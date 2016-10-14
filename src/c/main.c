@@ -1,72 +1,100 @@
 #include <pebble.h>
 //creates a pointer for main window
 static Window *s_main_window;
-static Layer *s_drawing_layer;
+static Layer *s_circle_layer, *s_inside_text_layer, *s_upper_text_layer, *s_lower_text_layer;
 static AppTimer *s_animation_completed_timer;
 static GPath *s_up_triangle, *s_down_triangle;
 static GRect bounds;
 static const 	GPathInfo UP_PATH_INFO = {
 		.num_points = 3,
-		.points = (GPoint []) {{72, 36}, {77, 41}, {67, 41}}
+		.points = (GPoint []) {{72, 39}, {77, 44}, {67, 44}}
 	};
 static const GPathInfo DOWN_PATH_INFO = {
 		.num_points = 3,
-	.points = (GPoint []) {{72, 131}, {67, 126}, {77, 126}}
+	.points = (GPoint []) {{72, 129}, {67, 124}, {77, 124}}
 	};
-static uint8_t s_radius_final, s_radius = 30;
-static int s_minutes_breathed = 1;
+static uint8_t s_radius_final, s_radius = 0;
+static int s_min_to_breathe = 1, s_times_clicked_select = 0;
 static bool s_animating = false, s_animation_completed = false;
 static GPoint s_center;
-static char s_greeting_text[2] = "1", s_instruct_text[8], s_min_text[5];
+static char s_min_to_breathe_text[3] = "1", s_instruct_text[8], s_min_text[5], s_min_today[19] = "BREATHED TODAY: 0", s_greet_text[19] = "HELLO, AARON";
 
-
+// ******************************************************************************************* Layer Update Processes
 static void canvas_update_proc(Layer *s_drawing_layer, GContext *ctx) {
-	graphics_context_set_text_color(ctx, GColorBlack);
-	GSize greet_text_bounds = graphics_text_layout_get_content_size("8", fonts_get_system_font(FONT_KEY_LECO_42_NUMBERS), 
-																																	GRect(0, 0, bounds.size.w, bounds.size.h), 
-																							GTextOverflowModeWordWrap, GTextAlignmentCenter);
-	graphics_draw_text(ctx, s_greeting_text, fonts_get_system_font(FONT_KEY_LECO_42_NUMBERS), 
-                     GRect((bounds.size.w - greet_text_bounds.w) / 2, (bounds.size.h - greet_text_bounds.h) / 2 - 6, greet_text_bounds.w, greet_text_bounds.h), 
-										 GTextOverflowModeWordWrap, GTextAlignmentCenter, NULL);
-	
-	GSize instruct_text_bounds = graphics_text_layout_get_content_size("BREATHE", fonts_get_system_font(FONT_KEY_GOTHIC_14_BOLD), 
-																																	GRect(0, 0, bounds.size.w, bounds.size.h), 
-																							GTextOverflowModeWordWrap, GTextAlignmentCenter);
-	graphics_draw_text(ctx, s_instruct_text, fonts_get_system_font(FONT_KEY_GOTHIC_14_BOLD), 
-                     GRect((bounds.size.w - instruct_text_bounds.w) / 2, (bounds.size.h - instruct_text_bounds.h) / 2 - 30, instruct_text_bounds.w, instruct_text_bounds.h), 
-										 GTextOverflowModeWordWrap, GTextAlignmentCenter, NULL);
-	
-	GSize min_text_bounds = graphics_text_layout_get_content_size("MINS", fonts_get_system_font(FONT_KEY_GOTHIC_14_BOLD), 
-																																	GRect(0, 0, bounds.size.w, bounds.size.h), 
-																							GTextOverflowModeWordWrap, GTextAlignmentCenter);
-	graphics_draw_text(ctx, s_min_text, fonts_get_system_font(FONT_KEY_GOTHIC_14_BOLD), 
-                     GRect((bounds.size.w - min_text_bounds.w) / 2, (bounds.size.h - min_text_bounds.h) / 2 + 26, min_text_bounds.w, min_text_bounds.h), 
-										 GTextOverflowModeWordWrap, GTextAlignmentCenter, NULL);
-	
 	graphics_context_set_stroke_color(ctx, GColorVividCerulean);
 	graphics_context_set_stroke_width(ctx, 5);
 	graphics_draw_circle(ctx, s_center, s_radius);
-	
-	if (s_animation_completed) {
+}
+
+static void inside_text_layer_update_proc(Layer *s_inside_text_layer, GContext *ctx) {
 		
 		//draw side circle
 		graphics_context_set_fill_color(ctx, GColorBlack);
 		graphics_fill_circle(ctx, GPoint(bounds.size.w + 5, bounds.size.h / 2), 10);
 		
 		// draw triangles
-		gpath_draw_filled(ctx, s_up_triangle);
-		gpath_draw_filled(ctx, s_down_triangle);
-	}
+		switch(s_min_to_breathe) {
+			case 1 :
+				gpath_draw_filled(ctx, s_up_triangle);
+				break;
+			case 10 :
+				gpath_draw_filled(ctx, s_down_triangle);
+				break;
+			default:
+				gpath_draw_filled(ctx, s_up_triangle);
+				gpath_draw_filled(ctx, s_down_triangle);
+		}
+		
+		// draw text in circle
+		graphics_context_set_text_color(ctx, GColorBlack);
+		GSize min_to_breathe_bounds = graphics_text_layout_get_content_size("10", fonts_get_system_font(FONT_KEY_LECO_42_NUMBERS), 
+																																		GRect(0, 0, bounds.size.w, bounds.size.h), 
+																								GTextOverflowModeWordWrap, GTextAlignmentCenter);
+		graphics_draw_text(ctx, s_min_to_breathe_text, fonts_get_system_font(FONT_KEY_LECO_42_NUMBERS), 
+											 GRect((bounds.size.w - min_to_breathe_bounds.w) / 2, (bounds.size.h - min_to_breathe_bounds.h) / 2 - 6, min_to_breathe_bounds.w, min_to_breathe_bounds.h), 
+											 GTextOverflowModeWordWrap, GTextAlignmentCenter, NULL);
+
+		GSize instruct_text_bounds = graphics_text_layout_get_content_size("BREATHE", fonts_get_system_font(FONT_KEY_GOTHIC_14_BOLD), 
+																																		GRect(0, 0, bounds.size.w, bounds.size.h), 
+																								GTextOverflowModeWordWrap, GTextAlignmentCenter);
+		graphics_draw_text(ctx, s_instruct_text, fonts_get_system_font(FONT_KEY_GOTHIC_14_BOLD), 
+											 GRect((bounds.size.w - instruct_text_bounds.w) / 2, (bounds.size.h - instruct_text_bounds.h) / 2 - 29, instruct_text_bounds.w, instruct_text_bounds.h), 
+											 GTextOverflowModeWordWrap, GTextAlignmentCenter, NULL);
+
+		GSize min_text_bounds = graphics_text_layout_get_content_size("MINS", fonts_get_system_font(FONT_KEY_GOTHIC_14_BOLD), 
+																																		GRect(0, 0, bounds.size.w, bounds.size.h), 
+																								GTextOverflowModeWordWrap, GTextAlignmentCenter);
+		graphics_draw_text(ctx, s_min_text, fonts_get_system_font(FONT_KEY_GOTHIC_14_BOLD), 
+											 GRect((bounds.size.w - min_text_bounds.w) / 2, (bounds.size.h - min_text_bounds.h) / 2 + 25, min_text_bounds.w, min_text_bounds.h), 
+											 GTextOverflowModeWordWrap, GTextAlignmentCenter, NULL);
 }
 
-static void circle_animation_started(Animation *anim, void *context) {
-	s_animating = true;
+
+static void upper_text_layer_update_proc(Layer *s_inside_text_layer, GContext *ctx) {
+		// draw text at top of screen
+		graphics_context_set_text_color(ctx, GColorBlack);
+		GSize greet_text_bounds = graphics_text_layout_get_content_size("HELLO, SAMANTHA", fonts_get_system_font(FONT_KEY_GOTHIC_14_BOLD),
+																																	 GRect(0, 0, bounds.size.w, bounds.size.h),
+																																	 GTextOverflowModeWordWrap, GTextAlignmentCenter);
+		
+		graphics_draw_text(ctx, s_greet_text, fonts_get_system_font(FONT_KEY_GOTHIC_14_BOLD), 
+											 GRect((bounds.size.w - greet_text_bounds.w) / 2, 5, greet_text_bounds.w, greet_text_bounds.h),
+											GTextOverflowModeWordWrap, GTextAlignmentCenter, NULL);
 }
 
-static void circle_animation_stopped(Animation *anim, bool stopped, void *context) {
-	s_animating = false;
+static void lower_text_layer_update_proc(Layer *s_inside_text_layer, GContext *ctx) {
+		// draw text at bottom of screen
+		graphics_context_set_text_color(ctx, GColorBlack);
+		GSize today_text_bounds = graphics_text_layout_get_content_size("BREATHED TODAY: 10", fonts_get_system_font(FONT_KEY_GOTHIC_14_BOLD),
+																																	 GRect(0, 0, bounds.size.w, bounds.size.h),
+																																	 GTextOverflowModeWordWrap, GTextAlignmentCenter);
+		
+		graphics_draw_text(ctx, s_min_today, fonts_get_system_font(FONT_KEY_GOTHIC_14_BOLD), 
+											 GRect((bounds.size.w - today_text_bounds.w) / 2, bounds.size.h - today_text_bounds.h - 8, today_text_bounds.w, today_text_bounds.h),
+											GTextOverflowModeWordWrap, GTextAlignmentCenter, NULL);
 }
-	
+
+// ******************************************************************************************* Startup Circle Animation
 static void circle_animate(int duration, int delay, AnimationImplementation *implementation) {
 	// creates animation instance
   Animation *anim = animation_create();
@@ -75,17 +103,13 @@ static void circle_animate(int duration, int delay, AnimationImplementation *imp
   animation_set_curve(anim, AnimationCurveEaseInOut);
 	// sets what the instance does with implementation passed in to argument
   animation_set_implementation(anim, implementation);
-	animation_set_handlers(anim, (AnimationHandlers) {
-		.started = circle_animation_started,
-		.stopped = circle_animation_stopped
-	}, NULL);
 	// schedules animation to start
   animation_schedule(anim);
 }
 
 static void radius_update(Animation *anim, AnimationProgress dist_normalized) {
-	s_radius = dist_normalized * s_radius_final / ANIMATION_NORMALIZED_MAX + 30;
-	layer_mark_dirty(s_drawing_layer);
+	s_radius = dist_normalized * s_radius_final / ANIMATION_NORMALIZED_MAX;
+	layer_mark_dirty(s_circle_layer);
 }
 
 static void circle_animation_setup() {
@@ -105,63 +129,168 @@ static void finish_setup_callback(void *context) {
 	s_up_triangle = gpath_create(&UP_PATH_INFO);
 	s_down_triangle = gpath_create(&DOWN_PATH_INFO);
 	
-	layer_mark_dirty(s_drawing_layer);
+	// creates more layers to hold text
+	s_inside_text_layer = layer_create(bounds);
+	layer_set_update_proc(s_inside_text_layer, inside_text_layer_update_proc);
+	
+	s_upper_text_layer = layer_create(bounds);
+	layer_set_update_proc(s_upper_text_layer, upper_text_layer_update_proc);
+	
+	s_lower_text_layer = layer_create(bounds);
+	layer_set_update_proc(s_lower_text_layer, lower_text_layer_update_proc);
+	
+	//adds layers to the window
+	layer_add_child(window_get_root_layer(s_main_window), s_inside_text_layer);
+	layer_add_child(window_get_root_layer(s_main_window), s_upper_text_layer);
+	layer_add_child(window_get_root_layer(s_main_window), s_lower_text_layer);
+	layer_mark_dirty(s_inside_text_layer);
+	layer_mark_dirty(s_upper_text_layer);
+	layer_mark_dirty(s_lower_text_layer);
+}
+
+// ******************************************************************************************* Main Circle Expand Animation
+static void circle_expand_animate(int duration, int delay, AnimationImplementation *implementation) {
+	// creates animation instance
+  Animation *anim = animation_create();
+  animation_set_duration(anim, duration);
+  animation_set_delay(anim, delay);
+  animation_set_curve(anim, AnimationCurveEaseInOut);
+	// sets what the instance does with implementation passed in to argument
+  animation_set_implementation(anim, implementation);
+	// schedules animation to start
+  animation_schedule(anim);
+}
+
+static void radius_expand_update(Animation *anim, AnimationProgress dist_normalized) {
+	s_radius = dist_normalized * s_radius_final / ANIMATION_NORMALIZED_MAX;
+	layer_mark_dirty(s_circle_layer);
+}
+
+static void circle_expand_setup() {
+	// set the update method for animation to radius_update
+	static AnimationImplementation s_circle_impl = {
+		.update = radius_expand_update
+	};
+	// starts animation
+	circle_expand_animate(3000, 0, &s_circle_impl);
+}
+
+static void finish_expand_callback(void *context) {
+	s_animation_completed = true;
+	layer_set_hidden(s_inside_text_layer, false);
+	layer_set_hidden(s_upper_text_layer, false);
+	layer_set_hidden(s_lower_text_layer, false);
+}
+
+// ******************************************************************************************* Main Circle Contract Animation
+static void circle_contract_animate(int duration, int delay, AnimationImplementation *implementation) {
+	// creates animation instance
+  Animation *anim = animation_create();
+  animation_set_duration(anim, duration);
+  animation_set_delay(anim, delay);
+  animation_set_curve(anim, AnimationCurveLinear);
+	// sets what the instance does with implementation passed in to argument
+  animation_set_implementation(anim, implementation);
+	// schedules animation to start
+  animation_schedule(anim);
+}
+
+static void radius_contract_update(Animation *anim, AnimationProgress dist_normalized) {
+	s_radius = s_radius_final - dist_normalized * s_radius_final / ANIMATION_NORMALIZED_MAX;
+	layer_mark_dirty(s_circle_layer);
+}
+
+static void circle_contract_setup() {
+	// set the update method for animation to radius_update
+	static AnimationImplementation s_circle_impl = {
+		.update = radius_contract_update
+	};
+	// starts animation
+	circle_contract_animate(3000, 0, &s_circle_impl);
+}
+
+static void finish_contract_callback(void *context) {
+	s_animation_completed_timer = app_timer_register(3100, finish_expand_callback, NULL);
+	circle_expand_setup();
+}
+
+// ******************************************************************************************* Click Handlers
+static void set_min_text(int minutes, void *string) {
+	if (minutes == 1) {
+			snprintf(string, 5, "%s", "MIN");
+		} else {
+			snprintf(string, 5, "%s", "MINS");
+		}
 }
 
 static void up_click_handler(ClickRecognizerRef recognizer, void *context) {
-	s_minutes_breathed += 1;
-	if (s_minutes_breathed == 1) {
-		snprintf(s_min_text, 5, "%s", "MIN");
+	if ((s_animation_completed) && (s_min_to_breathe < 10)) {
+		s_min_to_breathe += 1;
+		set_min_text(s_min_to_breathe, s_min_text);
+		if (s_min_to_breathe == 10) {
+			snprintf(s_min_to_breathe_text, 3, "%dd", s_min_to_breathe);
+		} else {
+			snprintf(s_min_to_breathe_text, 2, "%d", s_min_to_breathe);
+		}
+		layer_mark_dirty(s_inside_text_layer);
 	}
-	else {
-		snprintf(s_min_text, 5, "%s", "MINS");
-	}
-	snprintf(s_greeting_text, 2, "%d", s_minutes_breathed);
-	APP_LOG(APP_LOG_LEVEL_DEBUG, "Breathing minutes is now %d", s_minutes_breathed);
-	layer_mark_dirty(s_drawing_layer);
 }
 
 static void down_click_handler(ClickRecognizerRef recognizer, void *context) {
-	s_minutes_breathed -= 1;
-	if (s_minutes_breathed == 1) {
-		snprintf(s_min_text, 5, "%s", "MIN");
+	if ((s_animation_completed) && (s_min_to_breathe > 1)) {
+		s_min_to_breathe -= 1;
+		set_min_text(s_min_to_breathe, s_min_text);
+		snprintf(s_min_to_breathe_text, 2, "%d", s_min_to_breathe);
+		layer_mark_dirty(s_inside_text_layer);
 	}
-	else {
-		snprintf(s_min_text, 5, "%s", "MINS");
+}
+
+static void select_click_handler(ClickRecognizerRef recognizer, void *context) {
+	s_animation_completed_timer = app_timer_register(3100, finish_contract_callback, NULL);
+	s_times_clicked_select += 1;
+	s_animation_completed = false;
+	layer_set_hidden(s_inside_text_layer, true);
+	layer_set_hidden(s_upper_text_layer, true);
+	layer_set_hidden(s_lower_text_layer, true);
+	if (s_times_clicked_select > 9) {
+		snprintf(s_min_today, 19, "BREATHED TODAY: %dd", s_times_clicked_select);
+	} else {
+		snprintf(s_min_today, 19, "BREATHED TODAY: %d", s_times_clicked_select);
 	}
-	snprintf(s_greeting_text, 2, "%d", s_minutes_breathed);
-	APP_LOG(APP_LOG_LEVEL_DEBUG, "Breathing minutes is now %d", s_minutes_breathed);
-	layer_mark_dirty(s_drawing_layer);
+	circle_contract_setup();
 }
 
 static void click_config_provider(void *context) {
   ButtonId id_up = BUTTON_ID_UP;  // The Up button
 	ButtonId id_down = BUTTON_ID_DOWN; // The Down button
+	ButtonId id_select = BUTTON_ID_SELECT; // The Select button
   window_single_click_subscribe(id_up, up_click_handler);
 	window_single_click_subscribe(id_down, down_click_handler);
+	window_single_click_subscribe(id_select, select_click_handler);
 }
 
-//function for when window loads
+// ******************************************************************************************* Main App Functions
 static void main_window_load(Window *window){
 	//sets bounds of drawing layer
 	bounds = layer_get_bounds(window_get_root_layer(s_main_window));
 	
 	//creates drawing layer and sets update process
-	s_drawing_layer = layer_create(bounds);
-	layer_set_update_proc(s_drawing_layer, canvas_update_proc);
+	s_circle_layer = layer_create(bounds);
+	layer_set_update_proc(s_circle_layer, canvas_update_proc);
 	
 	//adds drawing layer to the window
-	layer_add_child(window_get_root_layer(s_main_window), s_drawing_layer);
-	layer_mark_dirty(s_drawing_layer);
+	layer_add_child(window_get_root_layer(s_main_window), s_circle_layer);
+	layer_mark_dirty(s_circle_layer);
 	
 	s_center = grect_center_point(&bounds); // sets the center of the circle to be the center of the screen
-	s_radius_final = 30; // sets the final radius of the circle
+	s_radius_final = 55; // sets the final radius of the circle
 	circle_animation_setup(); // starts the circle animation
 }
 
 //function for when window is destroyed
 static void main_window_unload(Window *window) {
-	
+	layer_destroy(s_circle_layer);
+	window_destroy(s_main_window);
 }
 
 static void init() {
@@ -177,7 +306,7 @@ static void init() {
 	
 	window_set_click_config_provider(s_main_window, click_config_provider);
 	
-	const int delay_ms = 1750;
+	const int delay_ms = 1800;
 	s_animation_completed_timer = app_timer_register(delay_ms, finish_setup_callback, NULL);
 	
 	//show window on the watch, with animated = true
@@ -185,7 +314,6 @@ static void init() {
 }
 
 static void deinit() {
-	window_destroy(s_main_window);
 }
 
 int main(void) {
