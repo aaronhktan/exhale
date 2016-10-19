@@ -3,7 +3,7 @@
 //creates a pointer for main window
 static Window *s_main_window;
 static Layer *s_circle_layer, *s_inside_text_layer, *s_upper_text_layer, *s_lower_text_layer;
-static AppTimer *s_animation_completed_timer, *s_main_animation_start_completed_timer, *s_main_animation_ended_timer, *animationTimer[69], *s_show_relax_text_timer;
+static AppTimer *s_animation_completed_timer, *s_main_animation_ended_timer, *animationTimer[69], *s_show_relax_text_timer, *s_show_inhale_timer, *s_hide_exhale_timer, *s_show_exhale_timer;
 static GPath *s_up_triangle, *s_down_triangle;
 static GRect bounds;
 static uint8_t s_radius_final, s_radius = 0;
@@ -11,6 +11,7 @@ static int s_min_to_breathe = 1, s_times_clicked_select = 0, s_times_played = 0;
 static bool s_animation_completed = false;
 static GPoint s_center;
 static char s_min_to_breathe_text[3] = "1", s_instruct_text[8], s_min_text[5], s_min_today[19] = "BREATHED TODAY: 0", s_greet_text[19] = "HELLO, AARON";
+static time_t t;
 
 #if PBL_DISPLAY_HEIGHT == 168
 	static const 	GPathInfo UP_PATH_INFO = {
@@ -202,6 +203,8 @@ static void main_animation_end() {
 
 // sets up and schedules circle contract and expand
 static void main_animation() {
+	layer_set_hidden(s_upper_text_layer, true);
+	layer_set_hidden(s_lower_text_layer, true);
 	static AnimationImplementation s_contract_impl = {
 		.update = radius_contract_update
 	};
@@ -236,9 +239,38 @@ static void main_animation_callback () {
 	}
 }
 
+// shows instructions to inhale
+static void first_breath_in_callback(void *context) {
+	snprintf(s_greet_text, 18, "%s", "NOW BREATHE IN...");
+	layer_set_hidden(s_upper_text_layer, false);
+}
+
+// shows instructions to exhale
+static void first_breath_out_callback(void *context) {
+	snprintf(s_min_today, 11, "%s", "AND OUT...");
+	layer_set_hidden(s_lower_text_layer, false);
+}
+
+static void first_breath_out_hide_callback(void *context) {
+	layer_set_hidden(s_lower_text_layer, true);
+}
+
+// start animation show text
+static void animation_start_callback(void *context) {
+	const char* strings[10] = {"TAKE A MOMENT", "BE STILL", "CLEAR YOUR MIND", "DON'T TALK", "EMPTY YOUR THOUGHTS", "BE CALM", "THINK NOTHING", "RELAX", "CHILL FOR A SEC", "SPACE OUT",};
+	APP_LOG(APP_LOG_LEVEL_DEBUG, "The string is %s", &*strings[rand() % 10]);
+	snprintf(s_greet_text, 20, "%s", &*strings[rand() % 10]);
+	const char* bottom_text[4] = {"BREATHE.", "EXHALE.", "CONCENTRATE.", "FOCUS."};
+	snprintf(s_min_today, 19, "%s", &*bottom_text[rand() % 4]);
+	layer_set_hidden(s_upper_text_layer, false);
+	layer_set_hidden(s_lower_text_layer, false);
+}
+
 // end animation show text
 static void animation_end_callback(void *context) {
 	s_animation_completed = true;
+	snprintf(s_greet_text, 19, "%s", "HELLO, AARON");
+	snprintf(s_min_today, 19, "BREATHED TODAY: %d", s_times_clicked_select);
 	layer_set_hidden(s_inside_text_layer, false);
 	layer_set_hidden(s_upper_text_layer, false);
 	layer_set_hidden(s_lower_text_layer, false);
@@ -293,6 +325,11 @@ static void select_click_handler(ClickRecognizerRef recognizer, void *context) {
 	
 	main_animation_start();
 	
+	s_show_relax_text_timer = app_timer_register(2100, animation_start_callback, NULL);
+	s_show_inhale_timer = app_timer_register(10100, first_breath_in_callback, NULL);
+	s_show_exhale_timer = app_timer_register(14100, first_breath_out_callback, NULL);
+	s_hide_exhale_timer = app_timer_register(18000, first_breath_out_hide_callback, NULL);
+	
 	animationTimer[0] = app_timer_register(6000, main_animation_callback, NULL); 
 	
 	s_main_animation_ended_timer = app_timer_register(s_min_to_breathe * 56000 + 6000, main_animation_end, NULL);
@@ -332,6 +369,9 @@ static void main_window_unload(Window *window) {
 }
 
 static void init() {
+	
+	//starts random number generator
+	srand((unsigned) time(&t));
 	
 	//create main window and assign to pointer
 	s_main_window = window_create();
