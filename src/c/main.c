@@ -1,5 +1,4 @@
 #include <pebble.h>
-#include <src/c/relax_text.h>
 //creates a pointer for main window
 static Window *s_main_window;
 static Layer *s_circle_layer, *s_inside_text_layer, *s_upper_text_layer, *s_lower_text_layer;
@@ -241,13 +240,13 @@ static void main_animation_callback () {
 
 // shows instructions to inhale
 static void first_breath_in_callback(void *context) {
-	snprintf(s_greet_text, 18, "%s", "NOW BREATHE IN...");
+	snprintf(s_greet_text, 18, "%s", "NOW INHALE...");
 	layer_set_hidden(s_upper_text_layer, false);
 }
 
 // shows instructions to exhale
 static void first_breath_out_callback(void *context) {
-	snprintf(s_min_today, 11, "%s", "AND OUT...");
+	snprintf(s_min_today, 12, "%s", "AND EXHALE.");
 	layer_set_hidden(s_lower_text_layer, false);
 }
 
@@ -257,7 +256,7 @@ static void first_breath_out_hide_callback(void *context) {
 
 // start animation show text
 static void animation_start_callback(void *context) {
-	const char* strings[10] = {"TAKE A MOMENT", "BE STILL", "CLEAR YOUR MIND", "DON'T TALK", "EMPTY YOUR THOUGHTS", "BE CALM", "THINK NOTHING", "RELAX", "CHILL FOR A SEC", "SPACE OUT",};
+	const char* strings[10] = {"TAKE A MOMENT;", "BE STILL;", "CLEAR YOUR MIND;", "DON'T TALK;", "EMPTY YOUR THOUGHTS;", "BE CALM;", "THINK NOTHING;", "RELAX;", "CHILL FOR A SEC;", "SPACE OUT;",};
 	APP_LOG(APP_LOG_LEVEL_DEBUG, "The string is %s", &*strings[rand() % 10]);
 	snprintf(s_greet_text, 20, "%s", &*strings[rand() % 10]);
 	const char* bottom_text[4] = {"BREATHE.", "EXHALE.", "CONCENTRATE.", "FOCUS."};
@@ -310,7 +309,7 @@ static void down_click_handler(ClickRecognizerRef recognizer, void *context) {
 
 static void select_click_handler(ClickRecognizerRef recognizer, void *context) {
 	s_times_played = 0;
-	int s_animation_completed_delay = s_min_to_breathe * 56000 + 8000;
+	int s_animation_completed_delay = s_min_to_breathe * 56000 + 10000;
 	s_animation_completed_timer = app_timer_register(s_animation_completed_delay, animation_end_callback, NULL);
 	s_times_clicked_select += 1;
 	s_animation_completed = false;
@@ -326,13 +325,13 @@ static void select_click_handler(ClickRecognizerRef recognizer, void *context) {
 	main_animation_start();
 	
 	s_show_relax_text_timer = app_timer_register(2100, animation_start_callback, NULL);
-	s_show_inhale_timer = app_timer_register(10100, first_breath_in_callback, NULL);
+	s_show_inhale_timer = app_timer_register(10600, first_breath_in_callback, NULL);
 	s_show_exhale_timer = app_timer_register(14100, first_breath_out_callback, NULL);
 	s_hide_exhale_timer = app_timer_register(18000, first_breath_out_hide_callback, NULL);
 	
 	animationTimer[0] = app_timer_register(6000, main_animation_callback, NULL); 
 	
-	s_main_animation_ended_timer = app_timer_register(s_min_to_breathe * 56000 + 6000, main_animation_end, NULL);
+	s_main_animation_ended_timer = app_timer_register(s_min_to_breathe * 56000 + 8000, main_animation_end, NULL);
 }
 
 static void click_config_provider(void *context) {
