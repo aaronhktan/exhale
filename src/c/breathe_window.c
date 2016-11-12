@@ -1,5 +1,6 @@
 #include <pebble.h>
 #include "breathe_window.h"
+#include "src/c/data.h"
 
 //creates a pointer for main window
 static Window *s_main_window;
@@ -11,8 +12,9 @@ static uint8_t s_radius_final, s_radius = 0;
 static int s_min_to_breathe = 1, s_times_clicked_select = 0, s_times_played = 0;
 static bool s_animation_completed = false, s_animating = false;
 static GPoint s_center;
-static char s_min_to_breathe_text[3] = "1", s_instruct_text[8], s_min_text[5], s_min_today[19] = "BREATHED TODAY: 0", s_greet_text[19] = "HELLO, AARON";
+static char s_min_to_breathe_text[3] = "1", s_instruct_text[8], s_min_text[5], s_min_today[19] = "TODAY: 0 MIN", s_greet_text[19] = "HELLO.";
 static time_t t;
+ClaySettings settings;
 
 // Depending on display size, change location of up and down arrows
 #if PBL_DISPLAY_HEIGHT == 168
@@ -44,9 +46,8 @@ static time_t t;
 		};
 #endif
 
-ClaySettings settings;
-
 // ******************************************************************************************* Settings Procedures
+// Loads default settings; if user has set settings, then other settings are loaded
 static void load_settings() {
 	settings.backgroundColor = GColorBlack;
 	settings.circleColor = PBL_IF_COLOR_ELSE(GColorJaegerGreen, GColorWhite);
@@ -66,68 +67,79 @@ static void canvas_update_proc(Layer *s_drawing_layer, GContext *ctx) {
 // updates text inside circle, side semicircle, and triangles
 static void inside_text_layer_update_proc(Layer *s_inside_text_layer, GContext *ctx) {
 		
-		//draw side circle
-		graphics_context_set_fill_color(ctx, settings.textColor);
-		graphics_fill_circle(ctx, GPoint(bounds.size.w + 5, bounds.size.h / 2), 10);
-		
-		// draw triangles
-		switch(s_min_to_breathe) {
-			case 1 :
-				gpath_draw_filled(ctx, s_up_triangle);
-				break;
-			case 10 :
-				gpath_draw_filled(ctx, s_down_triangle);
-				break;
-			default:
-				gpath_draw_filled(ctx, s_up_triangle);
-				gpath_draw_filled(ctx, s_down_triangle);
-		}
-		
-		// draw text in circle
-		graphics_context_set_text_color(ctx, settings.textColor);
-		GSize min_to_breathe_bounds = graphics_text_layout_get_content_size("10", fonts_get_system_font(FONT_KEY_LECO_42_NUMBERS), 
-																																		GRect(0, 0, bounds.size.w, bounds.size.h), 
-																								GTextOverflowModeWordWrap, GTextAlignmentCenter);
-		graphics_draw_text(ctx, s_min_to_breathe_text, fonts_get_system_font(FONT_KEY_LECO_42_NUMBERS), 
-											 GRect((bounds.size.w - min_to_breathe_bounds.w) / 2, (bounds.size.h - min_to_breathe_bounds.h) / 2 - 6, min_to_breathe_bounds.w, min_to_breathe_bounds.h), 
-											 GTextOverflowModeWordWrap, GTextAlignmentCenter, NULL);
+	//draw side circle
+	graphics_context_set_fill_color(ctx, settings.textColor);
+	graphics_fill_circle(ctx, GPoint(bounds.size.w + 5, bounds.size.h / 2), 10);
 
-		GSize instruct_text_bounds = graphics_text_layout_get_content_size("BREATHE", fonts_get_system_font(FONT_KEY_GOTHIC_14_BOLD), 
-																																		GRect(0, 0, bounds.size.w, bounds.size.h), 
-																								GTextOverflowModeWordWrap, GTextAlignmentCenter);
-		graphics_draw_text(ctx, s_instruct_text, fonts_get_system_font(FONT_KEY_GOTHIC_14_BOLD), 
-											 GRect((bounds.size.w - instruct_text_bounds.w) / 2, (bounds.size.h - instruct_text_bounds.h) / 2 - 29, instruct_text_bounds.w, instruct_text_bounds.h), 
-											 GTextOverflowModeWordWrap, GTextAlignmentCenter, NULL);
+	// draw triangles
+	switch(s_min_to_breathe) {
+		case 1 :
+		gpath_draw_filled(ctx, s_up_triangle);
+		break;
+		case 10 :
+		gpath_draw_filled(ctx, s_down_triangle);
+		break;
+		default:
+		gpath_draw_filled(ctx, s_up_triangle);
+		gpath_draw_filled(ctx, s_down_triangle);
+	}
 
-		GSize min_text_bounds = graphics_text_layout_get_content_size("MINS", fonts_get_system_font(FONT_KEY_GOTHIC_14_BOLD), 
-																																		GRect(0, 0, bounds.size.w, bounds.size.h), 
-																								GTextOverflowModeWordWrap, GTextAlignmentCenter);
-		graphics_draw_text(ctx, s_min_text, fonts_get_system_font(FONT_KEY_GOTHIC_14_BOLD), 
-											 GRect((bounds.size.w - min_text_bounds.w) / 2, (bounds.size.h - min_text_bounds.h) / 2 + 25, min_text_bounds.w, min_text_bounds.h), 
-											 GTextOverflowModeWordWrap, GTextAlignmentCenter, NULL);
+	// draw text in circle
+	graphics_context_set_text_color(ctx, settings.textColor);
+	GSize min_to_breathe_bounds = graphics_text_layout_get_content_size("10", fonts_get_system_font(FONT_KEY_LECO_42_NUMBERS), 
+																																			GRect(0, 0, bounds.size.w, bounds.size.h), 
+																																			GTextOverflowModeWordWrap, GTextAlignmentCenter);
+	graphics_draw_text(ctx, s_min_to_breathe_text, fonts_get_system_font(FONT_KEY_LECO_42_NUMBERS), 
+										 GRect((bounds.size.w - min_to_breathe_bounds.w) / 2, (bounds.size.h - min_to_breathe_bounds.h) / 2 - 6, min_to_breathe_bounds.w, min_to_breathe_bounds.h), 
+										 GTextOverflowModeWordWrap, GTextAlignmentCenter, NULL);
+
+	GSize instruct_text_bounds = graphics_text_layout_get_content_size("BREATHE", fonts_get_system_font(FONT_KEY_GOTHIC_14_BOLD), 
+																																		 GRect(0, 0, bounds.size.w, bounds.size.h), 
+																																		 GTextOverflowModeWordWrap, GTextAlignmentCenter);
+	graphics_draw_text(ctx, s_instruct_text, fonts_get_system_font(FONT_KEY_GOTHIC_14_BOLD), 
+										 GRect((bounds.size.w - instruct_text_bounds.w) / 2, (bounds.size.h - instruct_text_bounds.h) / 2 - 29, instruct_text_bounds.w, instruct_text_bounds.h), 
+										 GTextOverflowModeWordWrap, GTextAlignmentCenter, NULL);
+
+	GSize min_text_bounds = graphics_text_layout_get_content_size("MINS", fonts_get_system_font(FONT_KEY_GOTHIC_14_BOLD), 
+																																GRect(0, 0, bounds.size.w, bounds.size.h), 
+																																GTextOverflowModeWordWrap, GTextAlignmentCenter);
+	graphics_draw_text(ctx, s_min_text, fonts_get_system_font(FONT_KEY_GOTHIC_14_BOLD), 
+										 GRect((bounds.size.w - min_text_bounds.w) / 2, (bounds.size.h - min_text_bounds.h) / 2 + 25, min_text_bounds.w, min_text_bounds.h), 
+										 GTextOverflowModeWordWrap, GTextAlignmentCenter, NULL);
 }
 
 // draws text at top of screen
 static void upper_text_layer_update_proc(Layer *s_inside_text_layer, GContext *ctx) {
-		graphics_context_set_text_color(ctx, (s_animating) ? settings.textColor : PBL_IF_COLOR_ELSE(GColorDarkGray, settings.textColor));
-		GSize greet_text_bounds = graphics_text_layout_get_content_size("HELLO, SAMANTHA", fonts_get_system_font(FONT_KEY_GOTHIC_14_BOLD),
-																																	 GRect(0, 0, bounds.size.w, bounds.size.h),
-																																	 GTextOverflowModeWordWrap, GTextAlignmentCenter);
+	#if defined(PBL_HEALTH)
+		int current_steps = data_get_current_steps();
+		const char *steps_buffer = data_get_current_steps_buffer();
+	#endif
+	
+	graphics_context_set_text_color(ctx, (s_animating) ? settings.textColor : PBL_IF_COLOR_ELSE(GColorDarkGray, settings.textColor));
+		GSize greet_text_bounds = graphics_text_layout_get_content_size("10,000 STEPS TODAY OMG", fonts_get_system_font(FONT_KEY_GOTHIC_14_BOLD),
+																																		GRect(0, 0, bounds.size.w, bounds.size.h),
+																																		GTextOverflowModeWordWrap, GTextAlignmentCenter);
+	if (s_animating) {
 		graphics_draw_text(ctx, s_greet_text, fonts_get_system_font(FONT_KEY_GOTHIC_14_BOLD), 
 											 GRect((bounds.size.w - greet_text_bounds.w) / 2, 5, greet_text_bounds.w, greet_text_bounds.h),
-											GTextOverflowModeWordWrap, GTextAlignmentCenter, NULL);
+											 GTextOverflowModeWordWrap, GTextAlignmentCenter, NULL);
+	} else {
+		graphics_draw_text(ctx, PBL_IF_HEALTH_ELSE(steps_buffer, s_greet_text), fonts_get_system_font(FONT_KEY_GOTHIC_14_BOLD), 
+											 GRect((bounds.size.w - greet_text_bounds.w) / 2, 5, greet_text_bounds.w, greet_text_bounds.h),
+											 GTextOverflowModeWordWrap, GTextAlignmentCenter, NULL);
+	}
 }
 
 // draws text at bottom of screen
 static void lower_text_layer_update_proc(Layer *s_inside_text_layer, GContext *ctx) {
-		graphics_context_set_text_color(ctx, (s_animating) ? settings.textColor : PBL_IF_COLOR_ELSE(GColorDarkGray, settings.textColor));
-		GSize today_text_bounds = graphics_text_layout_get_content_size("BREATHED TODAY: 10", fonts_get_system_font(FONT_KEY_GOTHIC_14_BOLD),
-																																	 GRect(0, 0, bounds.size.w, bounds.size.h),
-																																	 GTextOverflowModeWordWrap, GTextAlignmentCenter);
-		
-		graphics_draw_text(ctx, s_min_today, fonts_get_system_font(FONT_KEY_GOTHIC_14_BOLD), 
-											 GRect((bounds.size.w - today_text_bounds.w) / 2, bounds.size.h - today_text_bounds.h - 8, today_text_bounds.w, today_text_bounds.h),
-											GTextOverflowModeWordWrap, GTextAlignmentCenter, NULL);
+	graphics_context_set_text_color(ctx, (s_animating) ? settings.textColor : PBL_IF_COLOR_ELSE(GColorDarkGray, settings.textColor));
+	GSize today_text_bounds = graphics_text_layout_get_content_size("TODAY: 10 MINUTES", fonts_get_system_font(FONT_KEY_GOTHIC_14_BOLD),
+																																	GRect(0, 0, bounds.size.w, bounds.size.h),
+																																	GTextOverflowModeWordWrap, GTextAlignmentCenter);
+
+	graphics_draw_text(ctx, s_min_today, fonts_get_system_font(FONT_KEY_GOTHIC_14_BOLD), 
+										 GRect((bounds.size.w - today_text_bounds.w) / 2, bounds.size.h - today_text_bounds.h - 8, today_text_bounds.w, today_text_bounds.h),
+										 GTextOverflowModeWordWrap, GTextAlignmentCenter, NULL);
 }
 
 // ******************************************************************************************* Animation Stuff
@@ -304,8 +316,12 @@ static void animation_start_callback(void *context) {
 // end animation show text
 static void animation_end_callback(void *context) {
 	s_animation_completed = true;
-	snprintf(s_greet_text, 19, "%s", "HELLO, AARON");
-	snprintf(s_min_today, 19, "BREATHED TODAY: %d", s_times_clicked_select);
+	snprintf(s_greet_text, 19, "%s", "HELLO.");
+	if (s_times_clicked_select > 9) {
+			snprintf(s_min_today, 19, "TODAY: %dd MIN", s_times_clicked_select);
+		} else {
+			snprintf(s_min_today, 19, "TODAY: %d MIN", s_times_clicked_select);
+		}
 	if (s_min_to_breathe == 10) {
 			snprintf(s_min_to_breathe_text, 3, "%dd", s_min_to_breathe);
 		} else {
@@ -357,11 +373,6 @@ static void select_click_handler(ClickRecognizerRef recognizer, void *context) {
 		layer_set_hidden(s_inside_text_layer, true);
 		layer_set_hidden(s_upper_text_layer, true);
 		layer_set_hidden(s_lower_text_layer, true);
-		if (s_times_clicked_select > 9) {
-			snprintf(s_min_today, 19, "BREATHED TODAY: %dd", s_times_clicked_select);
-		} else {
-			snprintf(s_min_today, 19, "BREATHED TODAY: %d", s_times_clicked_select);
-		}
 
 		main_animation_start();
 
@@ -388,6 +399,8 @@ static void click_config_provider(void *context) {
 }
 
 // ******************************************************************************************* Main App Functions
+
+// Save settings and reload visual aspects
 static void save_settings() {
 	persist_write_data(SETTINGS_KEY, &settings, sizeof(settings));
 	window_set_background_color(s_main_window, settings.backgroundColor);
@@ -395,6 +408,7 @@ static void save_settings() {
 	layer_mark_dirty(s_inside_text_layer);
 }
 
+// Receive settings from phone
 static void inbox_received_handler(DictionaryIterator *iter, void *context) {
 	Tuple *bg_color_t = dict_find(iter, MESSAGE_KEY_backgroundColor);
 	if (bg_color_t) {

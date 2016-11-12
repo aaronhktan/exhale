@@ -1,7 +1,12 @@
 #include <pebble.h>
 #include "src/c/breathe_window.h"
+#include "src/c/data.h"
+#include "src/c/health.h"
 
 static void init() {
+	// Subscribe to health service
+	health_init();
+	data_init();
 	// Show main window
 	breathe_window_push();
 }

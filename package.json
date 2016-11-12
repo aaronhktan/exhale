@@ -7,7 +7,8 @@
     "name": "breathe",
     "pebble": {
         "capabilities": [
-            "configurable"
+            "configurable",
+            "health"
         ],
         "displayName": "Breathe",
         "enableMultiJS": true,
