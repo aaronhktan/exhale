@@ -1,15 +1,32 @@
 {
     "author": "cheeseisdisgusting@gmail.com",
-    "dependencies": {},
+    "dependencies": {
+        "pebble-clay": "^1.0.3"
+    },
     "keywords": [],
     "name": "breathe",
     "pebble": {
+        "capabilities": [
+            "configurable"
+        ],
         "displayName": "Breathe",
         "enableMultiJS": true,
-        "messageKeys": [],
+        "messageKeys": [
+            "backgroundColor",
+            "circleColor"
+        ],
         "projectType": "native",
         "resources": {
-            "media": []
+            "media": [
+                {
+                    "file": "images/icon.png",
+                    "menuIcon": true,
+                    "name": "icon",
+                    "storageFormat": "png",
+                    "targetPlatforms": null,
+                    "type": "bitmap"
+                }
+            ]
         },
         "sdkVersion": "3",
         "targetPlatforms": [

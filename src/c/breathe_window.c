@@ -1,16 +1,15 @@
 #include <pebble.h>
 #include "breathe_window.h"
 
-
 //creates a pointer for main window
 static Window *s_main_window;
 static Layer *s_circle_layer, *s_inside_text_layer, *s_upper_text_layer, *s_lower_text_layer;
-static AppTimer *s_animation_completed_timer, *s_main_animation_ended_timer, *animationTimer[69], *s_show_relax_text_timer, *s_show_inhale_timer, *s_hide_exhale_timer, *s_show_exhale_timer, *s_hide_lower_text_layer;
+static AppTimer *s_animation_completed_timer, *s_main_animation_ended_timer, *animationTimer[69], *s_show_relax_text_timer, *s_show_inhale_timer, *s_hide_exhale_timer, *s_show_exhale_timer, *s_hide_lower_text_layer, *s_click_provider_timer;
 static GPath *s_up_triangle, *s_down_triangle;
 static GRect bounds;
 static uint8_t s_radius_final, s_radius = 0;
 static int s_min_to_breathe = 1, s_times_clicked_select = 0, s_times_played = 0;
-static bool s_animation_completed = false;
+static bool s_animation_completed = false, s_animating = false;
 static GPoint s_center;
 static char s_min_to_breathe_text[3] = "1", s_instruct_text[8], s_min_text[5], s_min_today[19] = "BREATHED TODAY: 0", s_greet_text[19] = "HELLO, AARON";
 static time_t t;
@@ -37,7 +36,7 @@ static time_t t;
 #else
 	static const GPathInfo UP_PATH_INFO = {
 			.num_points = 3,
-			.points = (GPoint []) {{100, 59}, {100, 55}, {100, 45}}
+			.points = (GPoint []) {{105, 65}, {95, 65}, {100, 60}}
 		};
 	static const GPathInfo DOWN_PATH_INFO = {
 			.num_points = 3,
@@ -45,18 +44,29 @@ static time_t t;
 		};
 #endif
 
+ClaySettings settings;
+
+// ******************************************************************************************* Settings Procedures
+static void load_settings() {
+	settings.backgroundColor = GColorBlack;
+	settings.circleColor = PBL_IF_COLOR_ELSE(GColorJaegerGreen, GColorWhite);
+	settings.textColor = GColorWhite;
+	persist_read_data(SETTINGS_KEY, &settings, sizeof(settings));
+}
+
 // ******************************************************************************************* Layer Update Procedures
 // updates circle
 static void canvas_update_proc(Layer *s_drawing_layer, GContext *ctx) {
-	graphics_context_set_stroke_color(ctx, PBL_IF_COLOR_ELSE(GColorMediumAquamarine, GColorBlack));
+	graphics_context_set_stroke_color(ctx, settings.circleColor);
 	graphics_context_set_stroke_width(ctx, 5);
 	graphics_draw_circle(ctx, s_center, s_radius);
 }
 
 // updates text inside circle, side semicircle, and triangles
 static void inside_text_layer_update_proc(Layer *s_inside_text_layer, GContext *ctx) {
+		
 		//draw side circle
-		graphics_context_set_fill_color(ctx, GColorBlack);
+		graphics_context_set_fill_color(ctx, settings.textColor);
 		graphics_fill_circle(ctx, GPoint(bounds.size.w + 5, bounds.size.h / 2), 10);
 		
 		// draw triangles
@@ -73,7 +83,7 @@ static void inside_text_layer_update_proc(Layer *s_inside_text_layer, GContext *
 		}
 		
 		// draw text in circle
-		graphics_context_set_text_color(ctx, GColorBlack);
+		graphics_context_set_text_color(ctx, settings.textColor);
 		GSize min_to_breathe_bounds = graphics_text_layout_get_content_size("10", fonts_get_system_font(FONT_KEY_LECO_42_NUMBERS), 
 																																		GRect(0, 0, bounds.size.w, bounds.size.h), 
 																								GTextOverflowModeWordWrap, GTextAlignmentCenter);
@@ -98,7 +108,7 @@ static void inside_text_layer_update_proc(Layer *s_inside_text_layer, GContext *
 
 // draws text at top of screen
 static void upper_text_layer_update_proc(Layer *s_inside_text_layer, GContext *ctx) {
-		graphics_context_set_text_color(ctx, GColorBlack);
+		graphics_context_set_text_color(ctx, (s_animating) ? settings.textColor : PBL_IF_COLOR_ELSE(GColorDarkGray, settings.textColor));
 		GSize greet_text_bounds = graphics_text_layout_get_content_size("HELLO, SAMANTHA", fonts_get_system_font(FONT_KEY_GOTHIC_14_BOLD),
 																																	 GRect(0, 0, bounds.size.w, bounds.size.h),
 																																	 GTextOverflowModeWordWrap, GTextAlignmentCenter);
@@ -109,7 +119,7 @@ static void upper_text_layer_update_proc(Layer *s_inside_text_layer, GContext *c
 
 // draws text at bottom of screen
 static void lower_text_layer_update_proc(Layer *s_inside_text_layer, GContext *ctx) {
-		graphics_context_set_text_color(ctx, GColorBlack);
+		graphics_context_set_text_color(ctx, (s_animating) ? settings.textColor : PBL_IF_COLOR_ELSE(GColorDarkGray, settings.textColor));
 		GSize today_text_bounds = graphics_text_layout_get_content_size("BREATHED TODAY: 10", fonts_get_system_font(FONT_KEY_GOTHIC_14_BOLD),
 																																	 GRect(0, 0, bounds.size.w, bounds.size.h),
 																																	 GTextOverflowModeWordWrap, GTextAlignmentCenter);
@@ -281,7 +291,7 @@ static void first_breath_out_hide_callback(void *context) {
 static void animation_start_callback(void *context) {
 	const char* strings[10] = {"TAKE A MOMENT;", "BE STILL;", "CLEAR YOUR MIND;", "EMPTY YOUR THOUGHTS;", "BE CALM;", "THINK NOTHING;", "RELAX;", "CHILL FOR A SEC;", "SPACE OUT;",};
 	APP_LOG(APP_LOG_LEVEL_DEBUG, "The string is %s", &*strings[rand() % 9]);
-	snprintf(s_greet_text, 21, "%s", &*strings[rand() % 10]);
+	snprintf(s_greet_text, 21, "%s", &*strings[rand() % 9]);
 	const char* bottom_text[4] = {"BREATHE.", "EXHALE.", "CONCENTRATE.", "FOCUS."};
 	snprintf(s_min_today, 19, "%s", &*bottom_text[rand() % 4]);
 	layer_set_hidden(s_upper_text_layer, false);
@@ -293,13 +303,17 @@ static void animation_end_callback(void *context) {
 	s_animation_completed = true;
 	snprintf(s_greet_text, 19, "%s", "HELLO, AARON");
 	snprintf(s_min_today, 19, "BREATHED TODAY: %d", s_times_clicked_select);
+	if (s_min_to_breathe == 10) {
+			snprintf(s_min_to_breathe_text, 3, "%dd", s_min_to_breathe);
+		} else {
+			snprintf(s_min_to_breathe_text, 2, "%d", s_min_to_breathe);
+		}
 	layer_set_hidden(s_inside_text_layer, false);
 	layer_set_hidden(s_upper_text_layer, false);
 	layer_set_hidden(s_lower_text_layer, false);
+	s_animating = false;
 }
 
-
-// ******************************************************************************************* Click Handlers
 static void set_min_text(int minutes, void *string) {
 	if (minutes == 1) {
 			snprintf(string, 5, "%s", "MIN");
@@ -308,6 +322,7 @@ static void set_min_text(int minutes, void *string) {
 		}
 }
 
+// ******************************************************************************************* Click Handlers
 static void up_click_handler(ClickRecognizerRef recognizer, void *context) {
 	if ((s_animation_completed) && (s_min_to_breathe < 10)) {
 		s_min_to_breathe += 1;
@@ -331,6 +346,7 @@ static void down_click_handler(ClickRecognizerRef recognizer, void *context) {
 }
 
 static void select_click_handler(ClickRecognizerRef recognizer, void *context) {
+	s_animating = true;
 	s_times_played = 0;
 	s_times_clicked_select += 1;
 	s_animation_completed = false;
@@ -353,7 +369,7 @@ static void select_click_handler(ClickRecognizerRef recognizer, void *context) {
 	animationTimer[0] = app_timer_register(6000, main_animation_callback, NULL); 
 	
 	s_main_animation_ended_timer = app_timer_register(s_min_to_breathe * 56000 + 7000, main_animation_end, NULL);
-	int s_animation_completed_delay = s_min_to_breathe * 56000 + 12000;
+	int s_animation_completed_delay = s_min_to_breathe * 56000 + 11000;
 	s_animation_completed_timer = app_timer_register(s_animation_completed_delay, animation_end_callback, NULL);
 }
 
@@ -367,6 +383,35 @@ static void click_config_provider(void *context) {
 }
 
 // ******************************************************************************************* Main App Functions
+static void save_settings() {
+	persist_write_data(SETTINGS_KEY, &settings, sizeof(settings));
+	window_set_background_color(s_main_window, settings.backgroundColor);
+	layer_mark_dirty(s_circle_layer);
+	layer_mark_dirty(s_inside_text_layer);
+}
+
+static void inbox_received_handler(DictionaryIterator *iter, void *context) {
+	Tuple *bg_color_t = dict_find(iter, MESSAGE_KEY_backgroundColor);
+	if (bg_color_t) {
+		settings.backgroundColor = GColorFromHEX(bg_color_t->value->int32);
+		if (bg_color_t->value->int32 == 0x000000) {
+			APP_LOG(APP_LOG_LEVEL_DEBUG, "The background color is black.");
+			settings.textColor = GColorWhite;
+		} else {
+			APP_LOG(APP_LOG_LEVEL_DEBUG, "The background color is white.");
+			settings.textColor = GColorBlack;
+		}
+	}
+	
+	Tuple *circle_color_t = dict_find(iter, MESSAGE_KEY_circleColor);
+	if (circle_color_t) {
+		settings.circleColor = GColorFromHEX(circle_color_t->value->int32);
+	}
+	
+	save_settings();
+}
+
+
 static void main_window_load(Window *window){
 	//sets bounds of drawing layer
 	bounds = layer_get_bounds(window_get_root_layer(s_main_window));
@@ -390,15 +435,31 @@ static void main_window_unload(Window *window) {
 	layer_destroy(s_upper_text_layer);
 	layer_destroy(s_lower_text_layer);
 	layer_destroy(s_inside_text_layer);
+	vibes_cancel();
+	if (s_times_played != 0) {
+		app_timer_cancel(animationTimer[s_times_played]);
+	}
 	window_destroy(s_main_window);
 }
 
+static void set_click_config_providers() {
+	window_set_click_config_provider(s_main_window, click_config_provider);
+}
+
 void breathe_window_push() {
-		//starts random number generator
+	//starts random number generator
 	srand((unsigned) time(&t));
+	
+	// Open AppMessage connection
+	app_message_register_inbox_received(inbox_received_handler);
+	app_message_open(128, 128);
+	
+	// Load settings
+	load_settings();
 	
 	//create main window and assign to pointer
 	s_main_window = window_create();
+	window_set_background_color(s_main_window, settings.backgroundColor);
 	
 	//set funcions to handle window
 	window_set_window_handlers(s_main_window, (WindowHandlers) {
@@ -406,7 +467,7 @@ void breathe_window_push() {
 		.unload = main_window_unload
 	});
 	
-	window_set_click_config_provider(s_main_window, click_config_provider);
+	s_click_provider_timer = app_timer_register(2000, set_click_config_providers, NULL);
 	
 	// starts timer to show text at end of start animation
 	const int delay_ms = 1800;

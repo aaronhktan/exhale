@@ -2,6 +2,7 @@
 #include "src/c/breathe_window.h"
 
 static void init() {
+	// Show main window
 	breathe_window_push();
 }
 
