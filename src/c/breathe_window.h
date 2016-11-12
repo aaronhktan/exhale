@@ -8,6 +8,7 @@ typedef struct ClaySettings {
 	GColor backgroundColor;
 	GColor circleColor;
 	GColor textColor;
+	bool vibrationEnabled;
 } ClaySettings;
 
 void breathe_window_push();

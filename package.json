@@ -13,7 +13,8 @@
         "enableMultiJS": true,
         "messageKeys": [
             "backgroundColor",
-            "circleColor"
+            "circleColor",
+            "vibrationEnabled"
         ],
         "projectType": "native",
         "resources": {

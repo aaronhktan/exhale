@@ -51,6 +51,7 @@ static void load_settings() {
 	settings.backgroundColor = GColorBlack;
 	settings.circleColor = PBL_IF_COLOR_ELSE(GColorJaegerGreen, GColorWhite);
 	settings.textColor = GColorWhite;
+	settings.vibrationEnabled = true;
 	persist_read_data(SETTINGS_KEY, &settings, sizeof(settings));
 }
 
@@ -254,13 +255,15 @@ static void main_animation() {
 	animation_schedule(circle_animation_sequence);
 	s_times_played++;
 	
-	// vibrations!
-	static const uint32_t const segments[] = {0, 5500, 25, 25, 25, 25, 25, 25, 25, 25, 25, 50, 25, 75, 25, 125, 25, 125, 25, 125, 25, 125, 25, 200, 25, 325, 25, 550, 25};
-	VibePattern vibes = {
-		.durations = segments,
-		.num_segments = ARRAY_LENGTH(segments),
-	};
-	vibes_enqueue_custom_pattern(vibes);
+	if (settings.vibrationEnabled) {
+		// vibrations!
+		static const uint32_t const segments[] = {0, 5500, 25, 25, 25, 25, 25, 25, 25, 25, 25, 50, 25, 75, 25, 125, 25, 125, 25, 125, 25, 125, 25, 200, 25, 325, 25, 550, 25};
+		VibePattern vibes = {
+			.durations = segments,
+			.num_segments = ARRAY_LENGTH(segments),
+		};
+		vibes_enqueue_custom_pattern(vibes);
+	}
 }
 
 // schedules next animation
@@ -346,31 +349,33 @@ static void down_click_handler(ClickRecognizerRef recognizer, void *context) {
 }
 
 static void select_click_handler(ClickRecognizerRef recognizer, void *context) {
-	s_animating = true;
-	s_times_played = 0;
-	s_times_clicked_select += 1;
-	s_animation_completed = false;
-	layer_set_hidden(s_inside_text_layer, true);
-	layer_set_hidden(s_upper_text_layer, true);
-	layer_set_hidden(s_lower_text_layer, true);
-	if (s_times_clicked_select > 9) {
-		snprintf(s_min_today, 19, "BREATHED TODAY: %dd", s_times_clicked_select);
-	} else {
-		snprintf(s_min_today, 19, "BREATHED TODAY: %d", s_times_clicked_select);
+	if (!s_animating) {
+		s_animating = true;
+		s_times_played = 0;
+		s_times_clicked_select += 1;
+		s_animation_completed = false;
+		layer_set_hidden(s_inside_text_layer, true);
+		layer_set_hidden(s_upper_text_layer, true);
+		layer_set_hidden(s_lower_text_layer, true);
+		if (s_times_clicked_select > 9) {
+			snprintf(s_min_today, 19, "BREATHED TODAY: %dd", s_times_clicked_select);
+		} else {
+			snprintf(s_min_today, 19, "BREATHED TODAY: %d", s_times_clicked_select);
+		}
+
+		main_animation_start();
+
+		s_show_relax_text_timer = app_timer_register(2100, animation_start_callback, NULL);
+		s_show_inhale_timer = app_timer_register(10600, first_breath_in_callback, NULL);
+		s_show_exhale_timer = app_timer_register(14100, first_breath_out_callback, NULL);
+		s_hide_exhale_timer = app_timer_register(18000, first_breath_out_hide_callback, NULL);
+
+		animationTimer[0] = app_timer_register(6000, main_animation_callback, NULL); 
+
+		s_main_animation_ended_timer = app_timer_register(s_min_to_breathe * 56000 + 7000, main_animation_end, NULL);
+		int s_animation_completed_delay = s_min_to_breathe * 56000 + 11000;
+		s_animation_completed_timer = app_timer_register(s_animation_completed_delay, animation_end_callback, NULL);
 	}
-	
-	main_animation_start();
-	
-	s_show_relax_text_timer = app_timer_register(2100, animation_start_callback, NULL);
-	s_show_inhale_timer = app_timer_register(10600, first_breath_in_callback, NULL);
-	s_show_exhale_timer = app_timer_register(14100, first_breath_out_callback, NULL);
-	s_hide_exhale_timer = app_timer_register(18000, first_breath_out_hide_callback, NULL);
-	
-	animationTimer[0] = app_timer_register(6000, main_animation_callback, NULL); 
-	
-	s_main_animation_ended_timer = app_timer_register(s_min_to_breathe * 56000 + 7000, main_animation_end, NULL);
-	int s_animation_completed_delay = s_min_to_breathe * 56000 + 11000;
-	s_animation_completed_timer = app_timer_register(s_animation_completed_delay, animation_end_callback, NULL);
 }
 
 static void click_config_provider(void *context) {
@@ -406,6 +411,11 @@ static void inbox_received_handler(DictionaryIterator *iter, void *context) {
 	Tuple *circle_color_t = dict_find(iter, MESSAGE_KEY_circleColor);
 	if (circle_color_t) {
 		settings.circleColor = GColorFromHEX(circle_color_t->value->int32);
+	}
+	
+	Tuple *vibration_enabled_t = dict_find(iter, MESSAGE_KEY_vibrationEnabled);
+	if (vibration_enabled_t) {
+		settings.vibrationEnabled = vibration_enabled_t->value->int32 == 1;
 	}
 	
 	save_settings();

@@ -27,6 +27,20 @@ module.exports = [
 		]
 	},
 	{
+		"type": "section",
+		"items": [
+			{"type": "heading",
+			 "defaultValue": "Haptic Feedback"
+			},
+			{
+				"type": "toggle",
+				"messageKey": "vibrationEnabled",
+				"defaultValue": true,
+				"label": "Enable vibrations on inhale",
+			}
+		]
+	},
+	{
 	"type": "submit",
 	"defaultValue": "Save Settings"
 	}
