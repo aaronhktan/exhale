@@ -20,9 +20,8 @@ A little reminder to take a moment to breathe during your busy day.
 - A circle animation expands and contracts to help visualize and focus on breathing.
 - Gentle vibrations allow users to use the app even if they are not looking at the screen.
 - The background colour, circle colour, and whether to enable vibrations are all selectable by the user.
+- The main screen displays how many steps the user has taken today, as well as how many minutes they have breathed using this app.
 
 ##Issues and Plans:
-- Change the upper text from being fixed to my name.
-- Change the bottom text to make it shorter and more descriptive.
 - Add a little reminder every few hours for the user to breathe.
-- Make the app more modular. It's currently in one window file, which is really big.
+- Integrate heart rate monitoring into the top part of the screen, and give the user the option to use heart rate or steps if they are both available.
