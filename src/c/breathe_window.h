@@ -1,7 +1,7 @@
 #pragma once
 #include <pebble.h>
 
-#define SETTINGS_KEY 1
+#define SETTINGS_KEY 3
 
 // Define settings struct
 typedef struct ClaySettings {

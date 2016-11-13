@@ -4,6 +4,7 @@
 #include "src/c/health.h"
 
 static void init() {
+	APP_LOG(APP_LOG_LEVEL_DEBUG, "You are running the most recent version of this app.");
 	// Subscribe to health service
 	health_init();
 	data_init();
