@@ -23,6 +23,11 @@ static void load_settings() {
 	settings.circleColor = PBL_IF_COLOR_ELSE(GColorJaegerGreen, GColorWhite);
 	settings.textColor = GColorWhite;
 	settings.vibrationEnabled = true;
+	#if PBL_API_EXISTS(health_service_peek_current_value)
+		settings.heartRateEnabled = true;
+	#else
+		settings.heartRateEnabled = false;
+	#endif
 	persist_read_data(SETTINGS_KEY, &settings, sizeof(settings));
 }
 
@@ -39,7 +44,7 @@ static void inside_text_layer_update_proc(Layer *s_inside_text_layer, GContext *
 
 // draws text at top of screen
 static void upper_text_layer_update_proc(Layer *s_inside_text_layer, GContext *ctx) {
-	graphics_draw_upper_text(ctx, bounds, s_animating, settings.textColor, s_greet_text);
+	graphics_draw_upper_text(ctx, bounds, s_animating, settings.heartRateEnabled, settings.textColor, s_greet_text);
 }
 
 // draws text at bottom of screen
@@ -317,6 +322,7 @@ static void save_settings() {
 	window_set_background_color(s_main_window, settings.backgroundColor);
 	layer_mark_dirty(s_circle_layer);
 	layer_mark_dirty(s_inside_text_layer);
+	layer_mark_dirty(s_upper_text_layer);
 }
 
 // Receive settings from phone
@@ -331,6 +337,7 @@ static void inbox_received_handler(DictionaryIterator *iter, void *context) {
 			APP_LOG(APP_LOG_LEVEL_DEBUG, "The background color is white.");
 			settings.textColor = GColorBlack;
 		}
+		settings.circleColor = settings.textColor;
 	}
 	
 	Tuple *circle_color_t = dict_find(iter, MESSAGE_KEY_circleColor);
@@ -341,6 +348,11 @@ static void inbox_received_handler(DictionaryIterator *iter, void *context) {
 	Tuple *vibration_enabled_t = dict_find(iter, MESSAGE_KEY_vibrationEnabled);
 	if (vibration_enabled_t) {
 		settings.vibrationEnabled = vibration_enabled_t->value->int32 == 1;
+	}
+	
+	Tuple *heartRate_enabled_t = dict_find(iter, MESSAGE_KEY_heartRateEnabled);
+	if (heartRate_enabled_t) {
+		settings.heartRateEnabled = heartRate_enabled_t->value->int32 == 1;
 	}
 	
 	save_settings();

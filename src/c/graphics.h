@@ -2,7 +2,7 @@
 #include <pebble.h>
 #include "src/c/data.h"
 
-void graphics_draw_upper_text(GContext *ctx, GRect bounds, bool is_animating, GColor textColor, char *);
+void graphics_draw_upper_text(GContext *ctx, GRect bounds, bool is_animating, bool heart_rate, GColor textColor, char *);
 
 void graphics_draw_lower_text(GContext *ctx, GRect bounds, bool is_animating, GColor textColor, char *);
 

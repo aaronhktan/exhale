@@ -2,7 +2,8 @@
 #include "data.h"
 
 static int s_current_steps;
-static char s_current_steps_buffer[19];
+HealthValue s_current_heart_rate;
+static char s_current_steps_buffer[19], s_current_heart_rate_buffer[8];
 
 void data_update_steps_buffer() {
   int thousands = s_current_steps / 1000;
@@ -14,9 +15,17 @@ void data_update_steps_buffer() {
   }
 }
 
+void data_update_heart_rate_buffer() {
+	snprintf(s_current_heart_rate_buffer, sizeof(s_current_heart_rate_buffer), "%lu BPM", (uint32_t) s_current_heart_rate);
+}
+
 static void load_health_data_handler() {
 	s_current_steps = health_service_sum_today(HealthMetricStepCount);
 	data_update_steps_buffer();
+	#if PBL_API_EXISTS(health_service_peek_current_value)
+		s_current_heart_rate = health_service_peek_current_value(HealthMetricHeartRateBPM);
+		data_update_heart_rate_buffer();
+	#endif
 }
 
 void data_init() {
@@ -31,8 +40,20 @@ void data_set_current_steps(int value) {
 	s_current_steps = value;
 }
 
+int data_get_current_heart_rate() {
+	return s_current_heart_rate;
+}
+
+void data_set_current_heart_rate(int value) {
+	s_current_heart_rate = value;
+}
+
 char* data_get_current_steps_buffer() {
   return s_current_steps_buffer;
+}
+
+char* data_get_current_heart_rate_buffer() {
+	return s_current_heart_rate_buffer;
 }
 
 char *data_get_date_today() {
@@ -45,7 +66,7 @@ char *data_get_date_today() {
 
 void data_write_breathe_persist_data(int min_breathed_today){
 	persist_write_int(MIN_BREATHED_TODAY_KEY, min_breathed_today);
-	APP_LOG(APP_LOG_LEVEL_DEBUG, "The minutes breathed today are: %dd", min_breathed_today);
+	APP_LOG(APP_LOG_LEVEL_DEBUG, "The minutes breathed today are: %d", min_breathed_today);
 }
 
 void data_write_date_persist_data() {

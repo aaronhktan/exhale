@@ -15,7 +15,8 @@
         "messageKeys": [
             "backgroundColor",
             "circleColor",
-            "vibrationEnabled"
+            "vibrationEnabled",
+            "heartRateEnabled"
         ],
         "projectType": "native",
         "resources": {

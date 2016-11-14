@@ -33,7 +33,7 @@ static GPath *s_up_triangle, *s_down_triangle;
 		};
 #endif
 
-void graphics_draw_upper_text(GContext *ctx, GRect bounds, bool is_animating, GColor textColor, char *greet_text) {
+void graphics_draw_upper_text(GContext *ctx, GRect bounds, bool is_animating, bool heart_rate, GColor textColor, char *greet_text) {
 	#if defined(PBL_HEALTH)
 		const char *steps_buffer = data_get_current_steps_buffer();
 	#endif
@@ -47,9 +47,16 @@ void graphics_draw_upper_text(GContext *ctx, GRect bounds, bool is_animating, GC
 											 GRect((bounds.size.w - greet_text_bounds.w) / 2, 5, greet_text_bounds.w, greet_text_bounds.h),
 											 GTextOverflowModeWordWrap, GTextAlignmentCenter, NULL);
 	} else {
-		graphics_draw_text(ctx, PBL_IF_HEALTH_ELSE(steps_buffer, greet_text), fonts_get_system_font(FONT_KEY_GOTHIC_14_BOLD), 
+		if (heart_rate && data_get_current_heart_rate() > 0) {
+			const char *heart_rate_buffer = data_get_current_heart_rate_buffer();
+			graphics_draw_text(ctx, heart_rate_buffer, fonts_get_system_font(FONT_KEY_GOTHIC_14_BOLD), 
 											 GRect((bounds.size.w - greet_text_bounds.w) / 2, 5, greet_text_bounds.w, greet_text_bounds.h),
 											 GTextOverflowModeWordWrap, GTextAlignmentCenter, NULL);
+		} else {
+			graphics_draw_text(ctx, PBL_IF_HEALTH_ELSE(steps_buffer, greet_text), fonts_get_system_font(FONT_KEY_GOTHIC_14_BOLD), 
+											 GRect((bounds.size.w - greet_text_bounds.w) / 2, 5, greet_text_bounds.w, greet_text_bounds.h),
+											 GTextOverflowModeWordWrap, GTextAlignmentCenter, NULL);
+		}
 	}
 }
 
