@@ -39,22 +39,22 @@ void graphics_draw_upper_text(GContext *ctx, GRect bounds, bool is_animating, bo
 	#endif
 	
 	graphics_context_set_text_color(ctx, (is_animating) ? textColor : PBL_IF_COLOR_ELSE(GColorDarkGray, textColor));
-	GSize greet_text_bounds = graphics_text_layout_get_content_size("10,000 STEPS TODAY OMG", fonts_get_system_font(FONT_KEY_GOTHIC_14_BOLD),
+	GSize greet_text_bounds = graphics_text_layout_get_content_size("THAT IS A LOT OF STEPS TO TAKE IN JUST ONE DAY, INNIT?", fonts_get_system_font(FONT_KEY_GOTHIC_14_BOLD),
 																																		GRect(0, 0, bounds.size.w, bounds.size.h),
 																																		GTextOverflowModeWordWrap, GTextAlignmentCenter);
 	if (is_animating) {
 		graphics_draw_text(ctx, greet_text, fonts_get_system_font(FONT_KEY_GOTHIC_14_BOLD), 
-											 GRect((bounds.size.w - greet_text_bounds.w) / 2, 5, greet_text_bounds.w, greet_text_bounds.h),
+											 GRect((bounds.size.w - greet_text_bounds.w) / 2, PBL_IF_RECT_ELSE(5, 15), greet_text_bounds.w, greet_text_bounds.h),
 											 GTextOverflowModeWordWrap, GTextAlignmentCenter, NULL);
 	} else {
 		if (heart_rate && data_get_current_heart_rate() > 0) {
 			const char *heart_rate_buffer = data_get_current_heart_rate_buffer();
 			graphics_draw_text(ctx, heart_rate_buffer, fonts_get_system_font(FONT_KEY_GOTHIC_14_BOLD), 
-											 GRect((bounds.size.w - greet_text_bounds.w) / 2, 5, greet_text_bounds.w, greet_text_bounds.h),
+											 GRect((bounds.size.w - greet_text_bounds.w) / 2, PBL_IF_RECT_ELSE(5, 15), greet_text_bounds.w, greet_text_bounds.h),
 											 GTextOverflowModeWordWrap, GTextAlignmentCenter, NULL);
 		} else {
 			graphics_draw_text(ctx, PBL_IF_HEALTH_ELSE(steps_buffer, greet_text), fonts_get_system_font(FONT_KEY_GOTHIC_14_BOLD), 
-											 GRect((bounds.size.w - greet_text_bounds.w) / 2, 5, greet_text_bounds.w, greet_text_bounds.h),
+											 GRect((bounds.size.w - greet_text_bounds.w) / 2, PBL_IF_RECT_ELSE(5, 15), greet_text_bounds.w, greet_text_bounds.h),
 											 GTextOverflowModeWordWrap, GTextAlignmentCenter, NULL);
 		}
 	}
@@ -67,7 +67,7 @@ void graphics_draw_lower_text(GContext *ctx, GRect bounds, bool is_animating, GC
 																																	GTextOverflowModeWordWrap, GTextAlignmentCenter);
 
 	graphics_draw_text(ctx, min_today, fonts_get_system_font(FONT_KEY_GOTHIC_14_BOLD), 
-										 GRect((bounds.size.w - today_text_bounds.w) / 2, bounds.size.h - today_text_bounds.h - 8, today_text_bounds.w, today_text_bounds.h),
+										 GRect((bounds.size.w - today_text_bounds.w) / 2, bounds.size.h - today_text_bounds.h - PBL_IF_RECT_ELSE(8, 20), today_text_bounds.w, today_text_bounds.h),
 										 GTextOverflowModeWordWrap, GTextAlignmentCenter, NULL);
 }
 
@@ -98,7 +98,7 @@ void graphics_draw_inner_text(GContext *ctx, GRect bounds, int min_to_breathe, G
 										 GRect((bounds.size.w - min_to_breathe_bounds.w) / 2, (bounds.size.h - min_to_breathe_bounds.h) / 2 - 6, min_to_breathe_bounds.w, min_to_breathe_bounds.h), 
 										 GTextOverflowModeWordWrap, GTextAlignmentCenter, NULL);
 
-	GSize instruct_text_bounds = graphics_text_layout_get_content_size("BREATHE", fonts_get_system_font(FONT_KEY_GOTHIC_14_BOLD), 
+	GSize instruct_text_bounds = graphics_text_layout_get_content_size("RESPIRAR", fonts_get_system_font(FONT_KEY_GOTHIC_14_BOLD), 
 																																		 GRect(0, 0, bounds.size.w, bounds.size.h), 
 																																		 GTextOverflowModeWordWrap, GTextAlignmentCenter);
 	graphics_draw_text(ctx, instruct_text, fonts_get_system_font(FONT_KEY_GOTHIC_14_BOLD), 

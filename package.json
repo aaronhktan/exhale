@@ -16,11 +16,18 @@
             "backgroundColor",
             "circleColor",
             "vibrationEnabled",
-            "heartRateEnabled"
+            "heartRateEnabled",
+            "reminderHours"
         ],
         "projectType": "native",
         "resources": {
             "media": [
+                {
+                    "file": "data/clock_sequence.pdc",
+                    "name": "CLOCK_SEQUENCE",
+                    "targetPlatforms": null,
+                    "type": "raw"
+                },
                 {
                     "file": "images/icon.png",
                     "menuIcon": true,

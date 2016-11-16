@@ -1,23 +1,23 @@
 module.exports = [
 	{
 		"type": "heading",
-		"defaultValue": "Configuration Page"
+		"defaultValue": "Paramètres"
 	},
 	{
 		"type": "text",
-		"defaultValue": "This is the settings page for the Breathe app. You are running version 0.2 of Breathe.",
+		"defaultValue": "Ceci est la page de configuration pour l'app Breathe. Vous utilisez version 0.2 de l'app.",
 	},
 	{
 		"type": "section",
 		"items": [
 			{"type": "heading",
-			 "defaultValue": "Colors"
+			 "defaultValue": "Couleurs"
 			},
 			{
 				"type": "color",
 				"messageKey": "backgroundColor",
 				"defaultValue": "000000",
-				"label": "Background Color",
+				"label": "Couleur de fond",
 				"sunlight": true,
 				"layout": "BLACK_WHITE"
 			},
@@ -25,7 +25,7 @@ module.exports = [
 				"type": "color",
 				"messageKey": "circleColor",
 				"defaultValue": "00AA55",
-				"label": "Circle Color",
+				"label": "Couleur de cercle",
 				"sunlight": true,
 				"capabilities": ["COLOR"]
 			}
@@ -35,13 +35,13 @@ module.exports = [
 		"type": "section",
 		"items": [
 			{"type": "heading",
-			 "defaultValue": "Haptic Feedback"
+			 "defaultValue": "Vibrations"
 			},
 			{
 				"type": "toggle",
 				"messageKey": "vibrationEnabled",
 				"defaultValue": true,
-				"label": "Enable vibrations on inhale",
+				"label": "Activer les vibrations pendant respirations?",
 			}
 		]
 	},
@@ -50,14 +50,14 @@ module.exports = [
 		"capabilities": ["NOT_PLATFORM_APLITE", "NOT_PLATFORM_BASALT", "NOT_PLATFORM_CHALK"],
 		"items": [
 			{"type": "heading",
-			 "defaultValue": "Health"
+			 "defaultValue": "Santé"
 			},
 			{
 				"type": "toggle",
 				"messageKey": "heartRateEnabled",
 				"defaultValue": true,
-				"label": "Show heart rate",
-				"description": "If enabled, the app shows the heart rate. If disabled, the app shows the number of steps taken today."
+				"label": "Montrer le rhythme cardiaque",
+				"description": "Si activé, l'app montre le rhythme cardiaque dans le menu principal. Sinon, le nombre de pas marchés aujourd'hui sera montré."
 			}
 		]
 	},
@@ -66,29 +66,29 @@ module.exports = [
 		"items": [
 			{
 				"type": "heading",
-			 "defaultValue": "Reminders"
+			 	"defaultValue": "Rappels"
 			},
 			{
 				"type": "select",
 				"messageKey": "reminderHours",
 				"defaultValue": "4",
-				"label": "Remind to breathe every...",
-				"description": "The app will remind you to breathe at these intervals, starting from 8AM and ending at 8PM daily.",
+				"label": "Me rappeler toutes les...",
+				"description": "L'app vous rappellera de respirer à cet intervalle tous les jours, à partir de 8h00 jusqu'à 20h00.",
 				"options": [
 					{ 
-						"label": "2 hours", 
+						"label": "2 heures", 
 						"value": "2" 
 					},
 					{ 
-						"label": "4 hours",
+						"label": "4 heures",
 						"value": "4" 
 					},
 					{ 
-						"label": "6 hours",
+						"label": "6 heures",
 						"value": "6" 
 					},
 					{ 
-						"label": "Don't remind me",
+						"label": "Ne me rappelle pas",
 						"value": "0" 
 					}
 				]
@@ -97,6 +97,6 @@ module.exports = [
 	},
 	{
 	"type": "submit",
-	"defaultValue": "Save Settings"
+	"defaultValue": "Sauvegarder mes paramètres"
 	}
 ];

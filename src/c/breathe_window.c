@@ -2,6 +2,8 @@
 #include "breathe_window.h"
 #include "src/c/data.h"
 #include "src/c/graphics.h"
+#include "src/c/settings.h"
+#include "localize.h"
 
 //creates a pointer for main window
 static Window *s_main_window;
@@ -12,44 +14,28 @@ static uint8_t s_radius_final, s_radius = 0;
 static int s_min_to_breathe = 1, s_min_breathed_today = 0, s_times_played = 0;
 static bool s_animation_completed = false, s_animating = false;
 static GPoint s_center;
-static char s_min_to_breathe_text[3] = "1", s_instruct_text[8], s_min_text[5], s_min_today[19] = "TODAY: 0 MIN", s_greet_text[19] = "HELLO.", *s_start_time, *s_end_time;
+static char s_min_to_breathe_text[3] = "1", s_instruct_text[9], s_min_text[5], s_min_today[25], s_greet_text[27], *s_start_time, *s_end_time;
 static time_t t;
-ClaySettings settings;
-
-// ******************************************************************************************* Settings Procedures
-// Loads default settings; if user has set settings, then other settings are loaded
-static void load_settings() {
-	settings.backgroundColor = GColorBlack;
-	settings.circleColor = PBL_IF_COLOR_ELSE(GColorJaegerGreen, GColorWhite);
-	settings.textColor = GColorWhite;
-	settings.vibrationEnabled = true;
-	#if PBL_API_EXISTS(health_service_peek_current_value)
-		settings.heartRateEnabled = true;
-	#else
-		settings.heartRateEnabled = false;
-	#endif
-	persist_read_data(SETTINGS_KEY, &settings, sizeof(settings));
-}
 
 // ******************************************************************************************* Layer Update Procedures
 // updates circle
 static void canvas_update_proc(Layer *s_drawing_layer, GContext *ctx) {
-	graphics_draw_main_circle(ctx, settings.circleColor, s_center, s_radius);
+	graphics_draw_main_circle(ctx, settings_get_circleColor(), s_center, s_radius);
 }
 
 // updates text inside circle, side semicircle, and triangles
 static void inside_text_layer_update_proc(Layer *s_inside_text_layer, GContext *ctx) {
-	graphics_draw_inner_text(ctx, bounds, s_min_to_breathe, settings.textColor, s_min_to_breathe_text, s_instruct_text, s_min_text);
+	graphics_draw_inner_text(ctx, bounds, s_min_to_breathe, settings_get_textColor(), s_min_to_breathe_text, s_instruct_text, s_min_text);
 }
 
 // draws text at top of screen
 static void upper_text_layer_update_proc(Layer *s_inside_text_layer, GContext *ctx) {
-	graphics_draw_upper_text(ctx, bounds, s_animating, settings.heartRateEnabled, settings.textColor, s_greet_text);
+	graphics_draw_upper_text(ctx, bounds, s_animating, settings_get_heartRateEnabled(), settings_get_textColor(), s_greet_text);
 }
 
 // draws text at bottom of screen
 static void lower_text_layer_update_proc(Layer *s_inside_text_layer, GContext *ctx) {
-	graphics_draw_lower_text(ctx, bounds, s_animating, settings.textColor, s_min_today);
+	graphics_draw_lower_text(ctx, bounds, s_animating, settings_get_textColor(), s_min_today);
 }
 
 // ******************************************************************************************* Animation Stuff
@@ -67,8 +53,14 @@ static void create_animation(int duration, int delay, AnimationCurve animationcu
 
 // fires at the end of app start
 static void finish_setup_callback(void *context) {
-	snprintf(s_instruct_text, 12, "%s", "BREATHE");
-	snprintf(s_min_text, 5, "%s", "MIN");
+	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+		snprintf(s_instruct_text, sizeof(s_instruct_text), "%s", "RESPIRER");
+	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+		snprintf(s_instruct_text, sizeof(s_instruct_text), "%s", "RESPIRAR");
+	} else {
+		snprintf(s_instruct_text, sizeof(s_instruct_text), "%s", "BREATHE");
+	}
+	
 	s_animation_completed = true;
 	
 	graphics_create_triangles_gpath();
@@ -137,7 +129,14 @@ static void main_animation_end() {
 	create_animation(2000, 2000, AnimationCurveEaseInOut, &s_main_animation_end);
 	
 	vibes_double_pulse();
-	snprintf(s_min_today, 17, "%s", "Well done.");
+	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+		snprintf(s_min_today, sizeof(s_min_today), "Bien fait.");
+	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+		snprintf(s_min_today, sizeof(s_min_today), "Bien hecho.");
+	} else {
+		snprintf(s_min_today, sizeof(s_min_today), "Well done.");
+	}
+	
 	layer_set_hidden(s_lower_text_layer, false);
 	
 	s_hide_lower_text_layer = app_timer_register(2000, hide_lower_text_callback, NULL);
@@ -176,7 +175,7 @@ static void main_animation() {
 	animation_schedule(circle_animation_sequence);
 	s_times_played++;
 	
-	if (settings.vibrationEnabled) {
+	if (settings_get_vibrationEnabled()) {
 		// vibrations!
 		static const uint32_t const segments[] = {0, 5500, 25, 25, 25, 25, 25, 25, 25, 25, 25, 50, 25, 75, 25, 125, 25, 125, 25, 125, 25, 125, 25, 200, 25, 325, 25, 550, 25};
 		VibePattern vibes = {
@@ -197,13 +196,25 @@ static void main_animation_callback () {
 
 // shows instructions to inhale
 static void first_breath_in_callback(void *context) {
-	snprintf(s_greet_text, 18, "%s", "NOW INHALE...");
+	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+		snprintf(s_greet_text, sizeof(s_greet_text), "INHALEZ...");
+	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+		snprintf(s_greet_text, sizeof(s_greet_text), "AHORA INHALA...");
+	} else {
+		snprintf(s_greet_text, sizeof(s_greet_text), "NOW INHALE...");
+	}
 	layer_set_hidden(s_upper_text_layer, false);
 }
 
 // shows instructions to exhale
 static void first_breath_out_callback(void *context) {
-	snprintf(s_min_today, 12, "%s", "AND EXHALE.");
+	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+		snprintf(s_min_today, sizeof(s_min_today), "...ET EXHALEZ.");
+	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+		snprintf(s_min_today, sizeof(s_min_today), "...Y EXHALA.");
+	} else {
+		snprintf(s_min_today, sizeof(s_min_today), "AND EXHALE.");
+	}
 	layer_set_hidden(s_lower_text_layer, false);
 }
 
@@ -213,11 +224,48 @@ static void first_breath_out_hide_callback(void *context) {
 
 // start animation show text
 static void animation_start_callback(void *context) {
-	const char* strings[10] = {"TAKE A MOMENT;", "BE STILL;", "CLEAR YOUR MIND;", "EMPTY YOUR THOUGHTS;", "BE CALM;", "THINK NOTHING;", "RELAX;", "CHILL FOR A SEC;", "SPACE OUT;",};
-	APP_LOG(APP_LOG_LEVEL_DEBUG, "The string is %s", &*strings[rand() % 9]);
-	snprintf(s_greet_text, 21, "%s", &*strings[rand() % 9]);
-	const char* bottom_text[4] = {"BREATHE.", "EXHALE.", "CONCENTRATE.", "FOCUS."};
-	snprintf(s_min_today, 19, "%s", &*bottom_text[rand() % 4]);
+	char *strings[9] = {"TAKE A MOMENT;", "BE STILL;", "CLEAR YOUR MIND;", "EMPTY YOUR THOUGHTS;", "BE CALM;", "THINK NOTHING;", "RELAX;", "CHILL FOR A SEC;", "SPACE OUT;"};
+	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+		char *french_strings[9] = {"PRENEZ UN MOMENT;", "NE BOUGEZ PAS;", "VIDEZ VOTRE ESPRIT;", "NE PENSEZ À RIEN;", "SOYEZ CALME;", "CONCENTREZ;", "RELAXEZ;", "NE VOUS INQUIETEZ PAS;", "DONNEZ-VOUS DE L'ESPACE;"};
+		for (int i = 0; i <= 8; i++) {
+			strings[i] = french_strings[i];
+		}
+	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+		char *spanish_strings[9] = {"TOMA UN DESCANSO;", "NO TE MUEVAS;", "ACLARA TU MENTE;", "NO PIENSA A NADA;", "SÉ CALMO;", "CONCÉNTRATE;", "RELÁJATE;", "NO TE PREOCUPES;", "TOMA UN RATO;"};
+		for (int i = 0; i <= 8; i++) {
+			strings[i] = spanish_strings[i];
+		}
+	}
+
+	for (int i = 0; i <= 8; i++) {
+		APP_LOG(APP_LOG_LEVEL_DEBUG, "The string # %d is %s", i, &*strings[i]);
+	}
+	
+	int random_number = rand() % 9;
+	APP_LOG(APP_LOG_LEVEL_DEBUG, "The random_number is %d", random_number);
+	APP_LOG(APP_LOG_LEVEL_DEBUG, "The string is %s", &*strings[random_number]);
+	snprintf(s_greet_text, sizeof(s_greet_text), "%s", &*strings[random_number]);
+	
+	char* bottom_text[4] = {"BREATHE.", "EXHALE.", "CONCENTRATE.", "FOCUS."};
+	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+		char* french_bottom_text[4] = {"RESPIREZ.", "EXHALEZ.", "RESPIREZ.", "EXHALEZ."};
+		for (int i = 0; i <= 3; i++) {
+			bottom_text[i] = french_bottom_text[i];
+		}
+	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+		char* spanish_bottom_text[4] = {"RESPIRA.", "EXHALA.", "RESPIRA.", "EXHALA."};
+		for (int i = 0; i <= 8; i++) {
+			bottom_text[i] = spanish_bottom_text[i];
+		}
+	}
+	
+	for (int x = 0; x <= 3; x++) {
+		APP_LOG(APP_LOG_LEVEL_DEBUG, "The string # %d is %s", x, &*bottom_text[x]);
+	}
+	int random_number_2 = rand() % 4;
+	APP_LOG(APP_LOG_LEVEL_DEBUG, "The random_number #2 is %d", random_number_2);
+	APP_LOG(APP_LOG_LEVEL_DEBUG, "The string is %s", &*bottom_text[random_number_2]);
+	snprintf(s_min_today, sizeof(s_min_today), "%s", &*bottom_text[random_number_2]);
 	layer_set_hidden(s_upper_text_layer, false);
 	layer_set_hidden(s_lower_text_layer, false);
 }
@@ -230,12 +278,33 @@ static void animation_end_callback(void *context) {
 	data_write_breathe_persist_data(s_min_breathed_today);
 	data_write_date_persist_data();
 	
-	snprintf(s_greet_text, 19, "%s", "HELLO.");
+	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+		snprintf(s_greet_text, sizeof(s_greet_text), "%s", "ALLO!");
+	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+		snprintf(s_greet_text, sizeof(s_greet_text), "%s", "¡HOLA!");
+	} else {
+		snprintf(s_greet_text, sizeof(s_greet_text), "%s", "HELLO.");
+	}
+	
 	s_end_time = data_get_date_today();
 	if (strcmp(s_start_time, s_end_time) == 0) {
-		snprintf(s_min_today, 19, "TODAY: %d MIN", s_min_breathed_today);
+		APP_LOG(APP_LOG_LEVEL_DEBUG, "The date started and ended are the same");
+		if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+			snprintf(s_min_today, sizeof(s_min_today), "AUJ: %d MIN", s_min_breathed_today);
+		} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+			snprintf(s_min_today, sizeof(s_min_today), "HOY: %d MIN", s_min_breathed_today);
+		} else {
+			snprintf(s_min_today, sizeof(s_min_today), "TODAY: %d MIN", s_min_breathed_today);
+		}
 	} else {
-		snprintf(s_min_today, 19, "TODAY: 0 MIN");
+		APP_LOG(APP_LOG_LEVEL_DEBUG, "The date started and ended are not the same");
+		if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+			snprintf(s_min_today, sizeof(s_min_today), "AUJ: 0 MIN");
+		} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+			snprintf(s_min_today, sizeof(s_min_today), "HOY: 0 MIN");
+		} else {
+			snprintf(s_min_today, sizeof(s_min_today), "TODAY: 0 MIN");
+		}
 	}
 	if (s_min_to_breathe == 10) {
 			snprintf(s_min_to_breathe_text, 3, "%dd", s_min_to_breathe);
@@ -315,47 +384,13 @@ static void click_config_provider(void *context) {
 }
 
 // ******************************************************************************************* Main App Functions
-
-// Save settings and reload visual aspects
-static void save_settings() {
-	persist_write_data(SETTINGS_KEY, &settings, sizeof(settings));
-	window_set_background_color(s_main_window, settings.backgroundColor);
+static void inbox_received_handler(DictionaryIterator *iter, void *context) {
+	settings_handle_settings();
+	settings_save_settings();
+	window_set_background_color(s_main_window, settings_get_backgroundColor());
 	layer_mark_dirty(s_circle_layer);
 	layer_mark_dirty(s_inside_text_layer);
 	layer_mark_dirty(s_upper_text_layer);
-}
-
-// Receive settings from phone
-static void inbox_received_handler(DictionaryIterator *iter, void *context) {
-	Tuple *bg_color_t = dict_find(iter, MESSAGE_KEY_backgroundColor);
-	if (bg_color_t) {
-		settings.backgroundColor = GColorFromHEX(bg_color_t->value->int32);
-		if (bg_color_t->value->int32 == 0x000000) {
-			APP_LOG(APP_LOG_LEVEL_DEBUG, "The background color is black.");
-			settings.textColor = GColorWhite;
-		} else {
-			APP_LOG(APP_LOG_LEVEL_DEBUG, "The background color is white.");
-			settings.textColor = GColorBlack;
-		}
-		settings.circleColor = settings.textColor;
-	}
-	
-	Tuple *circle_color_t = dict_find(iter, MESSAGE_KEY_circleColor);
-	if (circle_color_t) {
-		settings.circleColor = GColorFromHEX(circle_color_t->value->int32);
-	}
-	
-	Tuple *vibration_enabled_t = dict_find(iter, MESSAGE_KEY_vibrationEnabled);
-	if (vibration_enabled_t) {
-		settings.vibrationEnabled = vibration_enabled_t->value->int32 == 1;
-	}
-	
-	Tuple *heartRate_enabled_t = dict_find(iter, MESSAGE_KEY_heartRateEnabled);
-	if (heartRate_enabled_t) {
-		settings.heartRateEnabled = heartRate_enabled_t->value->int32 == 1;
-	}
-	
-	save_settings();
 }
 
 
@@ -393,7 +428,7 @@ static void set_click_config_providers() {
 	window_set_click_config_provider(s_main_window, click_config_provider);
 }
 
-void breathe_window_push() {
+void breathe_window_push(int min) {
 	//starts random number generator
 	srand((unsigned) time(&t));
 	
@@ -402,13 +437,19 @@ void breathe_window_push() {
 	app_message_open(128, 128);
 	
 	// Load settings
-	load_settings();
 	s_min_breathed_today = data_read_breathe_persist_data();
-	snprintf(s_min_today, 19, "TODAY: %d MIN", s_min_breathed_today);
+	
+	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+			snprintf(s_min_today, sizeof(s_min_today), "AUJ: %d MIN", s_min_breathed_today);
+		} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+			snprintf(s_min_today, sizeof(s_min_today), "HOY: %d MIN", s_min_breathed_today);
+		} else {
+			snprintf(s_min_today, sizeof(s_min_today), "TODAY: %d MIN", s_min_breathed_today);
+	}
 	
 	//create main window and assign to pointer
 	s_main_window = window_create();
-	window_set_background_color(s_main_window, settings.backgroundColor);
+	window_set_background_color(s_main_window, settings_get_backgroundColor());
 	
 	//set funcions to handle window
 	window_set_window_handlers(s_main_window, (WindowHandlers) {
@@ -421,6 +462,10 @@ void breathe_window_push() {
 	// starts timer to show text at end of start animation
 	const int delay_ms = 1800;
 	s_animation_completed_timer = app_timer_register(delay_ms, finish_setup_callback, NULL);
+	
+	s_min_to_breathe = min;
+	snprintf(s_min_to_breathe_text, sizeof(s_min_to_breathe_text), "%d", s_min_to_breathe);
+	set_min_text(s_min_to_breathe, s_min_text);
 	
 	//show window on the watch, with animated = true
 	window_stack_push(s_main_window, true);

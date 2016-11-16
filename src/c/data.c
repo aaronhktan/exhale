@@ -1,5 +1,6 @@
 #include <pebble.h>
 #include "data.h"
+#include "localize.h"
 
 static int s_current_steps;
 HealthValue s_current_heart_rate;
@@ -9,14 +10,32 @@ void data_update_steps_buffer() {
   int thousands = s_current_steps / 1000;
   int hundreds = s_current_steps % 1000;
   if(thousands > 0) {
-    snprintf(s_current_steps_buffer, sizeof(s_current_steps_buffer), "%d,%03d STEPS TODAY", thousands, hundreds);
+		if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+			snprintf(s_current_steps_buffer, sizeof(s_current_steps_buffer), "%d,%03d PAS AUJ", thousands, hundreds);
+		} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+			snprintf(s_current_steps_buffer, sizeof(s_current_steps_buffer), "%d,%03d PASOS HOY", thousands, hundreds);
+		} else {
+			snprintf(s_current_steps_buffer, sizeof(s_current_steps_buffer), "%d,%03d STEPS TODAY", thousands, hundreds);
+		}
   } else {
-    snprintf(s_current_steps_buffer, sizeof(s_current_steps_buffer), "%d STEPS TODAY", hundreds);
+		if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+			snprintf(s_current_steps_buffer, sizeof(s_current_steps_buffer), "%d PAS AUJ", hundreds);
+		} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+			snprintf(s_current_steps_buffer, sizeof(s_current_steps_buffer), "%d PASOS HOY", hundreds);
+		} else {
+			snprintf(s_current_steps_buffer, sizeof(s_current_steps_buffer), "%d STEPS TODAY", hundreds);
+		}
   }
 }
 
 void data_update_heart_rate_buffer() {
-	snprintf(s_current_heart_rate_buffer, sizeof(s_current_heart_rate_buffer), "%lu BPM", (uint32_t) s_current_heart_rate);
+	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+				snprintf(s_current_heart_rate_buffer, sizeof(s_current_heart_rate_buffer), "%lu BPM", (uint32_t) s_current_heart_rate);
+	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+		snprintf(s_current_heart_rate_buffer, sizeof(s_current_heart_rate_buffer), "%lu LPM", (uint32_t) s_current_heart_rate);
+	} else {
+		snprintf(s_current_heart_rate_buffer, sizeof(s_current_heart_rate_buffer), "%lu BPM", (uint32_t) s_current_heart_rate);
+	}
 }
 
 static void load_health_data_handler() {
