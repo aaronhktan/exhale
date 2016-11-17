@@ -4,6 +4,7 @@
 
 ClaySettings settings;
 
+// Sets default settings and then loads custom ones if set
 void settings_init() {
 	settings.backgroundColor = GColorBlack;
 	settings.circleColor = PBL_IF_COLOR_ELSE(GColorJaegerGreen, GColorWhite);
@@ -18,10 +19,12 @@ void settings_init() {
 	persist_read_data(SETTINGS_KEY, &settings, sizeof(settings));
 }
 
+// Saves settings
 void settings_save_settings() {
 		persist_write_data(SETTINGS_KEY, &settings, sizeof(settings));
 }
 
+// Receives and applies settings from phone
 void settings_handle_settings(DictionaryIterator *iter, void *context) {
 	Tuple *bg_color_t = dict_find(iter, MESSAGE_KEY_backgroundColor);
 	if (bg_color_t) {

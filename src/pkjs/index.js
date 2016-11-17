@@ -12,9 +12,9 @@ var clay = new Clay(clayConfig, null, { autoHandleEvents: false });
 Pebble.addEventListener('showConfiguration', function(e) {
 	var info = Pebble.getActiveWatchInfo();
 	console.log('The language of the phone is ' + info.language.substr(0, 2));
-	if (info.language.substr(0, 2) == 'fr') {
+	if (info.language.substr(0, 2) == 'fr') { // The watch language is French; show the French config page
 		clay.config = clayConfigFR; 
-	} else if (info.language.substr(0, 2) == 'es') {
+	} else if (info.language.substr(0, 2) == 'es') { // The watch language is Spanish; show the Spanish config page
 		clay.config = clayConfigES;
 	}
   Pebble.openURL(clay.generateUrl());
@@ -32,6 +32,8 @@ Pebble.addEventListener('webviewclosed', function(e) {
 	if (platform === 'aplite' || platform === 'basalt' || platform === 'chalk') {
 		dict[messageKeys.heartRateEnabled] = false;
 	}
+	
+	// Log all the settings for fun
 	console.log('The reminderHours sent to Pebble is ' + dict[messageKeys.reminderHours] + '.');
 	console.log('The backgroundColor sent to Pebble is ' + dict[messageKeys.backgroundColor] + '.');
 	console.log('The circleColor sent to Pebble is ' + dict[messageKeys.circleColor] + '.');

@@ -11,7 +11,7 @@ static GPath *s_up_triangle, *s_down_triangle;
 		};
 	static const GPathInfo DOWN_PATH_INFO = {
 			.num_points = 3,
-		.points = (GPoint []) {{72, 129}, {67, 124}, {77, 124}}
+			.points = (GPoint []) {{72, 129}, {67, 124}, {77, 124}}
 		};
 #elif PBL_DISPLAY_HEIGHT == 180
 	static const 	GPathInfo UP_PATH_INFO = {
@@ -20,7 +20,7 @@ static GPath *s_up_triangle, *s_down_triangle;
 		};
 	static const GPathInfo DOWN_PATH_INFO = {
 			.num_points = 3,
-		.points = (GPoint []) {{90, 135}, {85, 130}, {95, 130}}
+			.points = (GPoint []) {{90, 135}, {85, 130}, {95, 130}}
 		};
 #else
 	static const GPathInfo UP_PATH_INFO = {
@@ -33,26 +33,27 @@ static GPath *s_up_triangle, *s_down_triangle;
 		};
 #endif
 
+// Method for updating the upper text layer
 void graphics_draw_upper_text(GContext *ctx, GRect bounds, bool is_animating, bool heart_rate, GColor textColor, char *greet_text) {
 	#if defined(PBL_HEALTH)
-		const char *steps_buffer = data_get_current_steps_buffer();
+		const char *steps_buffer = data_get_current_steps_buffer(); // Pebble Health exists; fetch the number of steps walked today
 	#endif
 	
-	graphics_context_set_text_color(ctx, (is_animating) ? textColor : PBL_IF_COLOR_ELSE(GColorDarkGray, textColor));
+	graphics_context_set_text_color(ctx, (is_animating) ? textColor : PBL_IF_COLOR_ELSE(GColorDarkGray, textColor)); // Set text color to dark gray on main menu, but white for other sections
 	GSize greet_text_bounds = graphics_text_layout_get_content_size("THAT IS A LOT OF STEPS TO TAKE IN JUST ONE DAY, INNIT?", fonts_get_system_font(FONT_KEY_GOTHIC_14_BOLD),
 																																		GRect(0, 0, bounds.size.w, bounds.size.h),
-																																		GTextOverflowModeWordWrap, GTextAlignmentCenter);
-	if (is_animating) {
+																																		GTextOverflowModeWordWrap, GTextAlignmentCenter); // Random string for size purposes
+	if (is_animating) { // If animating, shows the normal text
 		graphics_draw_text(ctx, greet_text, fonts_get_system_font(FONT_KEY_GOTHIC_14_BOLD), 
 											 GRect((bounds.size.w - greet_text_bounds.w) / 2, PBL_IF_RECT_ELSE(5, 15), greet_text_bounds.w, greet_text_bounds.h),
 											 GTextOverflowModeWordWrap, GTextAlignmentCenter, NULL);
 	} else {
-		if (heart_rate && data_get_current_heart_rate() > 0) {
+		if (heart_rate && data_get_current_heart_rate() > 0) { // If heart rate monitor is enabled in configuration and is available, show heart rate
 			const char *heart_rate_buffer = data_get_current_heart_rate_buffer();
 			graphics_draw_text(ctx, heart_rate_buffer, fonts_get_system_font(FONT_KEY_GOTHIC_14_BOLD), 
 											 GRect((bounds.size.w - greet_text_bounds.w) / 2, PBL_IF_RECT_ELSE(5, 15), greet_text_bounds.w, greet_text_bounds.h),
 											 GTextOverflowModeWordWrap, GTextAlignmentCenter, NULL);
-		} else {
+		} else { // Otherwise, show step counts if Pebble Health, and string if not.
 			graphics_draw_text(ctx, PBL_IF_HEALTH_ELSE(steps_buffer, greet_text), fonts_get_system_font(FONT_KEY_GOTHIC_14_BOLD), 
 											 GRect((bounds.size.w - greet_text_bounds.w) / 2, PBL_IF_RECT_ELSE(5, 15), greet_text_bounds.w, greet_text_bounds.h),
 											 GTextOverflowModeWordWrap, GTextAlignmentCenter, NULL);
@@ -60,8 +61,9 @@ void graphics_draw_upper_text(GContext *ctx, GRect bounds, bool is_animating, bo
 	}
 }
 
+// Method for updating the lower text layer
 void graphics_draw_lower_text(GContext *ctx, GRect bounds, bool is_animating, GColor textColor, char *min_today) {
-	graphics_context_set_text_color(ctx, (is_animating) ? textColor : PBL_IF_COLOR_ELSE(GColorDarkGray, textColor));
+	graphics_context_set_text_color(ctx, (is_animating) ? textColor : PBL_IF_COLOR_ELSE(GColorDarkGray, textColor)); // Like above, sets text color to dark gray on main menu, but white for other sections
 	GSize today_text_bounds = graphics_text_layout_get_content_size("TODAY: 10 MINUTES", fonts_get_system_font(FONT_KEY_GOTHIC_14_BOLD),
 																																	GRect(0, 0, bounds.size.w, bounds.size.h),
 																																	GTextOverflowModeWordWrap, GTextAlignmentCenter);
@@ -71,25 +73,26 @@ void graphics_draw_lower_text(GContext *ctx, GRect bounds, bool is_animating, GC
 										 GTextOverflowModeWordWrap, GTextAlignmentCenter, NULL);
 }
 
+// Method for updating the inner text, triangles, and the semicircle on the right center of the screen
 void graphics_draw_inner_text(GContext *ctx, GRect bounds, int min_to_breathe, GColor textColor, char *min_to_breathe_text, char *instruct_text, char *min_text) {
-	//draw side circle
+	// Draw side circle
 	graphics_context_set_fill_color(ctx, textColor);
 	graphics_fill_circle(ctx, GPoint(bounds.size.w + 5, bounds.size.h / 2), 10);
 
-	// draw triangles
+	// Draw triangles
 	switch(min_to_breathe) {
 		case 1 :
-		gpath_draw_filled(ctx, s_up_triangle);
+		gpath_draw_filled(ctx, s_up_triangle); // Only draw the upper triangle because user cannot set a time lower than 1
 		break;
 		case 10 :
-		gpath_draw_filled(ctx, s_down_triangle);
+		gpath_draw_filled(ctx, s_down_triangle); // Only draw the lower triangle because the user cannot set a time higher than 10
 		break;
 		default:
 		gpath_draw_filled(ctx, s_up_triangle);
 		gpath_draw_filled(ctx, s_down_triangle);
 	}
 
-	// draw text in circle
+	// Draw text in circle
 	graphics_context_set_text_color(ctx, textColor);
 	GSize min_to_breathe_bounds = graphics_text_layout_get_content_size("10", fonts_get_system_font(FONT_KEY_LECO_42_NUMBERS), 
 																																			GRect(0, 0, bounds.size.w, bounds.size.h), 
@@ -113,12 +116,14 @@ void graphics_draw_inner_text(GContext *ctx, GRect bounds, int min_to_breathe, G
 										 GTextOverflowModeWordWrap, GTextAlignmentCenter, NULL);
 }
 
+// Method to update the main circle in the UI
 void graphics_draw_main_circle(GContext *ctx, GColor circleColor, GPoint center, int radius) {
 	graphics_context_set_stroke_color(ctx, circleColor);
 	graphics_context_set_stroke_width(ctx, 5);
 	graphics_draw_circle(ctx, center, radius);
 }
 
+// Creates paths from the coordinates given in preprocessor directives
 void graphics_create_triangles_gpath() {
 	s_up_triangle = gpath_create(&UP_PATH_INFO);
 	s_down_triangle = gpath_create(&DOWN_PATH_INFO);
