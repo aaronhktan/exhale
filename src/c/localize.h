@@ -11,5 +11,5 @@ char * localize_get_hello_text();
 char * localize_get_min_breathed_today_text();
 char * localize_get_steps_today_text(int thousands);
 char * localize_get_heart_rate_text();
-char * localize_get_reminder_action_menu_text(int number);
+char * localize_get_reminder_action_menu_text();
 char * localize_get_reminder_text();

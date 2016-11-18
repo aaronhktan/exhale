@@ -113,17 +113,13 @@ char * localize_get_heart_rate_text() {
 	}
 }
 
-char * localize_get_reminder_action_menu_text(int number) {
-	static char action_menu_text[16];
+char * localize_get_reminder_action_menu_text() {
 	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
-		snprintf(action_menu_text, sizeof(action_menu_text), "Respirer %d min", number);
-		return action_menu_text;
+		return "Respirer %d min";
 	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
-		snprintf(action_menu_text, sizeof(action_menu_text), "Respirar %d min", number);
-		return action_menu_text;
+		return "Respirar %d min";
 	} else {
-		snprintf(action_menu_text, sizeof(action_menu_text), "Breathe %d min", number);
-		return action_menu_text;
+		return "Breathe %d min";
 	}
 }
 

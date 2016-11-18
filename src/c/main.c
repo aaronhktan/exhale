@@ -32,8 +32,8 @@ static void init() {
 		}
   } else {
 		// The app was started by the user; push the standard breathe window
-		breathe_window_push(1);
-
+// 		breathe_window_push(1);
+		reminder_window_push();
 		// Schedule next wakeup, just in case
 		if (settings_get_reminderHours() != 0) {
 			wakeup_schedule_next_wakeup(settings_get_reminderHours(), 0);

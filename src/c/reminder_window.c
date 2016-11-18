@@ -59,9 +59,12 @@ static void init_action_menu() {
   s_root_level = action_menu_level_create(10);
 
   // Set up the actions for this level, using action context to pass types
-	for (int i = 1; i <= 10; i++) {
-		action_menu_level_add_action(s_root_level, localize_get_reminder_action_menu_text(i), action_performed_callback, 
-																 (void *)1);
+	static char menu_text[11][16];
+	for (int i = 1; i < 11; i++) {
+		static char actionmenu_entry_text[16];
+		snprintf(actionmenu_entry_text, sizeof(actionmenu_entry_text), localize_get_reminder_action_menu_text(), i); 
+		strcpy(menu_text[i], actionmenu_entry_text);
+		action_menu_level_add_action(s_root_level, menu_text[i], action_performed_callback, (void *)i);
 	}
 }
 
@@ -126,6 +129,10 @@ static void reminder_window_unload(Window *window) {
 void reminder_window_push() {
 	#if PBL_COLOR
 		random_color = (GColor){ .a = 3, .r = rand() % 4, .g = rand() % 4, .b = rand() % 4 }; // Random color. Cool.
+		while (random_color.r == 0 && random_color.g == 0 && random_color.b == 0) {
+			APP_LOG(APP_LOG_LEVEL_DEBUG, "The random colour generated was black! Oh no!");
+			random_color = (GColor){ .a = 3, .r = rand() % 4, .g = rand() % 4, .b = rand() % 4 }; // To make sure that the background color is not black.
+		}
 	#else
 		random_color = GColorWhite;
 	#endif
