@@ -1,5 +1,6 @@
 #include <pebble.h>
 #include "wakeup.h"
+#include "src/c/settings.h"
 
 static int launch_number = 0;
 static time_t future_timestamp;
@@ -35,15 +36,15 @@ void wakeup_force_next_schedule(int hours, int wakeup_id) {
 		}
 	}
 	
-	if (launch_number >= 12 / hours) { // This means that it's past 8 o'clock PM, therefore the next time it should launch is 8 o'clock AM tomorrow
+	if (launch_number > 12 / hours) { // This means that it's past 8 o'clock PM, therefore the next time it should launch is 8 o'clock AM tomorrow
 		launch_number = 0;
 		APP_LOG(APP_LOG_LEVEL_DEBUG, "The app's launch number was reset to: %d", launch_number);
 	}
 
-	if (launch_number != 0) { // Sets timestamp to the next time it should launch
+	if (launch_number != 0) { // Sets timestamp to the next time it should launch (day, hours, minutes)
 		future_timestamp = clock_to_timestamp(TODAY, 8 + hours * launch_number, 0);
 	} else { // Sets the timestamp to tomorrow at 8
-		future_timestamp = time_start_of_today() + (24 * SECONDS_PER_HOUR + 8 * SECONDS_PER_HOUR);
+		future_timestamp = time_start_of_today() + (SECONDS_PER_DAY + 8 * SECONDS_PER_HOUR);
 	}
 
 	const int reason_for_launch = 1;
@@ -76,4 +77,9 @@ void wakeup_schedule_next_wakeup(int hours, int wakeup_id) {
       wakeup_force_next_schedule(hours, wakeup_id);
 		}
 	}
+}
+
+void wakeup_handler(WakeupId id, int32_t reason) {
+  // A wakeup event has occurred while the app was already open
+	wakeup_schedule_next_wakeup(settings_get_reminderHours(), reason);
 }

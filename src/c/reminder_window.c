@@ -59,69 +59,9 @@ static void init_action_menu() {
   s_root_level = action_menu_level_create(10);
 
   // Set up the actions for this level, using action context to pass types
-	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
-		action_menu_level_add_action(s_root_level, "Respirer 1 min", action_performed_callback, 
-																(void *)1);
-		action_menu_level_add_action(s_root_level, "Respirer 2 min", action_performed_callback, 
-																 (void *)2);
-		action_menu_level_add_action(s_root_level, "Respirer 3 min", action_performed_callback, 
-																 (void *)3);
-		action_menu_level_add_action(s_root_level, "Respirer 4 min", action_performed_callback, 
-																 (void *)4);
-		action_menu_level_add_action(s_root_level, "Respirer 5 min", action_performed_callback, 
-																 (void *)5);
-		action_menu_level_add_action(s_root_level, "Respirer 6 min", action_performed_callback, 
-																 (void *)6);
-		action_menu_level_add_action(s_root_level, "Respirer 7 min", action_performed_callback, 
-																 (void *)7);
-		action_menu_level_add_action(s_root_level, "Respirer 8 min", action_performed_callback, 
-																 (void *)8);
-		action_menu_level_add_action(s_root_level, "Respirer 9 min", action_performed_callback, 
-																 (void *)9);
-		action_menu_level_add_action(s_root_level, "Respirer 10 min", action_performed_callback, 
-																 (void *)10);
-	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
-		action_menu_level_add_action(s_root_level, "Respirar 1 min", action_performed_callback, 
-																(void *)1);
-		action_menu_level_add_action(s_root_level, "Respirar 2 min", action_performed_callback, 
-																 (void *)2);
-		action_menu_level_add_action(s_root_level, "Respirar 3 min", action_performed_callback, 
-																 (void *)3);
-		action_menu_level_add_action(s_root_level, "Respirar 4 min", action_performed_callback, 
-																 (void *)4);
-		action_menu_level_add_action(s_root_level, "Respirar 5 min", action_performed_callback, 
-																 (void *)5);
-		action_menu_level_add_action(s_root_level, "Respirar 6 min", action_performed_callback, 
-																 (void *)6);
-		action_menu_level_add_action(s_root_level, "Respirar 7 min", action_performed_callback, 
-																 (void *)7);
-		action_menu_level_add_action(s_root_level, "Respirar 8 min", action_performed_callback, 
-																 (void *)8);
-		action_menu_level_add_action(s_root_level, "Respirar 9 min", action_performed_callback, 
-																 (void *)9);
-		action_menu_level_add_action(s_root_level, "Respirar 10 min", action_performed_callback, 
-																 (void *)10);
-	} else {
-		action_menu_level_add_action(s_root_level, "Breathe 1 min", action_performed_callback, 
-																(void *)1);
-		action_menu_level_add_action(s_root_level, "Breathe 2 min", action_performed_callback, 
-																 (void *)2);
-		action_menu_level_add_action(s_root_level, "Breathe 3 min", action_performed_callback, 
-																 (void *)3);
-		action_menu_level_add_action(s_root_level, "Breathe 4 min", action_performed_callback, 
-																 (void *)4);
-		action_menu_level_add_action(s_root_level, "Breathe 5 min", action_performed_callback, 
-																 (void *)5);
-		action_menu_level_add_action(s_root_level, "Breathe 6 min", action_performed_callback, 
-																 (void *)6);
-		action_menu_level_add_action(s_root_level, "Breathe 7 min", action_performed_callback, 
-																 (void *)7);
-		action_menu_level_add_action(s_root_level, "Breathe 8 min", action_performed_callback, 
-																 (void *)8);
-		action_menu_level_add_action(s_root_level, "Breathe 9 min", action_performed_callback, 
-																 (void *)9);
-		action_menu_level_add_action(s_root_level, "Breathe 10 min", action_performed_callback, 
-																 (void *)10);
+	for (int i = 1; i <= 10; i++) {
+		action_menu_level_add_action(s_root_level, localize_get_reminder_action_menu_text(i), action_performed_callback, 
+																 (void *)1);
 	}
 }
 
@@ -130,8 +70,8 @@ static void select_click_handler(ClickRecognizerRef recognizer, void *context) {
   ActionMenuConfig config = (ActionMenuConfig) {
     .root_level = s_root_level,
     .colors = {
-      .background = GColorBlack,
-      .foreground = random_color,
+      .background = random_color,
+      .foreground = GColorBlack,
     },
     .align = ActionMenuAlignCenter
   };
@@ -166,13 +106,7 @@ static void reminder_window_load(Window *window) {
 	text_layer_set_font(s_text_layer, fonts_get_system_font(FONT_KEY_GOTHIC_24_BOLD));
 	text_layer_set_background_color(s_text_layer, random_color);
 	text_layer_set_text_alignment(s_text_layer, GTextAlignmentCenter);
-	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
-		text_layer_set_text(s_text_layer, "Respirez maintenant!");
-	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
-		text_layer_set_text(s_text_layer, "¡Respira ahora!");
-	} else {
-		text_layer_set_text(s_text_layer, "Time to breathe!");
-	}
+	text_layer_set_text(s_text_layer, localize_get_reminder_text());
 	
 	layer_add_child(window_layer, text_layer_get_layer(s_text_layer));
 	

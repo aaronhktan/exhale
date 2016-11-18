@@ -4,41 +4,25 @@
 
 static int s_current_steps;
 HealthValue s_current_heart_rate;
-static char s_current_steps_buffer[19], s_current_heart_rate_buffer[8];
+static char s_current_steps_buffer[22], s_current_heart_rate_buffer[8];
 
 // Updates how many steps there are
 void data_update_steps_buffer() {
   int thousands = s_current_steps / 1000;
   int hundreds = s_current_steps % 1000;
   // Puts the number of steps in a string
-	if(thousands > 0) { // There's a thousands digit!
-		if (strncmp(localize_get_locale(), "fr", 2) == 0) {
-			snprintf(s_current_steps_buffer, sizeof(s_current_steps_buffer), "%d,%03d PAS AUJ", thousands, hundreds);
-		} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
-			snprintf(s_current_steps_buffer, sizeof(s_current_steps_buffer), "%d,%03d PASOS HOY", thousands, hundreds);
-		} else {
-			snprintf(s_current_steps_buffer, sizeof(s_current_steps_buffer), "%d,%03d STEPS TODAY", thousands, hundreds);
-		}
-  } else { // There isn't a thousands digit!
-		if (strncmp(localize_get_locale(), "fr", 2) == 0) {
-			snprintf(s_current_steps_buffer, sizeof(s_current_steps_buffer), "%d PAS AUJ", hundreds);
-		} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
-			snprintf(s_current_steps_buffer, sizeof(s_current_steps_buffer), "%d PASOS HOY", hundreds);
-		} else {
-			snprintf(s_current_steps_buffer, sizeof(s_current_steps_buffer), "%d STEPS TODAY", hundreds);
-		}
+	if(thousands >= 10) { // There's a ten thousands digit!
+			snprintf(s_current_steps_buffer, sizeof(s_current_steps_buffer), localize_get_steps_today_text(thousands), thousands, hundreds);
+	} else if (thousands > 0) { // There's just a thousands digit
+			snprintf(s_current_steps_buffer, sizeof(s_current_steps_buffer), localize_get_steps_today_text(thousands), thousands, hundreds);
+	} else { // There isn't a thousands digit!
+			snprintf(s_current_steps_buffer, sizeof(s_current_steps_buffer), localize_get_steps_today_text(thousands), hundreds);
   }
 }
 
 // Updates the current heart rate
 void data_update_heart_rate_buffer() {
-	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
-				snprintf(s_current_heart_rate_buffer, sizeof(s_current_heart_rate_buffer), "%lu BPM", (uint32_t) s_current_heart_rate);
-	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
-		snprintf(s_current_heart_rate_buffer, sizeof(s_current_heart_rate_buffer), "%lu LPM", (uint32_t) s_current_heart_rate);
-	} else {
-		snprintf(s_current_heart_rate_buffer, sizeof(s_current_heart_rate_buffer), "%lu BPM", (uint32_t) s_current_heart_rate);
-	}
+	snprintf(s_current_heart_rate_buffer, sizeof(s_current_heart_rate_buffer), localize_get_heart_rate_text(), (uint32_t) s_current_heart_rate);
 }
 
 // Handles update of step count
@@ -86,6 +70,7 @@ char *data_get_date_today() {
 	struct tm *tick_time = localtime(&temp);
 	static char date_buffer[11];
 	strftime(date_buffer, sizeof(date_buffer), "%F", tick_time);
+	APP_LOG(APP_LOG_LEVEL_DEBUG, "The date today is %s", date_buffer);
 	return date_buffer;
 } 
 

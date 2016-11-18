@@ -64,7 +64,7 @@ void graphics_draw_upper_text(GContext *ctx, GRect bounds, bool is_animating, bo
 // Method for updating the lower text layer
 void graphics_draw_lower_text(GContext *ctx, GRect bounds, bool is_animating, GColor textColor, char *min_today) {
 	graphics_context_set_text_color(ctx, (is_animating) ? textColor : PBL_IF_COLOR_ELSE(GColorDarkGray, textColor)); // Like above, sets text color to dark gray on main menu, but white for other sections
-	GSize today_text_bounds = graphics_text_layout_get_content_size("TODAY: 10 MINUTES", fonts_get_system_font(FONT_KEY_GOTHIC_14_BOLD),
+	GSize today_text_bounds = graphics_text_layout_get_content_size("TODAY: 10,000 MINUTES", fonts_get_system_font(FONT_KEY_GOTHIC_14_BOLD),
 																																	GRect(0, 0, bounds.size.w, bounds.size.h),
 																																	GTextOverflowModeWordWrap, GTextAlignmentCenter);
 

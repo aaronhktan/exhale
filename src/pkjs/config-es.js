@@ -5,7 +5,7 @@ module.exports = [
 	},
 	{
 		"type": "text",
-		"defaultValue": "Esta es la página de ajustes para el app Breathe. Estás usando la version 0.2 del app.",
+		"defaultValue": "Esta es la página de ajustes para el app Breathe. Estás usando la version 0.2.3 del app.",
 	},
 	{
 		"type": "section",
@@ -25,7 +25,7 @@ module.exports = [
 				"type": "color",
 				"messageKey": "circleColor",
 				"defaultValue": "00AA55",
-				"label": "Color del circulo",
+				"label": "Color del círculo",
 				"sunlight": true,
 				"capabilities": ["COLOR"]
 			}
@@ -41,7 +41,7 @@ module.exports = [
 				"type": "toggle",
 				"messageKey": "vibrationEnabled",
 				"defaultValue": true,
-				"label": "¿Activar les vibraciones durante la respiración?",
+				"label": "¿Activar las vibraciones durante la respiración?",
 			}
 		]
 	},
@@ -72,7 +72,7 @@ module.exports = [
 				"type": "select",
 				"messageKey": "reminderHours",
 				"defaultValue": "4",
-				"label": "Recuerdame cada...",
+				"label": "Recuérdame cada...",
 				"description": "El app te recordará a este intervalo diariamente, de 8:00 de la mañana hasta 8:00 de la tarde.",
 				"options": [
 					{ 
@@ -88,7 +88,7 @@ module.exports = [
 						"value": "6" 
 					},
 					{ 
-						"label": "No me recuerda",
+						"label": "No me recuerda nunca",
 						"value": "0" 
 					}
 				]

@@ -5,7 +5,7 @@ module.exports = [
 	},
 	{
 		"type": "text",
-		"defaultValue": "Ceci est la page de configuration pour l'app Breathe. Vous utilisez version 0.2 de l'app.",
+		"defaultValue": "Ceci est la page de configuration pour l'app Breathe. Vous utilisez version 0.2.3 de l'app.",
 	},
 	{
 		"type": "section",
@@ -25,7 +25,7 @@ module.exports = [
 				"type": "color",
 				"messageKey": "circleColor",
 				"defaultValue": "00AA55",
-				"label": "Couleur de cercle",
+				"label": "Couleur du cercle",
 				"sunlight": true,
 				"capabilities": ["COLOR"]
 			}
@@ -41,7 +41,7 @@ module.exports = [
 				"type": "toggle",
 				"messageKey": "vibrationEnabled",
 				"defaultValue": true,
-				"label": "Activer les vibrations pendant respirations?",
+				"label": "Activer les vibrations pendant les respirations?",
 			}
 		]
 	},

@@ -3,7 +3,7 @@
 #include "src/c/data.h"
 #include "src/c/graphics.h"
 #include "src/c/settings.h"
-#include "localize.h"
+#include "src/c/localize.h"
 
 static Window *s_main_window;
 static Layer *s_circle_layer, *s_inside_text_layer, *s_upper_text_layer, *s_lower_text_layer;
@@ -53,13 +53,7 @@ static void create_animation(int duration, int delay, AnimationCurve animationcu
 // Fires at the end of app start
 static void finish_setup_callback(void *context) {
 	// Sets string depending on watch language
-	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
-		snprintf(s_instruct_text, sizeof(s_instruct_text), "%s", "RESPIRER");
-	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
-		snprintf(s_instruct_text, sizeof(s_instruct_text), "%s", "RESPIRAR");
-	} else {
-		snprintf(s_instruct_text, sizeof(s_instruct_text), "%s", "BREATHE");
-	}
+	snprintf(s_instruct_text, sizeof(s_instruct_text), "%s", localize_get_breathe_text());
 	
 	// Animation is completed
 	s_animation_completed = true;
@@ -135,13 +129,7 @@ static void main_animation_end() {
 	vibes_double_pulse();
 	
 	// Localized strings
-	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
-		snprintf(s_min_today, sizeof(s_min_today), "Bien fait.");
-	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
-		snprintf(s_min_today, sizeof(s_min_today), "Bien hecho.");
-	} else {
-		snprintf(s_min_today, sizeof(s_min_today), "Well done.");
-	}
+	snprintf(s_min_today, sizeof(s_min_today), localize_get_well_done_text());
 	
 	// Show the "Well done text" and then hides it after 2 seconds
 	layer_set_hidden(s_lower_text_layer, false);
@@ -200,25 +188,13 @@ static void main_animation_callback () {
 
 // Shows instructions to inhale
 static void first_breath_in_callback(void *context) {
-	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
-		snprintf(s_greet_text, sizeof(s_greet_text), "INHALEZ...");
-	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
-		snprintf(s_greet_text, sizeof(s_greet_text), "AHORA INHALA...");
-	} else {
-		snprintf(s_greet_text, sizeof(s_greet_text), "NOW INHALE...");
-	}
+	snprintf(s_greet_text, sizeof(s_greet_text), localize_get_inhale_text());
 	layer_set_hidden(s_upper_text_layer, false);
 }
 
 // Shows instructions to exhale; first hides the top text and then shows the bottom text
 static void first_breath_out_callback(void *context) {
-	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
-		snprintf(s_min_today, sizeof(s_min_today), "...ET EXHALEZ.");
-	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
-		snprintf(s_min_today, sizeof(s_min_today), "...Y EXHALA.");
-	} else {
-		snprintf(s_min_today, sizeof(s_min_today), "AND EXHALE.");
-	}
+	snprintf(s_min_today, sizeof(s_min_today), localize_get_exhale_text());
 	layer_set_hidden(s_upper_text_layer, true);
 	layer_set_hidden(s_lower_text_layer, false);
 }
@@ -279,49 +255,34 @@ static void animation_end_callback(void *context) {
 	s_animation_completed = true;
 	s_animating = false;
 	
-	// Add number of minutes breathed and persist
-	s_min_breathed_today += s_min_to_breathe;
-	data_write_breathe_persist_data(s_min_breathed_today);
-	data_write_date_persist_data();
-	
-	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
-		snprintf(s_greet_text, sizeof(s_greet_text), "%s", "ALLO!");
-	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
-		snprintf(s_greet_text, sizeof(s_greet_text), "%s", "¡HOLA!");
-	} else {
-		snprintf(s_greet_text, sizeof(s_greet_text), "%s", "HELLO.");
-	}
+	snprintf(s_greet_text, sizeof(s_greet_text), "%s", localize_get_hello_text());
 	
 	// If the user breathes during passage from one day to another (i.e. 12AM) then set number of breaths to 0
 	s_end_time = data_get_date_today();
 	APP_LOG(APP_LOG_LEVEL_DEBUG, "The date started is %s", s_start_time);
-	APP_LOG(APP_LOG_LEVEL_DEBUG, "The date started is %s", s_end_time);
+	APP_LOG(APP_LOG_LEVEL_DEBUG, "The date ended is %s", s_end_time);
 	if (strcmp(s_start_time, s_end_time) == 0) {
+		// Add number of minutes breathed
+		s_min_breathed_today += s_min_to_breathe;
 		APP_LOG(APP_LOG_LEVEL_DEBUG, "The date started and ended are the same");
-		if (strncmp(localize_get_locale(), "fr", 2) == 0) {
-			snprintf(s_min_today, sizeof(s_min_today), "AUJ: %d MIN", s_min_breathed_today);
-		} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
-			snprintf(s_min_today, sizeof(s_min_today), "HOY: %d MIN", s_min_breathed_today);
-		} else {
-			snprintf(s_min_today, sizeof(s_min_today), "TODAY: %d MIN", s_min_breathed_today);
-		}
-	} else {
+	} else { // Not on the same day, so set number to zero
+		s_min_breathed_today = 0;
 		APP_LOG(APP_LOG_LEVEL_DEBUG, "The date started and ended are not the same");
-		if (strncmp(localize_get_locale(), "fr", 2) == 0) {
-			snprintf(s_min_today, sizeof(s_min_today), "AUJ: 0 MIN");
-		} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
-			snprintf(s_min_today, sizeof(s_min_today), "HOY: 0 MIN");
-		} else {
-			snprintf(s_min_today, sizeof(s_min_today), "TODAY: 0 MIN");
-		}
 	}
+	
+	// Display minutes breathed today
+	snprintf(s_min_today, sizeof(s_min_today), localize_get_min_breathed_today_text(), s_min_breathed_today);
+	
+	// Persist the number of minutes breathed
+	data_write_breathe_persist_data(s_min_breathed_today);
+	data_write_date_persist_data();
 	
 	// Sets different number of digits for one digit or two digits
 	if (s_min_to_breathe == 10) {
 			snprintf(s_min_to_breathe_text, 3, "%dd", s_min_to_breathe);
-		} else {
-			snprintf(s_min_to_breathe_text, 2, "%d", s_min_to_breathe);
-		}
+	} else {
+		snprintf(s_min_to_breathe_text, 2, "%d", s_min_to_breathe);
+	}
 	
 	// Shows all the layers because breathing is done
 	layer_set_hidden(s_inside_text_layer, false);
@@ -469,13 +430,7 @@ void breathe_window_push(int min) {
 	// Load settings
 	s_min_breathed_today = data_read_breathe_persist_data();
 	
-	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
-			snprintf(s_min_today, sizeof(s_min_today), "AUJ: %d MIN", s_min_breathed_today);
-		} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
-			snprintf(s_min_today, sizeof(s_min_today), "HOY: %d MIN", s_min_breathed_today);
-		} else {
-			snprintf(s_min_today, sizeof(s_min_today), "TODAY: %d MIN", s_min_breathed_today);
-	}
+	snprintf(s_min_today, sizeof(s_min_today), localize_get_min_breathed_today_text(), s_min_breathed_today);
 	
 	// Create main window and assign to pointer
 	s_main_window = window_create();
