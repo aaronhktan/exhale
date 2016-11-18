@@ -47,7 +47,7 @@ static void deinit() {
   	health_service_set_heart_rate_sample_period(0); // Reset heart rate sample period to default as to not waste too much battery
 	#endif
 	char app_glance_text[79];
-	snprintf(app_glance_text, sizeof(app_glance_text), localize_get_app_glance_text(), data_read_breathe_persist_data());
+	snprintf(app_glance_text, sizeof(app_glance_text), localize_get_app_glance_text(data_read_breathe_persist_data()), data_read_breathe_persist_data());
 	app_glance_reload(appglance_update_app_glance, app_glance_text); // Reload app glance
 }
 

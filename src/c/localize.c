@@ -5,13 +5,24 @@ const char * localize_get_locale() {
 	return i18n_get_system_locale();
 }
 
-char * localize_get_app_glance_text() {
-	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
-			return "La journée plus récente: %d minutes. Respirez maintenant!";
-		} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
-			return "El día más reciente: %d minutos. ¡Respira ahora!";
-		} else {
-			return "Most recent day: %d minutes. Breathe now!";
+char * localize_get_app_glance_text(int minutes) {
+	switch (minutes) {
+		case 1:
+			if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+					return "La journée plus récente: %d minute. Respirez maintenant!";
+				} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+					return "El día más reciente: %d minuto. ¡Respira ahora!";
+				} else {
+					return "Most recent day: %d minute. Breathe now!";
+			}
+		default:
+			if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+					return "La journée plus récente: %d minutes. Respirez maintenant!";
+				} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+					return "El día más reciente: %d minutos. ¡Respira ahora!";
+				} else {
+					return "Most recent day: %d minutes. Breathe now!";
+			}
 	}
 }
 
@@ -37,7 +48,7 @@ char * localize_get_well_done_text() {
 
 char * localize_get_inhale_text() {
 	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
-		return "INHALEZ";
+		return "INHALEZ...";
 	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
 		return "AHORA INHALA...";
 	} else {
