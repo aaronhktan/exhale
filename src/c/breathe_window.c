@@ -13,7 +13,7 @@ static uint8_t s_radius_final, s_radius = 0;
 static int s_min_to_breathe = 1, s_min_breathed_today = 0, s_times_played = 0;
 static bool s_animation_completed = false, s_animating = false;
 static GPoint s_center;
-static char s_min_to_breathe_text[3] = "1", s_instruct_text[9], s_min_text[5], s_min_today[25], s_greet_text[27], *s_start_time, *s_end_time;
+static char s_min_to_breathe_text[3] = "1", s_instruct_text[27], s_min_text[25], s_min_today[25], s_greet_text[27], *s_start_time, *s_end_time;
 static time_t t;
 
 // ******************************************************************************************* Layer Update Procedures
@@ -24,7 +24,7 @@ static void canvas_update_proc(Layer *s_drawing_layer, GContext *ctx) {
 
 // Updates text inside circle, side semicircle, and triangles
 static void inside_text_layer_update_proc(Layer *s_inside_text_layer, GContext *ctx) {
-	graphics_draw_inner_text(ctx, bounds, s_min_to_breathe, settings_get_textColor(), s_min_to_breathe_text, s_instruct_text, s_min_text);
+	graphics_draw_inner_text(ctx, bounds, s_animating, s_min_to_breathe, settings_get_textColor(), s_min_to_breathe_text, s_instruct_text, s_min_text);
 }
 
 // Draws text at top of screen
@@ -78,6 +78,16 @@ static void finish_setup_callback(void *context) {
 	layer_mark_dirty(s_inside_text_layer);
 	layer_mark_dirty(s_upper_text_layer);
 	layer_mark_dirty(s_lower_text_layer);
+}
+
+// ******************************************************************************************* Other stuff
+// Changes text in circle if singular or plural
+static void set_min_text(int minutes, void *string) {
+	if (minutes == 1) {
+			snprintf(string, 5, "%s", "MIN");
+		} else {
+			snprintf(string, 5, "%s", "MINS");
+		}
 }
 
 // ******************************************************************************************* Animation Sequence Creator
@@ -139,6 +149,10 @@ static void main_animation_end() {
 // Sets up and schedules circle contract and expand
 static void main_animation() {
 	// Hides text layers
+	#ifdef PBL_ROUND
+		layer_set_hidden(s_inside_text_layer, true);
+	#endif
+	
 	layer_set_hidden(s_upper_text_layer, true);
 	layer_set_hidden(s_lower_text_layer, true);
 	
@@ -190,6 +204,9 @@ static void main_animation_callback () {
 static void first_breath_in_callback(void *context) {
 	snprintf(s_greet_text, sizeof(s_greet_text), localize_get_inhale_text());
 	layer_set_hidden(s_upper_text_layer, false);
+	#ifdef PBL_ROUND
+		layer_set_hidden(s_inside_text_layer, true);
+	#endif
 }
 
 // Shows instructions to exhale; first hides the top text and then shows the bottom text
@@ -224,7 +241,6 @@ static void animation_start_callback(void *context) {
 	int random_number = rand() % 9;
 	APP_LOG(APP_LOG_LEVEL_DEBUG, "The random_number is %d", random_number);
 	APP_LOG(APP_LOG_LEVEL_DEBUG, "The string is %s", &*strings[random_number]);
-	snprintf(s_greet_text, sizeof(s_greet_text), "%s", &*strings[random_number]);
 	
 	// Same thing as above but for bottom text
 	char* bottom_text[4] = {"BREATHE.", "EXHALE.", "CONCENTRATE.", "FOCUS."};
@@ -232,7 +248,7 @@ static void animation_start_callback(void *context) {
 		char* french_bottom_text[4] = {"RESPIREZ.", "EXHALEZ.", "RESPIREZ.", "EXHALEZ."};
 		for (int i = 0; i <= 3; i++) {
 			bottom_text[i] = french_bottom_text[i];
-		}
+		}	
 	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
 		char* spanish_bottom_text[4] = {"RESPIRA.", "EXHALA.", "RESPIRA.", "EXHALA."};
 		for (int i = 0; i <= 8; i++) {
@@ -243,11 +259,19 @@ static void animation_start_callback(void *context) {
 	int random_number_2 = rand() % 4;
 	APP_LOG(APP_LOG_LEVEL_DEBUG, "The random_number #2 is %d", random_number_2);
 	APP_LOG(APP_LOG_LEVEL_DEBUG, "The string is %s", &*bottom_text[random_number_2]);
-	snprintf(s_min_today, sizeof(s_min_today), "%s", &*bottom_text[random_number_2]);
-	
-	// Shows the text at top and bottom
-	layer_set_hidden(s_upper_text_layer, false);
-	layer_set_hidden(s_lower_text_layer, false);
+
+	#ifdef PBL_RECT
+		// Shows the text at top and bottom
+		snprintf(s_greet_text, sizeof(s_greet_text), "%s", &*strings[random_number]);
+		snprintf(s_min_today, sizeof(s_min_today), "%s", &*bottom_text[random_number_2]);
+		layer_set_hidden(s_upper_text_layer, false);
+		layer_set_hidden(s_lower_text_layer, false);
+	#else
+		// Shows the text near the center of the screen
+		snprintf(s_instruct_text, sizeof(s_instruct_text), "%s", &*strings[random_number]);
+		snprintf(s_min_text, sizeof(s_min_text), "%s", &*bottom_text[random_number_2]);
+		layer_set_hidden(s_inside_text_layer, false);
+	#endif
 }
 
 // End animation show text
@@ -277,6 +301,12 @@ static void animation_end_callback(void *context) {
 	data_write_breathe_persist_data(s_min_breathed_today);
 	data_write_date_persist_data();
 	
+	// Persist the duration of minutes
+	if (settings_get_rememberDuration()) {
+		APP_LOG(APP_LOG_LEVEL_DEBUG, "rememberDuration is enabled and duration has been saved.");
+		data_write_last_duration_data(s_min_to_breathe);
+	}
+	
 	// Sets different number of digits for one digit or two digits
 	if (s_min_to_breathe == 10) {
 			snprintf(s_min_to_breathe_text, 3, "%dd", s_min_to_breathe);
@@ -285,18 +315,13 @@ static void animation_end_callback(void *context) {
 	}
 	
 	// Shows all the layers because breathing is done
+	#ifdef PBL_ROUND
+		set_min_text(s_min_to_breathe, s_min_text);
+		snprintf(s_instruct_text, sizeof(s_instruct_text), localize_get_breathe_text());
+	#endif
 	layer_set_hidden(s_inside_text_layer, false);
 	layer_set_hidden(s_upper_text_layer, false);
 	layer_set_hidden(s_lower_text_layer, false);
-}
-
-// Changes text in circle if singular or plural
-static void set_min_text(int minutes, void *string) {
-	if (minutes == 1) {
-			snprintf(string, 5, "%s", "MIN");
-		} else {
-			snprintf(string, 5, "%s", "MINS");
-		}
 }
 
 // ******************************************************************************************* Click Handlers
@@ -451,6 +476,8 @@ void breathe_window_push(int min) {
 	s_min_to_breathe = min;
 	snprintf(s_min_to_breathe_text, sizeof(s_min_to_breathe_text), "%d", s_min_to_breathe);
 	set_min_text(s_min_to_breathe, s_min_text);
+	
+	snprintf(s_greet_text, sizeof(s_greet_text), localize_get_greet_text());
 	
 	// Show window on the watch, with animated = true
 	window_stack_push(s_main_window, true);

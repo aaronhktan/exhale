@@ -3,6 +3,7 @@
 
 #define MIN_BREATHED_TODAY_KEY 0
 #define DATE_STORED_KEY 1
+#define LAST_DURATION_KEY 2
 
 void data_init();
 
@@ -22,3 +23,5 @@ char* data_get_date_today();
 void data_write_breathe_persist_data(int min_to_breathe);
 void data_write_date_persist_data();
 int data_read_breathe_persist_data();
+void data_write_last_duration_data(int last_duration);
+int data_read_last_duration_data();

@@ -30,7 +30,7 @@ Pebble.addEventListener('webviewclosed', function(e) {
 	dict[messageKeys.reminderHours] = parseInt(dict[messageKeys.reminderHours]);
 	var platform = clay.meta.activeWatchInfo.platform;
 	if (platform === 'aplite' || platform === 'basalt' || platform === 'chalk') {
-		dict[messageKeys.heartRateEnabled] = false;
+		dict[messageKeys.heartRateEnabled] = false; // Just in case
 	}
 	
 	// Log all the settings for fun
@@ -39,6 +39,7 @@ Pebble.addEventListener('webviewclosed', function(e) {
 	console.log('The circleColor sent to Pebble is ' + dict[messageKeys.circleColor] + '.');
 	console.log('The vibrationEnabled sent to Pebble is ' + dict[messageKeys.vibrationEnabled] + '.');
 	console.log('The heartRateEnabled sent to Pebble is ' + dict[messageKeys.heartRateEnabled] + '.');
+	console.log('The rememberDuration sent to Pebble is ' + dict[messageKeys.rememberDuration] + '.');
 	
   // Send settings values to watch side
   Pebble.sendAppMessage(dict, function(e) {

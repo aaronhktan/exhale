@@ -17,7 +17,8 @@
             "circleColor",
             "vibrationEnabled",
             "heartRateEnabled",
-            "reminderHours"
+            "reminderHours",
+            "rememberDuration"
         ],
         "projectType": "native",
         "resources": {
@@ -51,5 +52,5 @@
             "watchface": false
         }
     },
-    "version": "0.23.0"
+    "version": "0.24.0"
 }

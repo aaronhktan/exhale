@@ -5,7 +5,7 @@ module.exports = [
 	},
 	{
 		"type": "text",
-		"defaultValue": "This is the settings page for the Breathe app. You are running version 0.2.3 of Breathe.",
+		"defaultValue": "This is the settings page for the Breathe app. You are running version 0.2.4 of Breathe.",
 	},
 	{
 		"type": "section",
@@ -35,7 +35,13 @@ module.exports = [
 		"type": "section",
 		"items": [
 			{"type": "heading",
-			 "defaultValue": "Haptic Feedback"
+			 "defaultValue": "In-App"
+			},
+			{
+				"type": "toggle",
+				"messageKey": "rememberDuration",
+				"defaultValue": false,
+				"label": "Remember last duration when launching",
 			},
 			{
 				"type": "toggle",
@@ -72,19 +78,27 @@ module.exports = [
 				"type": "select",
 				"messageKey": "reminderHours",
 				"defaultValue": "4",
-				"label": "Remind to breathe every...",
+				"label": "Remind to breathe...",
 				"description": "The app will remind you to breathe at these intervals, starting from 8AM and ending at 8PM daily.",
 				"options": [
+					{
+						"label": "Every hour",
+						"value": "1"
+					},
 					{ 
-						"label": "2 hours", 
+						"label": "Every 2 hours", 
 						"value": "2" 
 					},
 					{ 
-						"label": "4 hours",
+						"label": "Every 3 hours",
+						"value": "3" 
+					},
+					{ 
+						"label": "Every 4 hours",
 						"value": "4" 
 					},
 					{ 
-						"label": "6 hours",
+						"label": "Every 6 hours",
 						"value": "6" 
 					},
 					{ 

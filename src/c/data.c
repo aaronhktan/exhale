@@ -117,3 +117,19 @@ int data_read_breathe_persist_data() {
 	}
 	return 0;
 }
+
+void data_write_last_duration_data(int last_duration) {
+	persist_write_int(LAST_DURATION_KEY, last_duration);
+}
+
+int data_read_last_duration_data() {
+	int last_duration = 1;
+	if (persist_exists(LAST_DURATION_KEY)) {
+		last_duration = persist_read_int(LAST_DURATION_KEY);
+		APP_LOG(APP_LOG_LEVEL_DEBUG, "The last duration was %d.", last_duration);
+	} else {
+		APP_LOG(APP_LOG_LEVEL_DEBUG, "User has not breathed before; created data.");
+		data_write_last_duration_data(last_duration);
+	}
+	return last_duration;
+}

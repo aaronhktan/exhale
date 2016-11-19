@@ -9,7 +9,7 @@
 #include "src/c/appglance.h"
 
 static void init() {
-	APP_LOG(APP_LOG_LEVEL_INFO, "You are running version 0.2.3 of this app.");
+	APP_LOG(APP_LOG_LEVEL_INFO, "You are running version 0.2.4 of this app.");
 	#if PBL_HEALTH
 		health_init(); // Subscribe to health service if health API is available
 	#endif
@@ -32,8 +32,12 @@ static void init() {
 		}
   } else {
 		// The app was started by the user; push the standard breathe window
-		breathe_window_push(1);
-// 		reminder_window_push(); for testing
+		if (settings_get_rememberDuration()) {
+			breathe_window_push(data_read_last_duration_data());
+		} else {
+			breathe_window_push(1);
+		}
+// 		reminder_window_push(); // For testing
 		// Schedule next wakeup, just in case
 		if (settings_get_reminderHours() != 0) {
 			wakeup_schedule_next_wakeup(settings_get_reminderHours(), 0);
@@ -47,7 +51,7 @@ static void deinit() {
   	health_service_set_heart_rate_sample_period(0); // Reset heart rate sample period to default as to not waste too much battery
 	#endif
 	char app_glance_text[79];
-	snprintf(app_glance_text, sizeof(app_glance_text), localize_get_app_glance_text(data_read_breathe_persist_data()), data_read_breathe_persist_data());
+	snprintf(app_glance_text, sizeof(app_glance_text), localize_get_app_glance_text(data_read_last_duration_data()), data_read_last_duration_data());
 	app_glance_reload(appglance_update_app_glance, app_glance_text); // Reload app glance
 }
 

@@ -10,6 +10,7 @@ void settings_init() {
 	settings.circleColor = PBL_IF_COLOR_ELSE(GColorJaegerGreen, GColorWhite);
 	settings.textColor = GColorWhite;
 	settings.vibrationEnabled = true;
+	settings.rememberDuration = false;
 	#if PBL_API_EXISTS(health_service_peek_current_value)
 		settings.heartRateEnabled = true;
 	#else
@@ -65,6 +66,11 @@ void settings_handle_settings(DictionaryIterator *iter, void *context) {
 			wakeup_force_next_schedule(settings.reminderHours, 0);
 		}
 	}
+	
+	Tuple *remember_duration_t = dict_find(iter, MESSAGE_KEY_rememberDuration);
+	if (remember_duration_t) {
+		settings.rememberDuration = remember_duration_t->value->int32 == 1;
+	}
 }
 
 GColor settings_get_backgroundColor() {
@@ -89,4 +95,8 @@ bool settings_get_heartRateEnabled() {
 
 int settings_get_reminderHours() {
 	return settings.reminderHours;
+}
+
+bool settings_get_rememberDuration() {
+	return settings.rememberDuration;
 }

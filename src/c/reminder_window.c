@@ -44,7 +44,13 @@ static void canvas_update_proc(Layer *layer, GContext *ctx) {
   }
 	
 	graphics_context_set_fill_color(ctx, GColorBlack);
-	graphics_fill_circle(ctx, GPoint(bounds.size.w + 5, bounds.size.h / 2), 10);
+	#ifdef PBL_PLATFORM_EMERY
+		graphics_fill_circle(ctx, GPoint(bounds.size.w + 7, bounds.size.h / 2), 12);
+	#elif PBL_PLATFORM_CHALK
+		graphics_fill_circle(ctx, GPoint(bounds.size.w + 1, bounds.size.h / 2), 12);
+	#else
+		graphics_fill_circle(ctx, GPoint(bounds.size.w + 5, bounds.size.h / 2), 10);
+	#endif
 }
 
 static void action_performed_callback(ActionMenu *action_menu, const ActionMenuItem *action, void *context) {
@@ -105,8 +111,8 @@ static void reminder_window_load(Window *window) {
 	app_timer_register(DELTA, next_frame_handler, NULL);
 	
 	// Layer for text
-	s_text_layer = text_layer_create(GRect(0, bounds.size.w - PBL_IF_RECT_ELSE(16, 40), bounds.size.w, bounds.size.h / 2));
-	text_layer_set_font(s_text_layer, fonts_get_system_font(FONT_KEY_GOTHIC_24_BOLD));
+	s_text_layer = text_layer_create(GRect(0, bounds.size.w - PBL_IF_RECT_ELSE(16, 50), bounds.size.w, bounds.size.h / 2));
+	text_layer_set_font(s_text_layer, fonts_get_system_font(FONT_KEY));
 	text_layer_set_background_color(s_text_layer, random_color);
 	text_layer_set_text_alignment(s_text_layer, GTextAlignmentCenter);
 	text_layer_set_text(s_text_layer, localize_get_reminder_text());
