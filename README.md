@@ -20,10 +20,13 @@ A little reminder to take a moment to breathe during your busy day.
 - A circle animation expands and contracts to help visualize and focus on breathing.
 - Gentle vibrations allow users to use the app even if they are not looking at the screen.
 - The background colour, circle colour, and whether to enable vibrations are all selectable by the user.
+- The duration of the breathing as shown on the main menu can be optionally set to be equal to the duration of the last breathing session.
 - The main screen displays how many steps the user has taken today, as well as how many minutes they have breathed using this app.
-- A reminder can be set (every 2, 4, or 6 hours) as a prompt to breathe.
 - If there is a heart rate monitor on the watch, current heart rate is shown at the top part of the screen, and the user has the option to display heart rate or steps if they are both available.
+- A reminder can be set (every 1, 2, 3, 4, or 6 hours) as a prompt to breathe.
 - Supports English, French, and Spanish (text in app, settings page all correspond to the watch's chosen language).
+- App Glance to show how many minutes the user breathed in the last session.
 
 ##Issues and Plans:
-- More languages.
+- Allow user to set when to start reminders, instead of hard-coding it to start and end at 8AM and 8PM, respectively.
+- Beta test on all the hardwares, especially Pebble 2. Still haven't been able to check whether heart rate *actually* works.
