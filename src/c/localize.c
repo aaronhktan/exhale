@@ -78,7 +78,11 @@ char * localize_get_hello_text() {
 
 char * localize_get_min_breathed_today_text() {
 	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
-		return "AUJOURD'HUI: %d MIN";
+		#ifdef PBL_ROUND
+			return "AUJ.: %d MIN";
+		#else
+			return "AUJOURD'HUI: %d MIN";
+		#endif
 	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
 		return "HOY: %d MIN";
 	} else {
@@ -93,11 +97,19 @@ char * localize_get_steps_today_text(int thousands) {
 		} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
 			return "%d,%03d PASOS HOY";
 		} else {
-			return "%d,%03d STEPS TODAY";
+			#ifdef PBL_ROUND
+				return "%d,%03d TODAY";
+			#else
+				return "%d,%03d STEPS TODAY";
+			#endif
 		}
 	} else if (thousands > 0) { // There's just a thousands digit
 		if (strncmp(localize_get_locale(), "fr", 2) == 0) {
-			return "%d,%03d PAS AUJOURD'HUI";
+			#ifdef PBL_ROUND
+				return "%d,%03d PAS AUJ.";
+			#else
+				return "%d,%03d PAS AUJOURD'HUI";
+			#endif
 		} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
 			return "%d,%03d PASOS HOY";
 		} else {
@@ -105,7 +117,11 @@ char * localize_get_steps_today_text(int thousands) {
 		}
 	} else { // There isn't a thousands digit!
 		if (strncmp(localize_get_locale(), "fr", 2) == 0) {
-			return "%d PAS AUJOURD'HUI";
+			#ifdef PBL_ROUND
+				return "%d PAS AUJ.";
+			#else
+				return "%d PAS AUJOURD'HUI";
+			#endif
 		} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
 			return "%d PASOS HOY";
 		} else {

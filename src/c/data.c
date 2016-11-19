@@ -123,7 +123,7 @@ void data_write_last_duration_data(int last_duration) {
 }
 
 int data_read_last_duration_data() {
-	int last_duration = 1;
+	int last_duration = 0;
 	if (persist_exists(LAST_DURATION_KEY)) {
 		last_duration = persist_read_int(LAST_DURATION_KEY);
 		APP_LOG(APP_LOG_LEVEL_DEBUG, "The last duration was %d.", last_duration);
@@ -132,4 +132,18 @@ int data_read_last_duration_data() {
 		data_write_last_duration_data(last_duration);
 	}
 	return last_duration;
+}
+
+void data_write_wakeup_time_data(char* wakeup_time) {
+	persist_write_string(WAKEUP_TIME_KEY, wakeup_time);
+}
+
+char * data_read_wakeup_time_data() {
+	static char wakeup_time[9];
+	if (persist_exists(WAKEUP_TIME_KEY)) {
+		persist_read_string(WAKEUP_TIME_KEY, wakeup_time, sizeof(wakeup_time));
+	} else {
+		snprintf(wakeup_time, sizeof(wakeup_time), "oh no");
+	}
+	return wakeup_time;
 }

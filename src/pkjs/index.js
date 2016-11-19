@@ -6,8 +6,10 @@ var messageKeys = require('message_keys');
 var clayConfig = require('./config.js');
 var clayConfigFR = require('./config-fr.js');
 var clayConfigES = require('./config-es.js');
+// Custom function that runs on the config page
+var customClay = require('./custom-clay.js');
 // Initialize Clay
-var clay = new Clay(clayConfig, null, { autoHandleEvents: false });
+var clay = new Clay(clayConfig, customClay, { autoHandleEvents: false });
 
 Pebble.addEventListener('showConfiguration', function(e) {
 	var info = Pebble.getActiveWatchInfo();
@@ -40,6 +42,7 @@ Pebble.addEventListener('webviewclosed', function(e) {
 	console.log('The vibrationEnabled sent to Pebble is ' + dict[messageKeys.vibrationEnabled] + '.');
 	console.log('The heartRateEnabled sent to Pebble is ' + dict[messageKeys.heartRateEnabled] + '.');
 	console.log('The rememberDuration sent to Pebble is ' + dict[messageKeys.rememberDuration] + '.');
+	console.log('The reminderHoursStart sent to Pebble is ' + dict[messageKeys.reminderHoursStart] + '.');
 	
   // Send settings values to watch side
   Pebble.sendAppMessage(dict, function(e) {

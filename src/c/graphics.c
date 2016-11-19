@@ -113,7 +113,7 @@ void graphics_draw_inner_text(GContext *ctx, GRect bounds, bool is_animating, in
 											 GTextOverflowModeWordWrap, GTextAlignmentCenter, NULL);
 	}
 	
-	GSize instruct_text_bounds = graphics_text_layout_get_content_size(PBL_IF_ROUND_ELSE("DONNEZ_VOUS DE L'ESPACE;", "BREATHE"), fonts_get_system_font(FONT_KEY), 
+	GSize instruct_text_bounds = graphics_text_layout_get_content_size(PBL_IF_ROUND_ELSE("DONNEZ_VOUS DE L'ESPACE;", "RESPIRAR"), fonts_get_system_font(FONT_KEY), 
 																																		 GRect(0, 0, bounds.size.w, bounds.size.h), 
 																																		 GTextOverflowModeWordWrap, GTextAlignmentCenter);
 	graphics_draw_text(ctx, instruct_text, fonts_get_system_font(FONT_KEY), 

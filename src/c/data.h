@@ -4,6 +4,7 @@
 #define MIN_BREATHED_TODAY_KEY 0
 #define DATE_STORED_KEY 1
 #define LAST_DURATION_KEY 2
+#define WAKEUP_TIME_KEY 3
 
 void data_init();
 
@@ -25,3 +26,5 @@ void data_write_date_persist_data();
 int data_read_breathe_persist_data();
 void data_write_last_duration_data(int last_duration);
 int data_read_last_duration_data();
+void data_write_wakeup_time_data(char* wakeup_time);
+char* data_read_wakeup_time_data();

@@ -13,7 +13,7 @@ static uint8_t s_radius_final, s_radius = 0;
 static int s_min_to_breathe = 1, s_min_breathed_today = 0, s_times_played = 0;
 static bool s_animation_completed = false, s_animating = false;
 static GPoint s_center;
-static char s_min_to_breathe_text[3] = "1", s_instruct_text[27], s_min_text[25], s_min_today[25], s_greet_text[27], *s_start_time, *s_end_time;
+static char s_min_to_breathe_text[3] = "1", s_instruct_text[27], s_min_text[25], s_min_today[25], s_greet_text[27], s_start_time[11], s_end_time[11];
 static time_t t;
 
 // ******************************************************************************************* Layer Update Procedures
@@ -282,7 +282,7 @@ static void animation_end_callback(void *context) {
 	snprintf(s_greet_text, sizeof(s_greet_text), "%s", localize_get_hello_text());
 	
 	// If the user breathes during passage from one day to another (i.e. 12AM) then set number of breaths to 0
-	s_end_time = data_get_date_today();
+	snprintf(s_end_time, sizeof(s_end_time), data_get_date_today());
 	APP_LOG(APP_LOG_LEVEL_DEBUG, "The date started is %s", s_start_time);
 	APP_LOG(APP_LOG_LEVEL_DEBUG, "The date ended is %s", s_end_time);
 	if (strcmp(s_start_time, s_end_time) == 0) {
@@ -297,15 +297,12 @@ static void animation_end_callback(void *context) {
 	// Display minutes breathed today
 	snprintf(s_min_today, sizeof(s_min_today), localize_get_min_breathed_today_text(), s_min_breathed_today);
 	
-	// Persist the number of minutes breathed
+	// Persist the number of minutes breathed in total today
 	data_write_breathe_persist_data(s_min_breathed_today);
 	data_write_date_persist_data();
 	
 	// Persist the duration of minutes
-	if (settings_get_rememberDuration()) {
-		APP_LOG(APP_LOG_LEVEL_DEBUG, "rememberDuration is enabled and duration has been saved.");
-		data_write_last_duration_data(s_min_to_breathe);
-	}
+	data_write_last_duration_data(s_min_to_breathe);
 	
 	// Sets different number of digits for one digit or two digits
 	if (s_min_to_breathe == 10) {
@@ -384,7 +381,7 @@ static void select_click_handler(ClickRecognizerRef recognizer, void *context) {
 		s_animation_completed_timer = app_timer_register(s_animation_completed_delay, animation_end_callback, NULL);
 		
 		// Gets today's date to compare with the end date after breathing is finished
-		s_start_time = data_get_date_today();
+		snprintf(s_start_time, sizeof(s_start_time), data_get_date_today());
 	}
 }
 

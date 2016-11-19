@@ -1,12 +1,13 @@
 #include <pebble.h>
 #include "wakeup.h"
 #include "src/c/settings.h"
+#include "src/c/data.h"
 
 static int launch_number = 0;
 static time_t future_timestamp;
 WakeupId id;
 
-void wakeup_force_next_schedule(int hours, int wakeup_id) {
+void wakeup_force_next_schedule(int hours, int wakeup_id, int startHours) {
 	
 	// Deletes any previously scheduled wakeup
 	persist_delete(PERSIST_WAKEUP);
@@ -20,8 +21,8 @@ void wakeup_force_next_schedule(int hours, int wakeup_id) {
 
 	// Checks for # of times launched today
 	for (int i = 0; i <= 12 / hours; i++) {
-		// Start a 8 o'clock AM, and add iterator # of hours to check whether it's past that time
-		time_t t_to_check = time_start_of_today() + 8 * SECONDS_PER_HOUR + i * hours * SECONDS_PER_HOUR;
+		// Start a time set by user, and add iterator # of hours to check whether it's past that time
+		time_t t_to_check = time_start_of_today() + startHours * SECONDS_PER_HOUR + i * hours * SECONDS_PER_HOUR;
 		const struct tm *time_check = localtime(&t_to_check);
 		int check_hour = time_check->tm_hour; // Like before, formatted to struct tm, and hours are extracted
 		
@@ -42,7 +43,7 @@ void wakeup_force_next_schedule(int hours, int wakeup_id) {
 	}
 
 	if (launch_number != 0) { // Sets timestamp to the next time it should launch (day, hours, minutes)
-		future_timestamp = clock_to_timestamp(TODAY, 8 + hours * launch_number, 0);
+		future_timestamp = clock_to_timestamp(TODAY, startHours + hours * launch_number, 0);
 	} else { // Sets the timestamp to tomorrow at 8
 		future_timestamp = time_start_of_today() + (SECONDS_PER_DAY + 8 * SECONDS_PER_HOUR);
 	}
@@ -60,6 +61,7 @@ void wakeup_force_next_schedule(int hours, int wakeup_id) {
 		struct tm *future_time = localtime(&future_timestamp);
 		static char future_time_string[9];
 		strftime(future_time_string, sizeof(future_time_string), "%H:%M:%S", future_time);
+		data_write_wakeup_time_data(future_time_string);
 		APP_LOG(APP_LOG_LEVEL_DEBUG, "The app is scheduled to wake up at %s.", future_time_string);
 		// Persist the ID so that a future launch can query it
 		persist_write_int(PERSIST_WAKEUP, id);
@@ -67,19 +69,19 @@ void wakeup_force_next_schedule(int hours, int wakeup_id) {
 }
 
 // Check if there is a wakeup scheduled at the time, if so, do not schedule a new one.
-void wakeup_schedule_next_wakeup(int hours, int wakeup_id) {
+void wakeup_schedule_next_wakeup(int hours, int wakeup_id, int startHours) {
 	if (persist_exists(PERSIST_WAKEUP)) {
     id = persist_read_int(PERSIST_WAKEUP);
     // query if event is still valid, otherwise delete
     if (wakeup_query(id, NULL)) {
-      APP_LOG(APP_LOG_LEVEL_DEBUG, "There is already a wakeup scheduled!");
+      APP_LOG(APP_LOG_LEVEL_DEBUG, "There is already a wakeup scheduled at %s!", data_read_wakeup_time_data());
     } else {
-      wakeup_force_next_schedule(hours, wakeup_id);
+      wakeup_force_next_schedule(hours, wakeup_id, startHours);
 		}
 	}
 }
 
 void wakeup_handler(WakeupId id, int32_t reason) {
   // A wakeup event has occurred while the app was already open
-	wakeup_schedule_next_wakeup(settings_get_reminderHours(), reason);
+	wakeup_schedule_next_wakeup(settings_get_reminderHours(), reason, settings_get_reminderHoursStart());
 }

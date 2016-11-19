@@ -18,6 +18,7 @@
             "vibrationEnabled",
             "heartRateEnabled",
             "reminderHours",
+            "reminderHoursStart",
             "rememberDuration"
         ],
         "projectType": "native",
@@ -52,5 +53,5 @@
             "watchface": false
         }
     },
-    "version": "0.24.0"
+    "version": "0.25.0"
 }

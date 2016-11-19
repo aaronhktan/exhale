@@ -17,6 +17,7 @@ void settings_init() {
 		settings.heartRateEnabled = false;
 	#endif
 	settings.reminderHours = 4;
+	settings.reminderHoursStart = 8;
 	persist_read_data(SETTINGS_KEY, &settings, sizeof(settings));
 }
 
@@ -37,7 +38,7 @@ void settings_handle_settings(DictionaryIterator *iter, void *context) {
 			APP_LOG(APP_LOG_LEVEL_DEBUG, "The background color is white.");
 			settings.textColor = GColorBlack;
 		}
-		settings.circleColor = settings.textColor;
+		settings.circleColor = settings.textColor; // Sets the circle color to the same as text color for BW platforms
 	}
 	
 	Tuple *circle_color_t = dict_find(iter, MESSAGE_KEY_circleColor);
@@ -55,6 +56,11 @@ void settings_handle_settings(DictionaryIterator *iter, void *context) {
 		settings.heartRateEnabled = heartRate_enabled_t->value->int32 == 1;
 	}
 	
+	Tuple *reminder_hours_start_t = dict_find(iter, MESSAGE_KEY_reminderHoursStart);
+	if (reminder_hours_start_t) {
+		settings.reminderHoursStart = reminder_hours_start_t->value->int32;
+	}
+	
 	Tuple *reminder_hours_t = dict_find(iter, MESSAGE_KEY_reminderHours);
 	if (reminder_hours_t) {
 		settings.reminderHours = reminder_hours_t->value->int8;
@@ -63,7 +69,7 @@ void settings_handle_settings(DictionaryIterator *iter, void *context) {
 			wakeup_cancel_all();
 		} else if (settings.reminderHours != 0) {
 			wakeup_cancel_all();
-			wakeup_force_next_schedule(settings.reminderHours, 0);
+			wakeup_force_next_schedule(settings.reminderHours, 0, settings.reminderHoursStart);
 		}
 	}
 	
@@ -99,4 +105,8 @@ int settings_get_reminderHours() {
 
 bool settings_get_rememberDuration() {
 	return settings.rememberDuration;
+}
+
+int settings_get_reminderHoursStart(){
+	return settings.reminderHoursStart;
 }

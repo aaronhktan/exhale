@@ -5,7 +5,7 @@ module.exports = [
 	},
 	{
 		"type": "text",
-		"defaultValue": "Ceci est la page de configuration pour l'app Breathe. Vous utilisez version 0.2.4 de l'app.",
+		"defaultValue": "Ceci est la page de configuration pour l'app Breathe. Vous utilisez version 0.2.5 de l'app.",
 	},
 	{
 		"type": "section",
@@ -79,7 +79,7 @@ module.exports = [
 				"messageKey": "reminderHours",
 				"defaultValue": "4",
 				"label": "Me rappeler de respirer",
-				"description": "L'app vous rappellera de respirer à cet intervalle tous les jours, à partir de 8h00 jusqu'à 20h00.",
+				"description": "L'app vous rappellera de respirer à cet intervalle tous les jours.",
 				"options": [
 					{ 
 						"label": "Toutes les heures", 
@@ -106,6 +106,16 @@ module.exports = [
 						"value": "0" 
 					}
 				]
+			},
+			{
+				"type": "slider",
+				"messageKey": "reminderHoursStart",
+				"defaultValue": 8,
+				"label": "Quand devraient commencer les rappels?",
+				"description": "Dès cette heure du matin (c.à.d 8 = 8h00 du matin) et pour un période 12 heures de suite, l'app vous rappellera de respirer.",
+				"min": 6,
+				"max": 10,
+				"step": 1
 			}
 		]
 	},
