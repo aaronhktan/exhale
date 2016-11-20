@@ -11,10 +11,16 @@ static ActionMenuLevel *s_root_level;
 static int s_min_to_breathe;
 static Layer *s_canvas_layer;
 static TextLayer *s_text_layer;
+static AppTimer *s_close_timer;
 static GDrawCommandSequence *s_command_seq;
 GColor random_color;
 
 int s_index = 0;
+
+// Closes app
+static void close_app() {
+	window_stack_pop_all(true);
+}
 
 // Finds and displays the next frame in PDC
 static void next_frame_handler(void *context) {
@@ -56,6 +62,7 @@ static void canvas_update_proc(Layer *layer, GContext *ctx) {
 static void action_performed_callback(ActionMenu *action_menu, const ActionMenuItem *action, void *context) {
   // Some amount of minutes was selected; find which one and pass to breathe_window to start
   s_min_to_breathe = (int)action_menu_item_get_action_data(action);
+	app_timer_cancel(s_close_timer);
 	window_stack_remove(s_reminder_window, false);
 	breathe_window_push(s_min_to_breathe);
 }
@@ -120,6 +127,9 @@ static void reminder_window_load(Window *window) {
 	layer_add_child(window_layer, text_layer_get_layer(s_text_layer));
 	
 	init_action_menu();
+	
+	// Start timer to close the app after 30 seconds if the user doesn't respond as to not waste battery
+	s_close_timer = app_timer_register(30000, close_app, NULL);
 }
 
 // DESTROY ALL THE THINGS (hopefully)
