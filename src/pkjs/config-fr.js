@@ -5,7 +5,7 @@ module.exports = [
 	},
 	{
 		"type": "text",
-		"defaultValue": "Ceci est la page de configuration pour l'app Breathe. Vous utilisez version 0.2.7 de l'app.",
+		"defaultValue": "Ceci est la page de configuration pour l'app Breathe. Vous utilisez version 0.2.8 de l'app.",
 	},
 	{
 		"type": "section",
@@ -48,6 +48,15 @@ module.exports = [
 				"messageKey": "vibrationEnabled",
 				"defaultValue": true,
 				"label": "Activer les vibrations pendant les respirations?",
+			},
+			{
+				"type": "slider",
+				"messageKey": "breathsPerMinute",
+				"defaultValue": 7,
+				"label": "Respirations par minute",
+				"min": 4,
+				"max": 10,
+				"step": 1
 			}
 		]
 	},
@@ -121,7 +130,7 @@ module.exports = [
 	},
 	{
 		"type": "text",
-		"defaultValue": "<em>&nbsp;&nbsp;Un grand merci aux bêta-testeurs: <br>&nbsp;Ayush Gupta, et David Voicu</em>",
+		"defaultValue": "<em><center>Un grand merci aux bêta-testeurs: <br>Paula&nbsp;Bosca, Nikita&nbsp;Cheng, Ayush&nbsp;Gupta, Ellen&nbsp;Huang, Yvonne&nbsp;Tan, et David&nbsp;Voicu</center></em>",
 	},
 	{
 	"type": "submit",

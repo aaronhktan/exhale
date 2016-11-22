@@ -44,8 +44,8 @@ void wakeup_force_next_schedule(int hours, int wakeup_id, int startHours) {
 
 	if (launch_number != 0) { // Sets timestamp to the next time it should launch (day, hours, minutes)
 		future_timestamp = clock_to_timestamp(TODAY, startHours + hours * launch_number, 0);
-	} else { // Sets the timestamp to tomorrow at 8
-		future_timestamp = time_start_of_today() + (SECONDS_PER_DAY + 8 * SECONDS_PER_HOUR);
+	} else { // Sets the timestamp to tomorrow at the time that's set in the app
+		future_timestamp = time_start_of_today() + (SECONDS_PER_DAY + startHours * SECONDS_PER_HOUR);
 	}
 
 	const int reason_for_launch = 1;

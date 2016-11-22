@@ -5,7 +5,7 @@ module.exports = [
 	},
 	{
 		"type": "text",
-		"defaultValue": "This is the settings page for the Breathe app. You are running version 0.2.7 of Breathe.",
+		"defaultValue": "This is the settings page for the Breathe app. You are running version 0.2.8 of Breathe.",
 	},
 	{
 		"type": "section",
@@ -48,6 +48,15 @@ module.exports = [
 				"messageKey": "vibrationEnabled",
 				"defaultValue": true,
 				"label": "Enable vibrations on inhale",
+			},
+			{
+				"type": "slider",
+				"messageKey": "breathsPerMinute",
+				"defaultValue": 7,
+				"label": "Breaths per minute",
+				"min": 4,
+				"max": 10,
+				"step": 1
 			}
 		]
 	},
@@ -121,7 +130,7 @@ module.exports = [
 	},
 	{
 		"type": "text",
-		"defaultValue": "<em>&nbsp;&nbsp;Many thanks to the beta testers: <br>&emsp;Ayush Gupta, and David Voicu</em>",
+		"defaultValue": "<em><center>Many thanks to the beta testers: <br>Paula&nbsp;Bosca, Nikita&nbsp;Cheng, Ayush&nbsp;Gupta, Ellen&nbsp;Huang, Yvonne&nbsp;Tan, and David&nbsp;Voicu</center></em>",
 	},
 	{
 	"type": "submit",

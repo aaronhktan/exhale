@@ -2,6 +2,7 @@
 #include <pebble.h>
 
 #define SETTINGS_KEY 20
+#define MILLISECONDS_PER_MINUTE 60000
 
 // Define settings struct
 typedef struct ClaySettings {
@@ -13,6 +14,7 @@ typedef struct ClaySettings {
 	int reminderHours;
 	bool rememberDuration;
 	int reminderHoursStart;
+	int breathsPerMinute;
 } ClaySettings;
 
 void settings_init();
@@ -27,3 +29,5 @@ bool settings_get_heartRateEnabled();
 int settings_get_reminderHours();
 bool settings_get_rememberDuration();
 int settings_get_reminderHoursStart();
+int settings_get_breathsPerMinute();
+int settings_get_breathDuration();

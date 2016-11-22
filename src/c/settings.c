@@ -18,6 +18,7 @@ void settings_init() {
 	#endif
 	settings.reminderHours = 4;
 	settings.reminderHoursStart = 8;
+	settings.breathsPerMinute = 7;
 	persist_read_data(SETTINGS_KEY, &settings, sizeof(settings));
 }
 
@@ -77,6 +78,11 @@ void settings_handle_settings(DictionaryIterator *iter, void *context) {
 	if (remember_duration_t) {
 		settings.rememberDuration = remember_duration_t->value->int32 == 1;
 	}
+	
+	Tuple *breaths_per_minute_t = dict_find(iter, MESSAGE_KEY_breathsPerMinute);
+	if (breaths_per_minute_t) {
+		settings.breathsPerMinute = breaths_per_minute_t->value->int32;
+	}
 }
 
 GColor settings_get_backgroundColor() {
@@ -109,4 +115,30 @@ bool settings_get_rememberDuration() {
 
 int settings_get_reminderHoursStart(){
 	return settings.reminderHoursStart;
+}
+
+int settings_get_breathsPerMinute() {
+	return settings.breathsPerMinute;
+}
+
+int settings_get_breathDuration() {
+	switch(settings.breathsPerMinute) {
+		case 4:
+		case 5:
+		case 6:
+		case 10:
+			/* Return one minute minus 2 second delay for each breath, divided by the number of breaths to take
+			That gives us how many seconds the entire breath should take, so divide by 2 to get inhale/exhale duration */
+			APP_LOG(APP_LOG_LEVEL_DEBUG, "The duration of breaths is %d.", (MILLISECONDS_PER_MINUTE - (2000 * settings.breathsPerMinute)) / settings.breathsPerMinute / 2);
+			return (MILLISECONDS_PER_MINUTE - (2000 * settings.breathsPerMinute)) / settings.breathsPerMinute / 2;
+			break;
+		case 7:
+		case 8:
+			// Like above, but taking removing 4 seconds because otherwise a decimal would happen. Don't want that happening!
+			return (MILLISECONDS_PER_MINUTE - 4000  - (2000 * settings.breathsPerMinute)) / settings.breathsPerMinute / 2;
+			break;
+		default: // 9 breaths per minute
+			return (MILLISECONDS_PER_MINUTE + 3000 - (2000 * settings.breathsPerMinute)) / settings.breathsPerMinute / 2;
+			break;
+	}
 }

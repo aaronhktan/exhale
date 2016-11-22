@@ -19,7 +19,8 @@
             "heartRateEnabled",
             "reminderHours",
             "reminderHoursStart",
-            "rememberDuration"
+            "rememberDuration",
+            "breathsPerMinute"
         ],
         "projectType": "native",
         "resources": {
@@ -53,5 +54,5 @@
             "watchface": false
         }
     },
-    "version": "0.27.0"
+    "version": "0.28.0"
 }
