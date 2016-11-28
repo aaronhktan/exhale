@@ -8,7 +8,7 @@
 	#define FONT_KEY FONT_KEY_GOTHIC_14_BOLD
 #endif
 
-void graphics_draw_upper_text(GContext *ctx, GRect bounds, bool is_animating, bool heart_rate, GColor textColor, char *);
+void graphics_draw_upper_text(GContext *ctx, GRect bounds, bool is_animating, int displayText, GColor textColor, char *);
 
 void graphics_draw_lower_text(GContext *ctx, GRect bounds, bool is_animating, GColor textColor, char *);
 

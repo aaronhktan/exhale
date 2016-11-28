@@ -7,7 +7,7 @@
 
 static Window *s_main_window;
 static Layer *s_circle_layer, *s_inside_text_layer, *s_upper_text_layer, *s_lower_text_layer;
-static AppTimer *s_animation_completed_timer, *s_main_animation_ended_timer, *animationTimer[69], *s_show_relax_text_timer, *s_show_inhale_timer, *s_hide_exhale_timer, *s_show_exhale_timer, *s_hide_lower_text_layer, *s_click_provider_timer;
+static AppTimer *s_animation_completed_timer, *s_main_animation_ended_timer, *animationTimer[69], *s_show_relax_text_timer, *s_show_inhale_timer, *s_show_exhale_timer, *s_hide_lower_text_layer, *s_click_provider_timer;
 static GRect bounds;
 static uint8_t s_radius_final, s_radius = 0;
 static int s_min_to_breathe = 1, s_min_breathed_today = 0, s_times_played = 0, s_breath_duration, s_breaths_per_minute;
@@ -29,7 +29,7 @@ static void inside_text_layer_update_proc(Layer *s_inside_text_layer, GContext *
 
 // Draws text at top of screen
 static void upper_text_layer_update_proc(Layer *s_inside_text_layer, GContext *ctx) {
-	graphics_draw_upper_text(ctx, bounds, s_animating, settings_get_heartRateEnabled(), settings_get_textColor(), s_greet_text);
+	graphics_draw_upper_text(ctx, bounds, s_animating, settings_get_displayText(), settings_get_textColor(), s_greet_text);
 }
 
 // Draws text at bottom of screen
@@ -153,9 +153,6 @@ static void main_animation() {
 		layer_set_hidden(s_inside_text_layer, true);
 	#endif
 	
-	layer_set_hidden(s_upper_text_layer, true);
-	layer_set_hidden(s_lower_text_layer, true);
-	
 	// Circle expands for 3 seconds and delays for 1 second
 	Animation *circle_expand = animation_create();
   animation_set_duration(circle_expand, s_breath_duration);
@@ -182,37 +179,49 @@ static void main_animation() {
 	s_times_played++; // Used to keep track to see how many should be played to fill time
 	
 	if (settings_get_vibrationEnabled()) {
-		// Vibrations! (play for 0, rest for 1500, play for 25, rest for 25, etc.)
-		static uint32_t segments[52];
-		switch(s_breaths_per_minute) {
-			case 4: ; // 15000 milliseconds long, with an empty statement after a label before a declaration
-				static const uint32_t four_segments[52] = {0, 2500, 25, 50, 25, 50, 25, 65, 25, 65, 25, 75, 25, 75, 25, 80, 25, 80, 25, 100, 25, 100, 25, 150, 25, 150, 25, 175, 25, 175, 25, 225, 25, 225, 25, 275, 25, 275, 25, 375, 25, 375, 25, 450, 25, 450, 25, 500, 25, 7300};
-				memcpy(segments, four_segments, sizeof(four_segments));
+		switch(settings_get_vibrationType()) {
+			case 0: ;
+				// Vibrations! (play for 0, rest for 1500, play for 25, rest for 25, etc.)
+				static uint32_t segments[52];
+				switch(s_breaths_per_minute) {
+					case 4: ; // 15000 milliseconds long, with an empty statement after a label before a declaration
+						static const uint32_t four_segments[52] = {0, 2500, 25, 50, 25, 50, 25, 65, 25, 65, 25, 75, 25, 75, 25, 80, 25, 80, 25, 100, 25, 100, 25, 150, 25, 150, 25, 175, 25, 175, 25, 225, 25, 225, 25, 275, 25, 275, 25, 375, 25, 375, 25, 450, 25, 450, 25, 500, 25, 7300};
+						memcpy(segments, four_segments, sizeof(four_segments));
+						break;
+					case 5: ; // 12000 milliseconds long (actually 11665 but who cares)
+						static const uint32_t five_segments[45] = {0, 2000, 25, 50, 25, 50, 25, 65, 25, 65, 25, 75, 25, 75, 25, 80, 25, 80, 25, 100, 25, 100, 25, 150, 25, 150, 25, 175, 25, 175, 25, 225, 25, 225, 25, 275, 25, 275, 25, 375, 25, 375, 25, 6000};
+						memcpy(segments, five_segments, sizeof(five_segments));
+						break;
+					case 6:
+					case 7: ; // 8000 milliseconds long (actually 7650 milliseconds long), with an empty statement after a label before a declaration
+						static const uint32_t seven_segments[31] = {0, 1500, 25, 25, 25, 25, 25, 25, 25, 25, 25, 50, 25, 75, 25, 125, 25, 125, 25, 125, 25, 125, 25, 200, 25, 325, 25, 550, 25, 4000};
+						memcpy(segments, seven_segments, sizeof(seven_segments));
+						break;
+					case 8: // 7000 milliseconds long (actually 7000) (wow!!)
+					case 9: ;
+						static const uint32_t nine_segments[29] = {0, 1500, 25, 25, 25, 25, 25, 25, 25, 50, 25, 75, 25, 100, 25, 125, 25, 150, 25, 200, 25, 250, 25, 300, 25, 350, 25, 3500};
+						memcpy(segments, nine_segments, sizeof(nine_segments));
+						break;
+					default: ; // 6000 milliseconds long (actually 5075)
+						static const uint32_t ten_segments[31] = {0, 1100, 25, 25, 25, 25, 25, 25, 25, 50, 25, 75, 25, 100, 25, 100, 25, 125, 25, 125, 25, 150, 25, 250, 25, 275, 25, 300, 25, 2000};
+						memcpy(segments, ten_segments, sizeof(ten_segments));
+						break;
+				}
+				VibePattern vibes = {
+					.durations = segments,
+					.num_segments = ARRAY_LENGTH(segments),
+				};
+				vibes_enqueue_custom_pattern(vibes);
 				break;
-			case 5: ; // 12000 milliseconds long (actually 11665 but who cares)
-				static const uint32_t five_segments[45] = {0, 2000, 25, 50, 25, 50, 25, 65, 25, 65, 25, 75, 25, 75, 25, 80, 25, 80, 25, 100, 25, 100, 25, 150, 25, 150, 25, 175, 25, 175, 25, 225, 25, 225, 25, 275, 25, 275, 25, 375, 25, 375, 25, 6000};
-				memcpy(segments, five_segments, sizeof(five_segments));
-				break;
-			case 6:
-			case 7: ; // 8000 milliseconds long (actually 7650 milliseconds long), with an empty statement after a label before a declaration
-				static const uint32_t seven_segments[31] = {0, 1500, 25, 25, 25, 25, 25, 25, 25, 25, 25, 50, 25, 75, 25, 125, 25, 125, 25, 125, 25, 125, 25, 200, 25, 325, 25, 550, 25, 4000};
-				memcpy(segments, seven_segments, sizeof(seven_segments));
-				break;
-			case 8: // 7000 milliseconds long (actually 7000) (wow!!)
-			case 9: ;
-				static const uint32_t nine_segments[29] = {0, 1500, 25, 25, 25, 25, 25, 25, 25, 50, 25, 75, 25, 100, 25, 125, 25, 150, 25, 200, 25, 250, 25, 300, 25, 350, 25, 3500};
-				memcpy(segments, nine_segments, sizeof(nine_segments));
-				break;
-			default: ; // 6000 milliseconds long (actually 5075)
-				static const uint32_t ten_segments[31] = {0, 1100, 25, 25, 25, 25, 25, 25, 25, 50, 25, 75, 25, 100, 25, 100, 25, 125, 25, 125, 25, 150, 25, 250, 25, 275, 25, 300, 25, 2000};
-				memcpy(segments, ten_segments, sizeof(ten_segments));
+			default: ;// 1000 delay for animation, 50 play, 100 stop, 50 play, rest for breath duration and delay and subtract (50 + 100 + 50), and vibrate again.
+				const uint32_t segments_simple[] = {0, 1000, 50, 100, 50, settings_get_breathDuration() + 1000 - 200, 50, 100, 50, settings_get_breathDuration() - 300};
+				VibePattern vibes_simple = {
+					.durations = segments_simple,
+					.num_segments = ARRAY_LENGTH(segments_simple),
+				};
+				vibes_enqueue_custom_pattern(vibes_simple);
 				break;
 		}
-		VibePattern vibes = {
-			.durations = segments,
-			.num_segments = ARRAY_LENGTH(segments),
-		};
-		vibes_enqueue_custom_pattern(vibes);
 	}
 }
 
@@ -220,6 +229,10 @@ static void main_animation() {
 static void main_animation_callback () {
 	if (s_times_played < s_breaths_per_minute * s_min_to_breathe) {
 		animationTimer[s_times_played] = app_timer_register(2 * s_breath_duration + 2000, main_animation_callback, NULL);
+		if (!layer_get_hidden(s_upper_text_layer) || !layer_get_hidden(s_lower_text_layer)) {
+			layer_set_hidden(s_upper_text_layer, true);
+			layer_set_hidden(s_lower_text_layer, true);
+		}
 		main_animation();
 	}
 }
@@ -238,11 +251,6 @@ static void first_breath_out_callback(void *context) {
 	snprintf(s_min_today, sizeof(s_min_today), localize_get_exhale_text());
 	layer_set_hidden(s_upper_text_layer, true);
 	layer_set_hidden(s_lower_text_layer, false);
-}
-
-// Hides bottom text
-static void first_breath_out_hide_callback(void *context) {
-	layer_set_hidden(s_lower_text_layer, true);
 }
 
 // Start animation show text
@@ -396,8 +404,6 @@ static void select_click_handler(ClickRecognizerRef recognizer, void *context) {
 		/* Shows the instruction to exhale at after one breathe in
 		Also hides the first instruction */
 		s_show_exhale_timer = app_timer_register(7100 + s_breath_duration, first_breath_out_callback, NULL);
-		// Hides the instruction to exhale after one breath in and one breath out
-		s_hide_exhale_timer = app_timer_register(7100 + 2 * s_breath_duration, first_breath_out_hide_callback, NULL);
 		
 		// First animationTimer, which will schedule the next time the circle expands or contracts
 		animationTimer[0] = app_timer_register(6000, main_animation_callback, NULL); 

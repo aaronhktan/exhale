@@ -1,7 +1,7 @@
 {
     "author": "cheeseisdisgusting@gmail.com",
     "dependencies": {
-        "pebble-clay": "^1.0.3"
+        "pebble-clay": "^1.0.4"
     },
     "keywords": [],
     "name": "breathe",
@@ -16,11 +16,12 @@
             "backgroundColor",
             "circleColor",
             "vibrationEnabled",
-            "heartRateEnabled",
             "reminderHours",
             "reminderHoursStart",
             "rememberDuration",
-            "breathsPerMinute"
+            "breathsPerMinute",
+            "vibrationType",
+            "displayText"
         ],
         "projectType": "native",
         "resources": {
@@ -54,5 +55,5 @@
             "watchface": false
         }
     },
-    "version": "0.28.0"
+    "version": "0.29.0"
 }

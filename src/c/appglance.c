@@ -16,7 +16,7 @@ void appglance_update_app_glance(AppGlanceReloadSession *session, size_t limit, 
       .icon = APP_GLANCE_SLICE_DEFAULT_ICON,
       .subtitle_template_string = message
     },
-    // TODO: Change to APP_GLANCE_SLICE_NO_EXPIRATION in SDK 4-dp2
+    
     .expiration_time = APP_GLANCE_SLICE_NO_EXPIRATION
   };
 

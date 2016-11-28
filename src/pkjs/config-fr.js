@@ -5,7 +5,7 @@ module.exports = [
 	},
 	{
 		"type": "text",
-		"defaultValue": "Ceci est la page de configuration pour l'app Breathe. Vous utilisez version 0.2.8 de l'app.",
+		"defaultValue": "Ceci est la page de configuration pour l'app Breathe. Vous utilisez version 0.2.9 de l'app.",
 	},
 	{
 		"type": "section",
@@ -50,6 +50,23 @@ module.exports = [
 				"label": "Activer les vibrations pendant les respirations?",
 			},
 			{
+				"type": "select",
+				"messageKey": "vibrationType",
+				"defaultValue": "0",
+				"label": "Type de vibration",
+				"description": "Défaut est comme celui du Apple Watch; Simple tappe deux fois.",
+				"options": [
+					{
+						"label": "Défaut",
+						"value": "0"
+					},
+					{ 
+						"label": "Simple", 
+						"value": "1"
+					}
+				]
+			},
+			{
 				"type": "slider",
 				"messageKey": "breathsPerMinute",
 				"defaultValue": 7,
@@ -62,18 +79,32 @@ module.exports = [
 	},
 	{
 		"type": "section",
-		"capabilities": ["NOT_PLATFORM_APLITE", "NOT_PLATFORM_BASALT", "NOT_PLATFORM_CHALK"],
+		"capabilities": ["NOT_PLATFORM_APLITE"],
 		"items": [
 			{"type": "heading",
 			 "defaultValue": "Santé"
 			},
 			{
-				"type": "toggle",
-				"messageKey": "heartRateEnabled",
-				"defaultValue": true,
-				"label": "Montrer le rhythme cardiaque",
-				"description": "Si activé, l'app montre le rhythme cardiaque dans le menu principal. Sinon, le nombre de pas marchés aujourd'hui sera montré."
-			}
+				"type": "select",
+				"messageKey": "displayText",
+				"defaultValue": "1",
+				"label": "Montrer...",
+				"description": "Ceci détermine ce qui est montré en haut du menu principal. Montrer le rhythme cardiaque requiert une montre avec un moniteur cardiaque.",
+				"options": [
+					{
+						"label": "Salut",
+						"value": "0"
+					},
+					{ 
+						"label": "Nombre de pas pris aujourd'hui", 
+						"value": "1" 
+					},
+					{ 
+						"label": "Rhythme cardiaque",
+						"value": "2" 
+					}
+				]
+			},
 		]
 	},
 	{
@@ -130,7 +161,7 @@ module.exports = [
 	},
 	{
 		"type": "text",
-		"defaultValue": "<em><center>Un grand merci aux bêta-testeurs: <br>Paula&nbsp;Bosca, Nikita&nbsp;Cheng, Ayush&nbsp;Gupta, Ellen&nbsp;Huang, Yvonne&nbsp;Tan, et David&nbsp;Voicu</center></em>",
+		"defaultValue": "<em><center>Un grand merci aux bêta-testeurs: <br>Paula&nbsp;Bosca, Nikita&nbsp;Cheng, Ayush&nbsp;Gupta, Ellen&nbsp;Huang, Yvonne&nbsp;Tan, David&nbsp;Voicu, et /u/PiwwowPants</center></em>",
 	},
 	{
 	"type": "submit",

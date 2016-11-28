@@ -30,17 +30,20 @@ Pebble.addEventListener('webviewclosed', function(e) {
   // Get the keys and values from each config item
   var dict = clay.getSettings(e.response);
 	dict[messageKeys.reminderHours] = parseInt(dict[messageKeys.reminderHours]);
-	var platform = clay.meta.activeWatchInfo.platform;
-	if (platform === 'aplite' || platform === 'basalt' || platform === 'chalk') {
-		dict[messageKeys.heartRateEnabled] = false; // Just in case
-	}
+	dict[messageKeys.displayText] = parseInt(dict[messageKeys.displayText]);
+	dict[messageKeys.vibrationType] = parseInt(dict[messageKeys.vibrationType]);
+// 	var platform = clay.meta.activeWatchInfo.platform;
+// 	if (platform === 'aplite' || platform === 'basalt' || platform === 'chalk') {
+// 		dict[messageKeys.heartRateEnabled] = false; // Just in case
+// 	}
 	
 	// Log all the settings for fun
 	console.log('The reminderHours sent to Pebble is ' + dict[messageKeys.reminderHours] + '.');
 	console.log('The backgroundColor sent to Pebble is ' + dict[messageKeys.backgroundColor] + '.');
 	console.log('The circleColor sent to Pebble is ' + dict[messageKeys.circleColor] + '.');
 	console.log('The vibrationEnabled sent to Pebble is ' + dict[messageKeys.vibrationEnabled] + '.');
-	console.log('The heartRateEnabled sent to Pebble is ' + dict[messageKeys.heartRateEnabled] + '.');
+	console.log('The vibrationType sent to Pebble is ' + dict[messageKeys.vibrationType] + '.');
+	console.log('The displayText sent to Pebble is ' + dict[messageKeys.displayText] + '.');
 	console.log('The rememberDuration sent to Pebble is ' + dict[messageKeys.rememberDuration] + '.');
 	console.log('The reminderHoursStart sent to Pebble is ' + dict[messageKeys.reminderHoursStart] + '.');
 	console.log('The breathsPerMinute sent to Pebble is ' + dict[messageKeys.breathsPerMinute] + '.');

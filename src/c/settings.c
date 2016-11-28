@@ -10,11 +10,12 @@ void settings_init() {
 	settings.circleColor = PBL_IF_COLOR_ELSE(GColorJaegerGreen, GColorWhite);
 	settings.textColor = GColorWhite;
 	settings.vibrationEnabled = true;
+	settings.vibrationType = 0;
 	settings.rememberDuration = false;
 	#if PBL_API_EXISTS(health_service_peek_current_value)
-		settings.heartRateEnabled = true;
+		settings.displayText = 2;
 	#else
-		settings.heartRateEnabled = false;
+		settings.displayText = 1;
 	#endif
 	settings.reminderHours = 4;
 	settings.reminderHoursStart = 8;
@@ -52,9 +53,15 @@ void settings_handle_settings(DictionaryIterator *iter, void *context) {
 		settings.vibrationEnabled = vibration_enabled_t->value->int32 == 1;
 	}
 	
-	Tuple *heartRate_enabled_t = dict_find(iter, MESSAGE_KEY_heartRateEnabled);
-	if (heartRate_enabled_t) {
-		settings.heartRateEnabled = heartRate_enabled_t->value->int32 == 1;
+	Tuple *vibration_type_t = dict_find(iter, MESSAGE_KEY_vibrationType);
+	if (vibration_type_t) {
+		settings.vibrationType = vibration_type_t->value->int8;
+	}
+	
+	Tuple *displayText_t = dict_find(iter, MESSAGE_KEY_displayText);
+	if (displayText_t) {
+		settings.displayText = displayText_t->value->int8;
+		APP_LOG(APP_LOG_LEVEL_DEBUG, "The displayText value is %d.", settings.displayText);
 	}
 	
 	Tuple *reminder_hours_start_t = dict_find(iter, MESSAGE_KEY_reminderHoursStart);
@@ -101,8 +108,12 @@ bool settings_get_vibrationEnabled() {
 	return settings.vibrationEnabled;
 }
 
-bool settings_get_heartRateEnabled() {
-	return settings.heartRateEnabled;
+int settings_get_vibrationType() {
+	return settings.vibrationType;
+}
+
+int settings_get_displayText() {
+	return settings.displayText;
 }
 
 int settings_get_reminderHours() {

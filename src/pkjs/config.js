@@ -5,7 +5,7 @@ module.exports = [
 	},
 	{
 		"type": "text",
-		"defaultValue": "This is the settings page for the Breathe app. You are running version 0.2.8 of Breathe.",
+		"defaultValue": "This is the settings page for the Breathe app. You are running version 0.2.9 of Breathe.",
 	},
 	{
 		"type": "section",
@@ -50,6 +50,23 @@ module.exports = [
 				"label": "Enable vibrations on inhale",
 			},
 			{
+				"type": "select",
+				"messageKey": "vibrationType",
+				"defaultValue": "0",
+				"label": "Vibration Type",
+				"description": "Default is like the Apple Watch, Simple is double tap.",
+				"options": [
+					{
+						"label": "Default",
+						"value": "0"
+					},
+					{ 
+						"label": "Simple", 
+						"value": "1"
+					}
+				]
+			},
+			{
 				"type": "slider",
 				"messageKey": "breathsPerMinute",
 				"defaultValue": 7,
@@ -62,18 +79,32 @@ module.exports = [
 	},
 	{
 		"type": "section",
-		"capabilities": ["NOT_PLATFORM_APLITE", "NOT_PLATFORM_BASALT", "NOT_PLATFORM_CHALK"],
+		"capabilities": ["NOT_PLATFORM_APLITE"],
 		"items": [
 			{"type": "heading",
 			 "defaultValue": "Health"
 			},
 			{
-				"type": "toggle",
-				"messageKey": "heartRateEnabled",
-				"defaultValue": true,
-				"label": "Show heart rate",
-				"description": "If enabled, the app shows the heart rate. If disabled, the app shows the number of steps taken today."
-			}
+				"type": "select",
+				"messageKey": "displayText",
+				"defaultValue": "1",
+				"label": "Show...",
+				"description": "This determines what the app shows at the top part of the main menu. Heart rate requires a watch with a heart rate monitor.",
+				"options": [
+					{
+						"label": "Greeting",
+						"value": "0"
+					},
+					{ 
+						"label": "Steps today", 
+						"value": "1" 
+					},
+					{ 
+						"label": "Heart Rate",
+						"value": "2" 
+					}
+				]
+			},
 		]
 	},
 	{
@@ -81,7 +112,7 @@ module.exports = [
 		"items": [
 			{
 				"type": "heading",
-			 "defaultValue": "Reminders"
+				"defaultValue": "Reminders"
 			},
 			{
 				"type": "select",
@@ -130,7 +161,7 @@ module.exports = [
 	},
 	{
 		"type": "text",
-		"defaultValue": "<em><center>Many thanks to the beta testers: <br>Paula&nbsp;Bosca, Nikita&nbsp;Cheng, Ayush&nbsp;Gupta, Ellen&nbsp;Huang, Yvonne&nbsp;Tan, and David&nbsp;Voicu</center></em>",
+		"defaultValue": "<em><center>Many thanks to the beta testers: <br>Paula&nbsp;Bosca, Nikita&nbsp;Cheng, Ayush&nbsp;Gupta, Ellen&nbsp;Huang, Yvonne&nbsp;Tan, David&nbsp;Voicu, and /u/PiwwowPants.</center></em>",
 	},
 	{
 	"type": "submit",

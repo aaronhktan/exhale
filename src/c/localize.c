@@ -72,7 +72,7 @@ char * localize_get_hello_text() {
 	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
 		return "¡HOLA!";
 	} else {
-		return "HELLO.";
+		return "HELLO!";
 	}
 }
 

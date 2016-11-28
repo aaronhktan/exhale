@@ -5,7 +5,7 @@ module.exports = [
 	},
 	{
 		"type": "text",
-		"defaultValue": "Esta es la página de ajustes para la app Breathe. Estás usando la version 0.2.8 de la app.",
+		"defaultValue": "Esta es la página de ajustes para la app Breathe. Estás usando la versión 0.2.9 de la app.",
 	},
 	{
 		"type": "section",
@@ -50,6 +50,23 @@ module.exports = [
 				"label": "¿Activar las vibraciones durante la respiración?",
 			},
 			{
+				"type": "select",
+				"messageKey": "vibrationType",
+				"defaultValue": "0",
+				"label": "Tipo de vibración",
+				"description": "La condición base es como el Apple Watch; Simple es un doble toque.",
+				"options": [
+					{
+						"label": "Condicón base",
+						"value": "0"
+					},
+					{ 
+						"label": "Simple", 
+						"value": "1"
+					}
+				]
+			},
+			{
 				"type": "slider",
 				"messageKey": "breathsPerMinute",
 				"defaultValue": 7,
@@ -62,18 +79,32 @@ module.exports = [
 	},
 	{
 		"type": "section",
-		"capabilities": ["NOT_PLATFORM_APLITE", "NOT_PLATFORM_BASALT", "NOT_PLATFORM_CHALK"],
+		"capabilities": ["NOT_PLATFORM_APLITE"],
 		"items": [
 			{"type": "heading",
 			 "defaultValue": "Salud"
 			},
 			{
-				"type": "toggle",
-				"messageKey": "heartRateEnabled",
-				"defaultValue": true,
-				"label": "¿Mostrar el ritmo cardiaco?",
-				"description": "Si activado, el app mostrará el ritmo cardiaco en el menú principal. Si no, el app mostrará el número de pasos que has tomado hoy."
-			}
+				"type": "select",
+				"messageKey": "displayText",
+				"defaultValue": "1",
+				"label": "Mostrar...",
+				"description": "Esto determina lo que está mostrado en el menu principal. NOTA: El ritmo cardiaco requiere un reloj con un monitor de ritmo cardiaco.",
+				"options": [
+					{
+						"label": "Saludo",
+						"value": "0"
+					},
+					{ 
+						"label": "Pasos hoy", 
+						"value": "1" 
+					},
+					{ 
+						"label": "Ritmo cardiaco",
+						"value": "2" 
+					}
+				]
+			},
 		]
 	},
 	{
@@ -130,7 +161,7 @@ module.exports = [
 	},
 	{
 		"type": "text",
-		"defaultValue": "<em><center>Muchas gracias a los probadores beta: <br>Paula&nbsp;Bosca, Nikita&nbsp;Cheng, Ayush&nbsp;Gupta, Ellen&nbsp;Huang, Yvonne&nbsp;Tan, y David&nbsp;Voicu</center></em>",
+		"defaultValue": "<em><center>Muchas gracias a los probadores beta: <br>Paula&nbsp;Bosca, Nikita&nbsp;Cheng, Ayush&nbsp;Gupta, Ellen&nbsp;Huang, Yvonne&nbsp;Tan, David&nbsp;Voicu, y /u/PiwwowPants</center></em>",
 	},
 	{
 	"type": "submit",
