@@ -49,7 +49,6 @@ void graphics_draw_upper_text(GContext *ctx, GRect bounds, bool is_animating, in
 											 GTextOverflowModeWordWrap, GTextAlignmentCenter, NULL);
 	} else {
 		if (display_text == 2 && data_get_current_heart_rate() > 0) { // If heart rate monitor is enabled in configuration and is available, show heart rate
-			APP_LOG(APP_LOG_LEVEL_DEBUG, "The app is showing the heart rate.");
 			const char *heart_rate_buffer = data_get_current_heart_rate_buffer();
 			graphics_draw_text(ctx, heart_rate_buffer, fonts_get_system_font(FONT_KEY), 
 											 GRect((bounds.size.w - greet_text_bounds.w) / 2, PBL_IF_RECT_ELSE(5, 15), greet_text_bounds.w, greet_text_bounds.h),
@@ -57,14 +56,12 @@ void graphics_draw_upper_text(GContext *ctx, GRect bounds, bool is_animating, in
 		} else { // Otherwise, show step counts if Pebble Health, and string if not.
 			switch(display_text) {
 				case 0:
-					APP_LOG(APP_LOG_LEVEL_DEBUG, "The app is showing the default greeting text.");
 					graphics_draw_text(ctx, greet_text, fonts_get_system_font(FONT_KEY), 
 											 GRect((bounds.size.w - greet_text_bounds.w) / 2, PBL_IF_RECT_ELSE(5, 15), greet_text_bounds.w, greet_text_bounds.h),
 											 GTextOverflowModeWordWrap, GTextAlignmentCenter, NULL);
 					break;
 				case 1:
 				case 2:
-					APP_LOG(APP_LOG_LEVEL_DEBUG, "The app is showing the number of steps.");
 					graphics_draw_text(ctx, PBL_IF_HEALTH_ELSE(steps_buffer, greet_text), fonts_get_system_font(FONT_KEY), 
 											 GRect((bounds.size.w - greet_text_bounds.w) / 2, PBL_IF_RECT_ELSE(5, 15), greet_text_bounds.w, greet_text_bounds.h),
 											 GTextOverflowModeWordWrap, GTextAlignmentCenter, NULL);

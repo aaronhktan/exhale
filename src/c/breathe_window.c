@@ -7,10 +7,10 @@
 
 static Window *s_main_window;
 static Layer *s_circle_layer, *s_inside_text_layer, *s_upper_text_layer, *s_lower_text_layer;
-static AppTimer *s_animation_completed_timer, *s_main_animation_ended_timer, *animationTimer[69], *s_show_relax_text_timer, *s_show_inhale_timer, *s_show_exhale_timer, *s_hide_lower_text_layer, *s_click_provider_timer;
+static AppTimer *s_animation_completed_timer, *s_main_animation_ended_timer, *animationTimer[69], *s_show_relax_text_timer, *s_show_inhale_timer, *s_show_exhale_timer, *s_hide_lower_text_layer, *s_click_provider_timer, *s_interrupt_timer;
 static GRect bounds;
 static uint8_t s_radius_final, s_radius = 0;
-static int s_min_to_breathe = 1, s_min_breathed_today = 0, s_times_played = 0, s_breath_duration, s_breaths_per_minute;
+static int s_min_to_breathe = 1, s_min_breathed_today = 0, s_times_played = 0, s_breath_duration, s_breaths_per_minute, s_current_radius;
 static bool s_animation_completed = false, s_animating = false;
 static GPoint s_center;
 static char s_min_to_breathe_text[3] = "1", s_instruct_text[27], s_min_text[25], s_min_today[25], s_greet_text[27], s_start_time[11], s_end_time[11];
@@ -103,6 +103,11 @@ static void radius_expand_update(Animation *anim, AnimationProgress dist_normali
 	layer_mark_dirty(s_circle_layer);
 }
 
+static void interrupt_expand_update(Animation *anim, AnimationProgress dist_normalized) {
+	s_radius = s_current_radius + (s_radius_final - s_current_radius) * dist_normalized / ANIMATION_NORMALIZED_MAX; // Adds to current radius
+	layer_mark_dirty(s_circle_layer);
+}
+
 // Start up animation
 static void circle_animation_setup() {
 	// Set the update method for animation to radius_update
@@ -128,22 +133,41 @@ static void hide_lower_text_callback() {
 }
 
 // Last out animation
-static void main_animation_end() {
+static void main_animation_end(void *data) {
+	
+	int animation_delay;
+	int animation_duration;
+	AnimationCurve animation_curve;
 	static AnimationImplementation s_main_animation_end = {
-		.update = radius_expand_update
+			.update = radius_expand_update
 	};
 	
-	create_animation(2000, 2000, AnimationCurveEaseInOut, &s_main_animation_end);
+	int complete = (int)data; // Coerce data into int
 	
-	// Vibration to signal that the thing is ended
-	vibes_double_pulse();
-	
-	// Localized strings
-	snprintf(s_min_today, sizeof(s_min_today), localize_get_well_done_text());
-	
-	// Show the "Well done text" and then hides it after 2 seconds
-	layer_set_hidden(s_lower_text_layer, false);
-	s_hide_lower_text_layer = app_timer_register(2000, hide_lower_text_callback, NULL);
+	if (complete == 0) {
+		// Sets duration of animation
+		animation_duration = 2000;
+		animation_delay = 2000;
+		animation_curve = AnimationCurveEaseInOut;
+		// Vibration to signal that the thing is ended
+		vibes_double_pulse();
+
+		// Localized strings
+		snprintf(s_min_today, sizeof(s_min_today), localize_get_well_done_text());
+				
+		// Show the "Well done text" and then hides it after 2 seconds
+		layer_set_hidden(s_lower_text_layer, false);
+		s_hide_lower_text_layer = app_timer_register(animation_duration, hide_lower_text_callback, NULL);
+	} else {
+		s_main_animation_end.update = interrupt_expand_update; // Changes the update procedure
+		animation_duration = 500; // Makes the duration longer
+		animation_delay = 0; // No delay; immediately play this animation
+		animation_curve = AnimationCurveEaseOut; // Feels faster than other curves
+		layer_set_hidden(s_lower_text_layer, true); // Hides any visible text layers
+		layer_set_hidden(s_upper_text_layer, true);
+	}
+
+	create_animation(animation_duration, animation_delay, animation_curve, &s_main_animation_end);
 }
 
 // Sets up and schedules circle contract and expand
@@ -227,7 +251,7 @@ static void main_animation() {
 
 // Schedules next animation if the number of times played is less than 7 times the number of minutes (seven breaths per minute)
 static void main_animation_callback () {
-	if (s_times_played < s_breaths_per_minute * s_min_to_breathe) {
+	if (s_times_played < s_breaths_per_minute * s_min_to_breathe && s_animating) { // That means that the time hasn't elapsed and the animations are still going on
 		animationTimer[s_times_played] = app_timer_register(2 * s_breath_duration + 2000, main_animation_callback, NULL);
 		if (!layer_get_hidden(s_upper_text_layer) || !layer_get_hidden(s_lower_text_layer)) {
 			layer_set_hidden(s_upper_text_layer, true);
@@ -307,7 +331,7 @@ static void animation_start_callback(void *context) {
 }
 
 // End animation show text
-static void animation_end_callback(void *context) {
+static void animation_end_callback(void *data) {
 	s_breaths_per_minute = settings_get_breathsPerMinute(); // In case the user changed settings while the they were breathing
 	s_breath_duration = settings_get_breathDuration();
 	s_animation_completed = true;
@@ -319,10 +343,14 @@ static void animation_end_callback(void *context) {
 	snprintf(s_end_time, sizeof(s_end_time), data_get_date_today());
 	APP_LOG(APP_LOG_LEVEL_DEBUG, "The date started is %s", s_start_time);
 	APP_LOG(APP_LOG_LEVEL_DEBUG, "The date ended is %s", s_end_time);
-	if (strcmp(s_start_time, s_end_time) == 0) {
+	
+	int complete = (int)data; // This tells us whether the user interrupted their session by pressing back
+
+	if (strcmp(s_start_time, s_end_time) == 0 && complete == 0) { // The date is the same and the user did not interrupt their session
 		// Add number of minutes breathed
 		s_min_breathed_today += s_min_to_breathe;
 		APP_LOG(APP_LOG_LEVEL_DEBUG, "The date started and ended are the same");
+	} else if (complete == 1) { // The user interrupted their session, so don't add number to their minutes breathed today
 	} else { // Not on the same day, so set number to zero
 		s_min_breathed_today = 0;
 		APP_LOG(APP_LOG_LEVEL_DEBUG, "The date started and ended are not the same");
@@ -335,8 +363,10 @@ static void animation_end_callback(void *context) {
 	data_write_breathe_persist_data(s_min_breathed_today);
 	data_write_date_persist_data();
 	
-	// Persist the duration of minutes
-	data_write_last_duration_data(s_min_to_breathe);
+	if (complete != 1) {
+		// Persist the duration of minutes if user didn't interrupt their session
+		data_write_last_duration_data(s_min_to_breathe);
+	}
 	
 	// Sets different number of digits for one digit or two digits
 	if (s_min_to_breathe == 10) {
@@ -356,6 +386,7 @@ static void animation_end_callback(void *context) {
 }
 
 // ******************************************************************************************* Click Handlers
+
 static void up_click_handler(ClickRecognizerRef recognizer, void *context) {
 	// Increments number, displays number.
 	if ((s_animation_completed) && (s_min_to_breathe < 10)) {
@@ -377,6 +408,53 @@ static void down_click_handler(ClickRecognizerRef recognizer, void *context) {
 		set_min_text(s_min_to_breathe, s_min_text);
 		snprintf(s_min_to_breathe_text, 2, "%d", s_min_to_breathe);
 		layer_mark_dirty(s_inside_text_layer);
+	}
+}
+
+static void back_click_handler(ClickRecognizerRef recognizer, void *context) {
+	if (s_animating) {
+		// Prevents any further animations
+		animation_unschedule_all();
+		vibes_cancel();
+		
+		// Destroys all currently running timers
+		if (s_animation_completed_timer != NULL) {
+			app_timer_cancel(s_animation_completed_timer);
+			s_animation_completed_timer = NULL;
+		}
+		if (s_main_animation_ended_timer != NULL) {
+			app_timer_cancel(s_main_animation_ended_timer);
+			s_main_animation_ended_timer = NULL;
+		}
+		if (s_show_relax_text_timer != NULL) {
+			app_timer_cancel(s_show_relax_text_timer);
+			s_show_relax_text_timer = NULL;
+		}
+		if (s_show_inhale_timer != NULL) {
+			app_timer_cancel(s_show_inhale_timer);
+			s_show_inhale_timer = NULL;
+		}
+		if (s_show_exhale_timer != NULL) {
+			app_timer_cancel(s_show_exhale_timer);
+			s_show_exhale_timer = NULL;
+		}
+		if (animationTimer[s_times_played] != NULL) {
+			app_timer_cancel(animationTimer[s_times_played]);
+			animationTimer[s_times_played] = NULL;
+		}
+		if (animationTimer[0] != NULL) {
+			app_timer_cancel(animationTimer[0]);
+			animationTimer[0] = NULL;
+		}
+		
+		// Shows the expand animation
+		s_current_radius = s_radius;
+		APP_LOG(APP_LOG_LEVEL_DEBUG, "The radius is %d", s_current_radius);
+		main_animation_end((void*)1);
+		s_interrupt_timer = app_timer_register(525, animation_end_callback, (void*)1);
+		s_animating = false;
+	} else {
+		window_stack_pop_all(true);
 	}
 }
 
@@ -413,11 +491,11 @@ static void select_click_handler(ClickRecognizerRef recognizer, void *context) {
 		APP_LOG(APP_LOG_LEVEL_DEBUG, "The number of minutes to breath is %d.", s_min_to_breathe);
 		APP_LOG(APP_LOG_LEVEL_DEBUG, "The number of breaths per minute is %d.", s_breaths_per_minute);
 		APP_LOG(APP_LOG_LEVEL_DEBUG, "The duration per breath is %d.", s_breath_duration);
-		s_main_animation_ended_timer = app_timer_register(s_min_to_breathe * s_breaths_per_minute * 2 * (s_breath_duration + 1000) + 7000, main_animation_end, NULL);
+		s_main_animation_ended_timer = app_timer_register(s_min_to_breathe * s_breaths_per_minute * 2 * (s_breath_duration + 1000) + 7000, main_animation_end, (void*)0);
 		/* Schedules the "hide everything and revert to main menu" callback 
 		(which is minutes * number of breaths per minute * duration per minute + duration of opening and closing text) */
 		int s_animation_completed_delay = s_min_to_breathe * s_breaths_per_minute * 2 * (s_breath_duration + 1000) + 11000;
-		s_animation_completed_timer = app_timer_register(s_animation_completed_delay, animation_end_callback, NULL);
+		s_animation_completed_timer = app_timer_register(s_animation_completed_delay, animation_end_callback, (void*)0);
 		
 		// Gets today's date to compare with the end date after breathing is finished
 		snprintf(s_start_time, sizeof(s_start_time), data_get_date_today());
@@ -428,8 +506,10 @@ static void click_config_provider(void *context) {
   ButtonId id_up = BUTTON_ID_UP;  // The Up button
 	ButtonId id_down = BUTTON_ID_DOWN; // The Down button
 	ButtonId id_select = BUTTON_ID_SELECT; // The Select button
+	ButtonId id_back = BUTTON_ID_BACK;
   window_single_click_subscribe(id_up, up_click_handler);
 	window_single_click_subscribe(id_down, down_click_handler);
+	window_single_click_subscribe(id_back, back_click_handler);
 	window_single_click_subscribe(id_select, select_click_handler);
 }
 
