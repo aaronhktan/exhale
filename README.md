@@ -1,6 +1,6 @@
 # Exhale
 
-A little reminder to take a moment to breathe during your busy day.
+![alt tag](https://github.com/cheeseisdisgusting/exhale/blob/master/screenshots/Emery_Marketing.png)
 
 ##Screenshots
 
