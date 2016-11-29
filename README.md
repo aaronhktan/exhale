@@ -1,4 +1,4 @@
-# Exhale
+# Breathe
 
 ![alt tag](https://github.com/cheeseisdisgusting/exhale/blob/master/screenshots/Emery_Marketing.png)
 
