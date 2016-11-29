@@ -1,24 +1,24 @@
 module.exports = [
 	{
 		"type": "heading",
-		"defaultValue": "Ajustes"
+		"defaultValue": "Einstellungen"
 	},
 	{
 		"type": "text",
-		"defaultValue": "Esta es la página de ajustes para la app Breathe. Estás usando la versión 0.2.10 de la app.",
+		"defaultValue": "Dies sind die Einstellungen für die Breathe-App. Sie benutzen Version 0.2.10 von Breathe.",
 	},
 	{
 		"type": "section",
 		"items": [
 			{
 				"type": "heading",
-				"defaultValue": "Colores"
+			 	"defaultValue": "Farben"
 			},
 			{
 				"type": "color",
 				"messageKey": "backgroundColor",
 				"defaultValue": "000000",
-				"label": "Color de fondo",
+				"label": "Hintergrundfarbe",
 				"sunlight": true,
 				"layout": "BLACK_WHITE"
 			},
@@ -26,7 +26,7 @@ module.exports = [
 				"type": "color",
 				"messageKey": "circleColor",
 				"defaultValue": "00AA55",
-				"label": "Color del círculo",
+				"label": "Kreisfarbe",
 				"sunlight": true,
 				"capabilities": ["COLOR"]
 			}
@@ -37,33 +37,33 @@ module.exports = [
 		"items": [
 			{
 				"type": "heading",
-				"defaultValue": "En la app"
+				"defaultValue": "App"
 			},
 			{
 				"type": "toggle",
 				"messageKey": "rememberDuration",
 				"defaultValue": false,
-				"label": "¿Recordar la duración anterior y usarla cuando se lance la app?",
+				"label": "Letze Dauer merken",
 			},
 			{
 				"type": "toggle",
 				"messageKey": "vibrationEnabled",
 				"defaultValue": true,
-				"label": "¿Activar las vibraciones durante la respiración?",
+				"label": "Vibrationen beim Einatmen",
 			},
 			{
 				"type": "select",
 				"messageKey": "vibrationType",
 				"defaultValue": "0",
-				"label": "Tipo de vibración",
-				"description": "Sacudidas es como el Apple Watch; Toques es un doble toque.",
+				"label": "Vibrationstyp",
+				"description": "Graduell fühlt sich an wie die Apple-Watch-App, Doppeltippen ist die Standard-Pebble-Vibration.",
 				"options": [
 					{
-						"label": "Sacudidas",
+						"label": "Graduell",
 						"value": "0"
 					},
 					{ 
-						"label": "Toques", 
+						"label": "Doppeltippen", 
 						"value": "1"
 					}
 				]
@@ -72,7 +72,7 @@ module.exports = [
 				"type": "slider",
 				"messageKey": "breathsPerMinute",
 				"defaultValue": 7,
-				"label": "Respiraciones por minuto",
+				"label": "Atemzüge pro Minute",
 				"min": 4,
 				"max": 10,
 				"step": 1
@@ -85,25 +85,25 @@ module.exports = [
 		"items": [
 			{
 				"type": "heading",
-				"defaultValue": "Salud"
+			 	"defaultValue": "Gesundheit"
 			},
 			{
 				"type": "select",
 				"messageKey": "displayText",
 				"defaultValue": "1",
-				"label": "Mostrar...",
-				"description": "Esto determina lo que está mostrado en el menu principal. NOTA: El ritmo cardiaco requiere un reloj con un monitor de ritmo cardiaco.",
+				"label": "Schnellinfo",
+				"description": "Legt fest, was im Hauptmenü oben angezeigt wird. Herzfrequenz setzt eine Uhr mit HR-Sensor voraus.",
 				"options": [
 					{
-						"label": "Saludo",
+						"label": "Begrüßung",
 						"value": "0"
 					},
 					{ 
-						"label": "Pasos hoy", 
+						"label": "Schritte", 
 						"value": "1" 
 					},
 					{ 
-						"label": "Ritmo cardiaco",
+						"label": "Herzfrequenz",
 						"value": "2" 
 					}
 				]
@@ -115,37 +115,37 @@ module.exports = [
 		"items": [
 			{
 				"type": "heading",
-			 	"defaultValue": "Recordatorios"
+				"defaultValue": "Erinnerungen"
 			},
 			{
 				"type": "select",
 				"messageKey": "reminderHours",
 				"defaultValue": "4",
-				"label": "Recuérdame de respirar...",
-				"description": "El app te recordará a este intervalo diariamente.",
+				"label": "Erinnere mich zu atmen…",
+				"description": "Die App wird dich in diesen Abständen erinnern, zu atmen.",
 				"options": [
-					{ 
-						"label": "Cada hora", 
-						"value": "1" 
+					{
+						"label": "Jede Stunde",
+						"value": "1"
 					},
 					{ 
-						"label": "Cada 2 horas", 
+						"label": "Alle 2 Stunden", 
 						"value": "2" 
 					},
 					{ 
-						"label": "Cada 3 horas",
+						"label": "Alle 3 Stunden",
 						"value": "3" 
 					},
 					{ 
-						"label": "Cada 4 horas",
+						"label": "Alle 4 Stunden",
 						"value": "4" 
 					},
 					{ 
-						"label": "Cada 6 horas",
+						"label": "Alle 6 Stunden",
 						"value": "6" 
 					},
 					{ 
-						"label": "No me recuerda nunca",
+						"label": "Nicht erinnern",
 						"value": "0" 
 					}
 				]
@@ -154,8 +154,8 @@ module.exports = [
 				"type": "slider",
 				"messageKey": "reminderHoursStart",
 				"defaultValue": 8,
-				"label": "¿Cuando debería empezar de recordarte la app?",
-				"description": "De esta hora (es decir, 8 = las 8 de la mañana) hasta 12 horas trás, la app de recordará de respirar.",
+				"label": "Erinnerungen beginnen um",
+				"description": "Breathe wird dich von zu dieser Uhrzeit morgens an (z.B. 8 Uhr vormittags) bis 12 Stunden später benachrichtigen.",
 				"min": 6,
 				"max": 10,
 				"step": 1
@@ -164,10 +164,10 @@ module.exports = [
 	},
 	{
 		"type": "text",
-		"defaultValue": "<em><center>Muchas gracias a los probadores beta: <br>Paula&nbsp;Bosca, Nikita&nbsp;Cheng, Ayush&nbsp;Gupta, Ellen&nbsp;Huang, Yvonne&nbsp;Tan, David&nbsp;Voicu, y /u/PiwwowPants</center></em>",
+		"defaultValue": "<em><center>Vielen Dank an die Betatester: <br>Paula&nbsp;Bosca, Nikita&nbsp;Cheng, Ayush&nbsp;Gupta, Ellen&nbsp;Huang, Yvonne&nbsp;Tan, David&nbsp;Voicu, and /u/PiwwowPants.</center></em>",
 	},
 	{
 		"type": "submit",
-		"defaultValue": "Guardar mis ajustes"
+		"defaultValue": "Einstellungen speichern"
 	}
 ];

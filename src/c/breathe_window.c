@@ -291,6 +291,11 @@ static void animation_start_callback(void *context) {
 		for (int i = 0; i <= 8; i++) {
 			strings[i] = spanish_strings[i];
 		}
+	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+		char *german_strings[9] = {"NIMM DIR ZEIT;", "STEHE STILL;", "LEERE DEINEN GEIST;", "DENKE AN NICHTS;", "WERDE RUHIG;", "EXISTIERE EINFACH;", "MACH'S DIR GEMÜTLICH;", "SPÜRE DEINE UMGEBUNG;", "KOMM RUNTER;"};
+		for (int i = 0; i <= 8; i++) {
+			strings[i] = german_strings[i];
+		}
 	}
 	
 	// Generates a random number between 0 and 8 and sets string to that index of the array of strings
@@ -307,8 +312,13 @@ static void animation_start_callback(void *context) {
 		}	
 	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
 		char* spanish_bottom_text[4] = {"RESPIRA.", "EXHALA.", "RESPIRA.", "EXHALA."};
-		for (int i = 0; i <= 8; i++) {
+		for (int i = 0; i <= 3; i++) {
 			bottom_text[i] = spanish_bottom_text[i];
+		}
+	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+		char* german_bottom_text[4] = {"ATME.", "ATME AUS.", "KONZENTRIER DICH.", "FOKUSSIERE DICH."};
+		for (int i = 0; i <= 3; i++) {
+			bottom_text[i] = german_bottom_text[i];
 		}
 	}
 	
