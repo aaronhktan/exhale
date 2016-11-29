@@ -5,7 +5,7 @@ module.exports = [
 	},
 	{
 		"type": "text",
-		"defaultValue": "This is the settings page for the Breathe app. You are running version 0.2.10 of Breathe.",
+		"defaultValue": "This is the settings page for the Breathe app. You are running version 0.2.11 of Breathe.",
 	},
 	{
 		"type": "section",

@@ -6,7 +6,6 @@ var messageKeys = require('message_keys');
 var clayConfig = require('./config.js');
 var clayConfigFR = require('./config-fr.js');
 var clayConfigES = require('./config-es.js');
-var clayConfigDE = require('./config-de.js');
 // Custom function that runs on the config page
 var customClay = require('./custom-clay.js');
 // Initialize Clay
@@ -15,16 +14,10 @@ var clay = new Clay(clayConfig, customClay, { autoHandleEvents: false });
 Pebble.addEventListener('showConfiguration', function(e) {
 	var info = Pebble.getActiveWatchInfo();
 	console.log('The language of the phone is ' + info.language.substr(0, 2));
-	switch (info.language.substr(0, 2)) {
-		case 'fr': // The watch language is French; show the French config page
-			clay.config = clayConfigFR;
-			break;
-		case 'es': // The watch language is Spanish; show the Spanish config page
-			clay.config = clayConfigES;
-			break;
-		case 'de': // The watch language is German; show the German config page
-			clay.config = clayConfigDE;
-			break;
+	if (info.language.substr(0, 2) == 'fr') { // The watch language is French; show the French config page
+		clay.config = clayConfigFR; 
+	} else if (info.language.substr(0, 2) == 'es') { // The watch language is Spanish; show the Spanish config page
+		clay.config = clayConfigES;
 	}
   Pebble.openURL(clay.generateUrl());
 });
