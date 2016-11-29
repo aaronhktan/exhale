@@ -26,23 +26,19 @@ Pebble.addEventListener('showConfiguration', function(e) {
 			clay.config = clayConfigDE;
 			break;
 	}
-  Pebble.openURL(clay.generateUrl());
+	Pebble.openURL(clay.generateUrl());
 });
 
 Pebble.addEventListener('webviewclosed', function(e) {
-  if (e && !e.response) {
-    return;
-  }
+	if (e && !e.response) {
+		return;
+	}
 
-  // Get the keys and values from each config item
-  var dict = clay.getSettings(e.response);
+	// Get the keys and values from each config item
+	var dict = clay.getSettings(e.response);
 	dict[messageKeys.reminderHours] = parseInt(dict[messageKeys.reminderHours]);
 	dict[messageKeys.displayText] = parseInt(dict[messageKeys.displayText]);
 	dict[messageKeys.vibrationType] = parseInt(dict[messageKeys.vibrationType]);
-// 	var platform = clay.meta.activeWatchInfo.platform;
-// 	if (platform === 'aplite' || platform === 'basalt' || platform === 'chalk') {
-// 		dict[messageKeys.heartRateEnabled] = false; // Just in case
-// 	}
 	
 	// Log all the settings for fun
 	console.log('The reminderHours sent to Pebble is ' + dict[messageKeys.reminderHours] + '.');
@@ -55,11 +51,11 @@ Pebble.addEventListener('webviewclosed', function(e) {
 	console.log('The reminderHoursStart sent to Pebble is ' + dict[messageKeys.reminderHoursStart] + '.');
 	console.log('The breathsPerMinute sent to Pebble is ' + dict[messageKeys.breathsPerMinute] + '.');
 	
-  // Send settings values to watch side
-  Pebble.sendAppMessage(dict, function(e) {
-    console.log('Sent config data to Pebble');
-  }, function(e) {
-    console.log('Failed to send config data!');
-    console.log(JSON.stringify(e));
-  });
+	// Send settings values to watch side
+	Pebble.sendAppMessage(dict, function(e) {
+		console.log('Sent config data to Pebble');
+	}, function(e) {
+		console.log('Failed to send config data!');
+		console.log(JSON.stringify(e));
+	});
 });

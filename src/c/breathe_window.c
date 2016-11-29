@@ -41,13 +41,13 @@ static void lower_text_layer_update_proc(Layer *s_inside_text_layer, GContext *c
 // Create generic animation
 static void create_animation(int duration, int delay, AnimationCurve animationcurve, AnimationImplementation *implementation) {
 	// Creates animation instance
-  Animation *anim = animation_create();
-  animation_set_duration(anim, duration);
-  animation_set_delay(anim, delay);
-  animation_set_curve(anim, animationcurve);
-  animation_set_implementation(anim, implementation);
+	Animation *anim = animation_create();
+	animation_set_duration(anim, duration);
+	animation_set_delay(anim, delay);
+	animation_set_curve(anim, animationcurve);
+	animation_set_implementation(anim, implementation);
 	// Schedules animation to start
-  animation_schedule(anim);
+	animation_schedule(anim);
 }
 
 // Fires at the end of app start
@@ -179,13 +179,13 @@ static void main_animation() {
 	
 	// Circle expands for 3 seconds and delays for 1 second
 	Animation *circle_expand = animation_create();
-  animation_set_duration(circle_expand, s_breath_duration);
-  animation_set_curve(circle_expand, AnimationCurveEaseInOut);
+	animation_set_duration(circle_expand, s_breath_duration);
+	animation_set_curve(circle_expand, AnimationCurveEaseInOut);
 	animation_set_delay(circle_expand, 1000);
 	static AnimationImplementation s_expand_impl = {
 		.update = radius_expand_update
 	};
-  animation_set_implementation(circle_expand, &s_expand_impl);
+	animation_set_implementation(circle_expand, &s_expand_impl);
 	
 	// Circle contracts for 3 seconds and delays for 1 second
 	Animation *circle_contract = animation_create();
@@ -195,7 +195,7 @@ static void main_animation() {
 	static AnimationImplementation s_contract_impl = {
 		.update = radius_contract_update
 	};
-  animation_set_implementation(circle_contract, &s_contract_impl);
+	animation_set_implementation(circle_contract, &s_contract_impl);
 	
 	// Plays expand and contract as a sequence (delay for 1 second, expand for 3, delay for 1, contract for 3)
 	Animation *circle_animation_sequence = animation_sequence_create(circle_expand, circle_contract, NULL);

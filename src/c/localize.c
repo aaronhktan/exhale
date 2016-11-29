@@ -149,7 +149,7 @@ char * localize_get_steps_today_text(int thousands) {
 		} else {
 			return "%d STEPS TODAY";
 		}
-  }
+	}
 }
 
 char * localize_get_heart_rate_text() {
