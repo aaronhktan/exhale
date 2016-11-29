@@ -21,9 +21,6 @@
 - Supports English, French, Spanish, and German (text in app, settings page all correspond to the watch's chosen language). Thanks to [noiob](https://github.com/noiob) for the German translation!
 - App Glance to show how many minutes the user breathed in the last session.
 
-##Todo
-- Make marketing assets to put on the Pebble Appstore.
-
 ##Some more screenshots:
 
 *Pebble Classic/Steel/2, Pebble Time (Steel), Pebble Time Round, Pebble Time 2*
