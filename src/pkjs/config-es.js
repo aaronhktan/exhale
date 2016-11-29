@@ -10,8 +10,9 @@ module.exports = [
 	{
 		"type": "section",
 		"items": [
-			{"type": "heading",
-			 "defaultValue": "Colores"
+			{
+				"type": "heading",
+				"defaultValue": "Colores"
 			},
 			{
 				"type": "color",
@@ -34,8 +35,9 @@ module.exports = [
 	{
 		"type": "section",
 		"items": [
-			{"type": "heading",
-			 "defaultValue": "En la app"
+			{
+				"type": "heading",
+				"defaultValue": "En la app"
 			},
 			{
 				"type": "toggle",
@@ -54,14 +56,14 @@ module.exports = [
 				"messageKey": "vibrationType",
 				"defaultValue": "0",
 				"label": "Tipo de vibración",
-				"description": "La condición base es como el Apple Watch; Simple es un doble toque.",
+				"description": "Sacudidas es como el Apple Watch; Toques es un doble toque.",
 				"options": [
 					{
-						"label": "Condicón base",
+						"label": "Sacudidas",
 						"value": "0"
 					},
 					{ 
-						"label": "Simple", 
+						"label": "Toques", 
 						"value": "1"
 					}
 				]
@@ -81,8 +83,9 @@ module.exports = [
 		"type": "section",
 		"capabilities": ["NOT_PLATFORM_APLITE"],
 		"items": [
-			{"type": "heading",
-			 "defaultValue": "Salud"
+			{
+				"type": "heading",
+				"defaultValue": "Salud"
 			},
 			{
 				"type": "select",
@@ -138,7 +141,7 @@ module.exports = [
 						"value": "4" 
 					},
 					{ 
-						"label": "Cada6 horas",
+						"label": "Cada 6 horas",
 						"value": "6" 
 					},
 					{ 
@@ -164,7 +167,7 @@ module.exports = [
 		"defaultValue": "<em><center>Muchas gracias a los probadores beta: <br>Paula&nbsp;Bosca, Nikita&nbsp;Cheng, Ayush&nbsp;Gupta, Ellen&nbsp;Huang, Yvonne&nbsp;Tan, David&nbsp;Voicu, y /u/PiwwowPants</center></em>",
 	},
 	{
-	"type": "submit",
-	"defaultValue": "Guardar mis ajustes"
+		"type": "submit",
+		"defaultValue": "Guardar mis ajustes"
 	}
 ];

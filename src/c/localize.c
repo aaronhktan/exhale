@@ -66,16 +66,6 @@ char * localize_get_exhale_text() {
 	}
 }
 
-char * localize_get_hello_text() {
-	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
-		return "ALLO!";
-	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
-		return "¡HOLA!";
-	} else {
-		return "HELLO!";
-	}
-}
-
 char * localize_get_min_breathed_today_text() {
 	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 		#ifdef PBL_ROUND

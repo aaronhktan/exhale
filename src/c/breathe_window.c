@@ -337,7 +337,7 @@ static void animation_end_callback(void *data) {
 	s_animation_completed = true;
 	s_animating = false;
 	
-	snprintf(s_greet_text, sizeof(s_greet_text), "%s", localize_get_hello_text());
+	snprintf(s_greet_text, sizeof(s_greet_text), "%s", localize_get_greet_text());
 	
 	// If the user breathes during passage from one day to another (i.e. 12AM) then set number of breaths to 0
 	snprintf(s_end_time, sizeof(s_end_time), data_get_date_today());
@@ -577,7 +577,7 @@ void breathe_window_push(int min) {
 	s_main_window = window_create();
 	window_set_background_color(s_main_window, settings_get_backgroundColor());
 	
-	// Set funcions to handle window
+	// Set functions to handle window
 	window_set_window_handlers(s_main_window, (WindowHandlers) {
 		.load = main_window_load,
 		.unload = main_window_unload

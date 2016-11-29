@@ -10,8 +10,9 @@ module.exports = [
 	{
 		"type": "section",
 		"items": [
-			{"type": "heading",
-			 "defaultValue": "Couleurs"
+			{
+				"type": "heading",
+			 	"defaultValue": "Couleurs"
 			},
 			{
 				"type": "color",
@@ -34,8 +35,9 @@ module.exports = [
 	{
 		"type": "section",
 		"items": [
-			{"type": "heading",
-			 "defaultValue": "Dans l'app"
+			{
+				"type": "heading",
+			 	"defaultValue": "Dans l'app"
 			},
 			{
 				"type": "toggle",
@@ -54,14 +56,14 @@ module.exports = [
 				"messageKey": "vibrationType",
 				"defaultValue": "0",
 				"label": "Type de vibration",
-				"description": "Défaut est comme celui du Apple Watch; Simple tappe deux fois.",
+				"description": "Secousses est comme celui du Apple Watch; Tapes tape deux fois.",
 				"options": [
 					{
-						"label": "Défaut",
+						"label": "Secousses",
 						"value": "0"
 					},
 					{ 
-						"label": "Simple", 
+						"label": "Tapes", 
 						"value": "1"
 					}
 				]
@@ -81,8 +83,9 @@ module.exports = [
 		"type": "section",
 		"capabilities": ["NOT_PLATFORM_APLITE"],
 		"items": [
-			{"type": "heading",
-			 "defaultValue": "Santé"
+			{
+				"type": "heading",
+				"defaultValue": "Santé"
 			},
 			{
 				"type": "select",
@@ -164,7 +167,7 @@ module.exports = [
 		"defaultValue": "<em><center>Un grand merci aux bêta-testeurs: <br>Paula&nbsp;Bosca, Nikita&nbsp;Cheng, Ayush&nbsp;Gupta, Ellen&nbsp;Huang, Yvonne&nbsp;Tan, David&nbsp;Voicu, et /u/PiwwowPants</center></em>",
 	},
 	{
-	"type": "submit",
-	"defaultValue": "Sauvegarder mes paramètres"
+		"type": "submit",
+		"defaultValue": "Sauvegarder mes paramètres"
 	}
 ];
