@@ -123,7 +123,11 @@ char * localize_get_steps_today_text(int thousands) {
 		} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
 			return "%d,%03d PASOS HOY";
 		} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
-			return "%d %03d SCHRITTE HEUTE";
+			#ifdef PBL_ROUND
+				return "%d %03d HEUTE";
+			#else
+				return "%d %03d SCHRITTE HEUTE";
+			#endif
 		} else {
 			return "%d,%03d STEPS TODAY";
 		}
@@ -137,7 +141,11 @@ char * localize_get_steps_today_text(int thousands) {
 		} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
 			return "%d PASOS HOY";
 		} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
-			return "%d SCHRITTE HEUTE";
+			#ifdef PBL_ROUND
+				return "%d HEUTE";
+			#else
+				return "%d SCHRITTE HEUTE";
+			#endif
 		} else {
 			return "%d STEPS TODAY";
 		}
