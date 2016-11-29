@@ -9,7 +9,7 @@
 #include "src/c/appglance.h"
 
 static void init() {
-	APP_LOG(APP_LOG_LEVEL_INFO, "You are running version 0.2.11 of the Breathe app.");
+	APP_LOG(APP_LOG_LEVEL_INFO, "You are running version 1.0 of the Breathe app.");
 	#if PBL_HEALTH
 		health_init(); // Subscribe to health service if health API is available
 	#endif

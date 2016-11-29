@@ -7,7 +7,7 @@ ClaySettings settings;
 // Sets default settings and then loads custom ones if set
 void settings_init() {
 	settings.backgroundColor = GColorBlack;
-	settings.circleColor = PBL_IF_COLOR_ELSE(GColorJaegerGreen, GColorWhite);
+	settings.circleColor = PBL_IF_COLOR_ELSE(GColorBlue, GColorWhite);
 	settings.textColor = GColorWhite;
 	settings.vibrationEnabled = true;
 	settings.vibrationType = 0;

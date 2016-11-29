@@ -251,6 +251,7 @@ static void main_animation() {
 
 // Schedules next animation if the number of times played is less than 7 times the number of minutes (seven breaths per minute)
 static void main_animation_callback () {
+	APP_LOG(APP_LOG_LEVEL_DEBUG, "The number of times played is %d.", s_times_played);
 	if (s_times_played < s_breaths_per_minute * s_min_to_breathe && s_animating) { // That means that the time hasn't elapsed and the animations are still going on
 		animationTimer[s_times_played] = app_timer_register(2 * s_breath_duration + 2000, main_animation_callback, NULL);
 		if (!layer_get_hidden(s_upper_text_layer) || !layer_get_hidden(s_lower_text_layer)) {
@@ -451,6 +452,10 @@ static void back_click_handler(ClickRecognizerRef recognizer, void *context) {
 		if (animationTimer[s_times_played] != NULL) {
 			app_timer_cancel(animationTimer[s_times_played]);
 			animationTimer[s_times_played] = NULL;
+		}
+		if (animationTimer[s_times_played - 1] != NULL) {
+			app_timer_cancel(animationTimer[s_times_played - 1]);
+			animationTimer[s_times_played - 1] = NULL;
 		}
 		if (animationTimer[0] != NULL) {
 			app_timer_cancel(animationTimer[0]);
