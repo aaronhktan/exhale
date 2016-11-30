@@ -1,10 +1,6 @@
 # Breathe
 
-![alt tag](https://github.com/cheeseisdisgusting/exhale/blob/master/screenshots/Emery_Marketing.png)
-
-##Screenshots
-
-*Main Menu*
+![alt tag](https://github.com/cheeseisdisgusting/exhale/blob/master/screenshots/Emery_Marketing_v2.png)
 
 ![alt tag](https://github.com/cheeseisdisgusting/exhale/blob/master/screenshots/main_menu_basalt.png)
 ![alt tag](https://github.com/cheeseisdisgusting/exhale/blob/master/screenshots/main_menu_basalt_blue.png)
