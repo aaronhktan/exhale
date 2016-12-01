@@ -1,74 +1,100 @@
 <!DOCTYPE html>
 <html lang="en-us">
-  <head>
-    <meta charset="UTF-8">
-    <title>Breathe by cheeseisdisgusting</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
-    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
-  </head>
-  <body>
-    <section class="page-header">
-      <h1 class="project-name">Breathe</h1>
-      <h2 class="project-tagline">Take a moment to breathe.</h2>
-      <a href="https://github.com/cheeseisdisgusting/exhale" class="btn">View on GitHub</a>
-      <a href="https://github.com/cheeseisdisgusting/exhale/zipball/master" class="btn">Download .zip</a>
-      <a href="https://github.com/cheeseisdisgusting/exhale/tarball/master" class="btn">Download .tar.gz</a>
-    </section>
+	<head>
+		<meta charset="UTF-8">
+		<title>Breathe for Pebble</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+		<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+		<link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+	</head>
+	<body>
+		<section class="page-header">
+			<h1 class="project-name">Breathe</h1>
+			<h2 class="project-tagline">Take a moment to breathe.</h2>
+			<a href="https://github.com/cheeseisdisgusting/exhale" class="btn">View on GitHub</a>
+			<a href="https://github.com/cheeseisdisgusting/exhale/zipball/master" class="btn">Download .zip</a>
+			<a href="https://github.com/cheeseisdisgusting/exhale/tarball/master" class="btn">Download .tar.gz</a>
+		</section>
 
-    <section class="main-content">
-      <p>Take a moment to breathe.</p>
+		<section class="main-content">
 
-<p>In the hectic life that we have now, take a step back and take a moment to collect our thoughts.</p>
+			<div id="English" class="tabcontent">
+				<p>Take a moment to breathe.</p>
+				<p>In the hectic life that we have now, take a step back and take a moment to collect our thoughts.</p>
+				<p>Features</p>
+				<ul>
+					<li>A soothing circle animation with gentle pulses to indicate inhale/exhale</li>
+					<li>Reminders to breathe: Choose when they start and how often reminders appear</li>
+					<li>A slew of settings: Choose what colour the circle and background are, how fast the breathing pace should be, and many more!</li>
+				</ul>
+				<p>Download now and enjoy breathing.</p>
+			</div>
 
-<p>Features</p>
+			<div id="Français" class="tabcontent">
+				<p>On vit aujourd'hui dans une société qui nous demande beaucoup, toute la journée. C'est pourquoi il faut prendre un moment pour respirer et réfléchir.</p>
+				<p>Fonctions</p>
+				<ul>
+					<li>Une animation relaxante et des vibrations légères pour vous indiquer d'inhaler/exhaler</li>
+					<li>Des rappels pour respirer: Choissisez quand commencent les rappels, et la fréquence à laquelle ils surviennent</li>
+					<li>Beaucoup de réglages: Choissisez la couleur du cercle et la couleur de fond, ainsi que la vitesse des respirationsm, et encore plus!</li>
+				</ul>
+				<p>Téléchargez maintenant et respirez maintenant!</p>
+			</div>
 
-<p>‣ A soothing circle animation with gentle pulses to indicate inhale/exhale</p>
+			<div id="Español" class="tabcontent">
+				<p>Vivimos hoy de manera muy conectada a todas horas; por eso, es necesario tomar un rato para relajarse, y respirar. Esta app te ayudará a descansar.</p>
+				<p>Características</p>
+				<ul>
+					<li>Una animación relajante con vibraciones ligeras para indicar una inspiración/exhalación</li>
+					<li>Recordatorios para respirar: Puedes escoger cuando empiezan los recordatorios, y la frecuencia de éstos</li>
+					<li>Varios ajustes: Escoge el color del círculo, el color de fondo, la rapidez de las respiraciones, y ¡mucho más!</li>
+				</ul>
+				<p>Descarga y ¡respira ahora!</p>
+			</div>
 
-<p>‣ Reminders to breathe: Choose when they start and how often reminders appear</p>
+			<ul class="tab">
+				<li><a href="javascript:void(0)" class="tablinks" onclick="openLanguage(event, 'English')" id="defaultOpen">English</a></li>
+				<li><a href="javascript:void(0)" class="tablinks" onclick="openLanguage(event, 'Français')">Français</a></li>
+				<li><a href="javascript:void(0)" class="tablinks" onclick="openLanguage(event, 'Español')">Español</a></li>
+			</ul>
 
-<p>‣ A slew of settings: Choose what colour the circle and background are, how fast the breathing pace should be, and many more!</p>
+			<select> 
+				<option value= "javascript:void(0)" class="tablinks" onclick="openLanguage(event, 'English')" id="defaultOpen">English</option> 
+				<option value= "javascript:void(0)" class="tablinks" onclick="openLanguage(event, 'Français')">Français</option> 
+				<option value= "javascript:void(0)" class="tablinks" onclick="openLanguage(event, 'Español')">Español</option> 
+			</select> 
 
-<p>Download now and enjoy breathing.</p>
+			<footer class="site-footer">
+				<span class="site-footer-owner"><a href="https://github.com/cheeseisdisgusting/exhale">Breathe</a> is maintained by <a href="https://github.com/cheeseisdisgusting">cheeseisdisgusting</a>.</span>
+				<span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+			</footer>
 
-<p>Français</p>
+		</section>
+		<script>
+			function openLanguage(evt, languageName) {
+				// Declare all variables
+				var i, tabcontent, tablinks;
 
-<p>On vit aujourd'hui dans une société qui nous demande beaucoup, toute la journée. C'est pourquoi il faut prendre un moment pour respirer et réfléchir.</p>
+				// Get all elements with class="tabcontent" and hide them
+				tabcontent = document.getElementsByClassName("tabcontent");
+				for (i = 0; i < tabcontent.length; i++) {
+					tabcontent[i].style.display = "none";
+				}
 
-<p>Fonctions</p>
+				// Get all elements with class="tablinks" and remove the class "active"
+				tablinks = document.getElementsByClassName("tablinks");
+				for (i = 0; i < tablinks.length; i++) {
+					tablinks[i].className = tablinks[i].className.replace(" active", "");
+				}
 
-<p>‣ Une animation relaxante et des vibrations légères pour vous indiquer d'inhaler/exhaler</p>
+				// Show the current tab, and add an "active" class to the link that opened the tab
+				document.getElementById(languageName).style.display = "block";
+				evt.currentTarget.className += " active";
+			}
 
-<p>‣ Des rappels pour respirer: Choissisez quand commencent les rappels, et la fréquence à laquelle ils surviennent</p>
-
-<p>‣ Beaucoup de réglages: Choissisez la couleur du cercle et la couleur de fond, ainsi que la vitesse des respirationsm, et encore plus!</p>
-
-<p>Téléchargez maintenant et respirez maintenant!</p>
-
-<p>Español</p>
-
-<p>Vivimos hoy de manera muy conectada a todas horas; por eso, es necesario tomar un rato para relajarse, y respirar. Esta app te ayudará a descansar.</p>
-
-<p>Características</p>
-
-<p>‣ Una animación relajante con vibraciones ligeras para indicar una inspiración/exhalación</p>
-
-<p>‣ Recordatorios para respirar: Puedes escoger cuando empiezan los recordatorios, y la frecuencia de éstos</p>
-
-<p>‣ Varios ajustes: Escoge el color del círculo, el color de fondo, la rapidez de las respiraciones, y ¡mucho más!</p>
-
-<p>Descarga y ¡respira ahora!</p>
-
-      <footer class="site-footer">
-        <span class="site-footer-owner"><a href="https://github.com/cheeseisdisgusting/exhale">Breathe</a> is maintained by <a href="https://github.com/cheeseisdisgusting">cheeseisdisgusting</a>.</span>
-
-        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
-      </footer>
-
-    </section>
-
-  
-  </body>
+			document.getElementById("defaultOpen").click();
+		</script>
+	</body>
 </html>
