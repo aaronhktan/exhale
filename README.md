@@ -1,11 +1,11 @@
 # Breathe
 
-![alt tag](https://github.com/cheeseisdisgusting/exhale/blob/master/screenshots/Emery_Marketing_v2.png)
+![alt tag](https://github.com/cheeseisdisgusting/exhale/blob/master/screenshots/Aplite_Marketing_v8.png)
 
-![alt tag](https://github.com/cheeseisdisgusting/exhale/blob/master/screenshots/main_menu_basalt.png)
-![alt tag](https://github.com/cheeseisdisgusting/exhale/blob/master/screenshots/main_menu_basalt_blue.png)
-![alt tag](https://github.com/cheeseisdisgusting/exhale/blob/master/screenshots/main_menu_basalt_pink.png)
-![alt tag](https://github.com/cheeseisdisgusting/exhale/blob/master/screenshots/index_basalt_green.png)
+![alt tag](https://github.com/cheeseisdisgusting/exhale/blob/master/screenshots/index_blue.png)
+![alt tag](https://github.com/cheeseisdisgusting/exhale/blob/master/screenshots/index_red.png)
+![alt tag](https://github.com/cheeseisdisgusting/exhale/blob/master/screenshots/index_green.png)
+![alt tag](https://github.com/cheeseisdisgusting/exhale/blob/master/screenshots/index_yellow.png)
 
 ##Features
 - A circle animation expands and contracts to help visualize and focus on breathing.
