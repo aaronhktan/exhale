@@ -54,17 +54,19 @@
 				<p>Descarga y ¡respira ahora!</p>
 			</div>
 
-			<ul class="tab">
-				<li><a href="javascript:void(0)" class="tablinks" onclick="openLanguage(event, 'English')" id="defaultOpen">English</a></li>
-				<li><a href="javascript:void(0)" class="tablinks" onclick="openLanguage(event, 'Français')">Français</a></li>
-				<li><a href="javascript:void(0)" class="tablinks" onclick="openLanguage(event, 'Español')">Español</a></li>
-			</ul>
+			<nav>
+				<ul class="tab">
+					<li><a href="javascript:void(0)" class="tablinks" onclick="openLanguage(event, 'English')" id="defaultOpen">English</a></li>
+					<li><a href="javascript:void(0)" class="tablinks" onclick="openLanguage(event, 'Français')">Français</a></li>
+					<li><a href="javascript:void(0)" class="tablinks" onclick="openLanguage(event, 'Español')">Español</a></li>
+				</ul>
 
-			<select> 
-				<option value= "javascript:void(0)" class="tablinks" onclick="openLanguage(event, 'English')" id="defaultOpen">English</option> 
-				<option value= "javascript:void(0)" class="tablinks" onclick="openLanguage(event, 'Français')">Français</option> 
-				<option value= "javascript:void(0)" class="tablinks" onclick="openLanguage(event, 'Español')">Español</option> 
-			</select> 
+				<select onchange="openLanguage(event, this.value)"> 
+					<option value= "English">English</option> 
+					<option value= "Français">Français</option> 
+					<option value= "Español">Español</option> 
+				</select>
+			</nav> 
 
 			<footer class="site-footer">
 				<span class="site-footer-owner"><a href="https://github.com/cheeseisdisgusting/exhale">Breathe</a> is maintained by <a href="https://github.com/cheeseisdisgusting">cheeseisdisgusting</a>.</span>
