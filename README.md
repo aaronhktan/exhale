@@ -7,6 +7,8 @@
 ![alt tag](https://github.com/cheeseisdisgusting/exhale/blob/master/screenshots/index_green.png)
 ![alt tag](https://github.com/cheeseisdisgusting/exhale/blob/master/screenshots/index_yellow.png)
 
+ [![Available on the Pebble App Store](http://pblweb.com/badge/583dc06f00355abe66000862/black/small)][appstore]
+
 ##Features
 - A circle animation expands and contracts to help visualize and focus on breathing.
 - Gentle vibrations allow users to use the app even if they are not looking at the screen.
@@ -25,3 +27,5 @@
 ![alt tag](https://github.com/cheeseisdisgusting/exhale/blob/master/screenshots/basalt_final.gif)
 ![alt tag](https://github.com/cheeseisdisgusting/exhale/blob/master/screenshots/chalk_final.gif)
 ![alt tag](https://github.com/cheeseisdisgusting/exhale/blob/master/screenshots/emery_final.gif)
+
+[appstore]: https://apps.getpebble.com/en_US/application/583dc06f00355abe66000862
