@@ -16,6 +16,7 @@ typedef struct ClaySettings {
 	bool rememberDuration;
 	int reminderHoursStart;
 	int breathsPerMinute;
+	bool heartRateVariation;
 } ClaySettings;
 
 void settings_init();
