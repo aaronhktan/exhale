@@ -7,7 +7,7 @@
 
 static Window *s_main_window;
 static Layer *s_circle_layer, *s_inside_text_layer, *s_upper_text_layer, *s_lower_text_layer;
-static AppTimer *s_animation_completed_timer, *s_main_animation_ended_timer, *animationTimer[69], *s_show_relax_text_timer, *s_show_inhale_timer, *s_show_exhale_timer, *s_hide_lower_text_layer, *s_click_provider_timer, *s_interrupt_timer;
+static AppTimer *s_animation_completed_timer, *s_main_animation_ended_timer, *animationTimer, *s_show_relax_text_timer, *s_show_inhale_timer, *s_show_exhale_timer, *s_hide_lower_text_layer, *s_click_provider_timer, *s_interrupt_timer;
 static GRect bounds;
 static uint8_t s_radius_final, s_radius = 0;
 static int s_min_to_breathe = 1, s_min_breathed_today = 0, s_times_played = 0, s_breath_duration, s_breaths_per_minute, s_current_radius;
@@ -149,8 +149,11 @@ static void main_animation_end(void *data) {
 		animation_duration = 2000;
 		animation_delay = 2000;
 		animation_curve = AnimationCurveEaseInOut;
-		// Vibration to signal that the thing is ended
-		vibes_double_pulse();
+		
+		if (settings_get_vibrationEnabled() && !quiet_time_is_active()) {
+			// Vibration to signal that the thing is ended
+			vibes_double_pulse();
+		}
 
 		// Localized strings
 		snprintf(s_min_today, sizeof(s_min_today), localize_get_well_done_text());
@@ -202,7 +205,7 @@ static void main_animation() {
 	animation_schedule(circle_animation_sequence);
 	s_times_played++; // Used to keep track to see how many should be played to fill time
 	
-	if (settings_get_vibrationEnabled()) {
+	if (settings_get_vibrationEnabled() && !quiet_time_is_active()) {
 		switch(settings_get_vibrationType()) {
 			case 0: ;
 				// Vibrations! (play for 0, rest for 1500, play for 25, rest for 25, etc.)
@@ -251,9 +254,8 @@ static void main_animation() {
 
 // Schedules next animation if the number of times played is less than 7 times the number of minutes (seven breaths per minute)
 static void main_animation_callback () {
-	APP_LOG(APP_LOG_LEVEL_DEBUG, "The number of times played is %d.", s_times_played);
 	if (s_times_played < s_breaths_per_minute * s_min_to_breathe && s_animating) { // That means that the time hasn't elapsed and the animations are still going on
-		animationTimer[s_times_played] = app_timer_register(2 * s_breath_duration + 2000, main_animation_callback, NULL);
+		animationTimer = app_timer_register(2 * s_breath_duration + 2000, main_animation_callback, NULL);
 		if (!layer_get_hidden(s_upper_text_layer) || !layer_get_hidden(s_lower_text_layer)) {
 			layer_set_hidden(s_upper_text_layer, true);
 			layer_set_hidden(s_lower_text_layer, true);
@@ -381,7 +383,7 @@ static void animation_end_callback(void *data) {
 	
 	// Sets different number of digits for one digit or two digits
 	if (s_min_to_breathe == 10) {
-			snprintf(s_min_to_breathe_text, 3, "%dd", s_min_to_breathe);
+			snprintf(s_min_to_breathe_text, 3, "%d", s_min_to_breathe);
 	} else {
 		snprintf(s_min_to_breathe_text, 2, "%d", s_min_to_breathe);
 	}
@@ -404,7 +406,7 @@ static void up_click_handler(ClickRecognizerRef recognizer, void *context) {
 		s_min_to_breathe += 1;
 		set_min_text(s_min_to_breathe, s_min_text);
 		if (s_min_to_breathe == 10) {
-			snprintf(s_min_to_breathe_text, 3, "%dd", s_min_to_breathe);
+			snprintf(s_min_to_breathe_text, 3, "%d", s_min_to_breathe);
 		} else {
 			snprintf(s_min_to_breathe_text, 2, "%d", s_min_to_breathe);
 		}
@@ -449,17 +451,9 @@ static void back_click_handler(ClickRecognizerRef recognizer, void *context) {
 			app_timer_cancel(s_show_exhale_timer);
 			s_show_exhale_timer = NULL;
 		}
-		if (animationTimer[s_times_played] != NULL) {
-			app_timer_cancel(animationTimer[s_times_played]);
-			animationTimer[s_times_played] = NULL;
-		}
-		if (animationTimer[s_times_played - 1] != NULL) {
-			app_timer_cancel(animationTimer[s_times_played - 1]);
-			animationTimer[s_times_played - 1] = NULL;
-		}
-		if (animationTimer[0] != NULL) {
-			app_timer_cancel(animationTimer[0]);
-			animationTimer[0] = NULL;
+		if (animationTimer != NULL) {
+			app_timer_cancel(animationTimer);
+			animationTimer = NULL;
 		}
 		
 		// Shows the expand animation
@@ -499,7 +493,7 @@ static void select_click_handler(ClickRecognizerRef recognizer, void *context) {
 		s_show_exhale_timer = app_timer_register(7100 + s_breath_duration, first_breath_out_callback, NULL);
 		
 		// First animationTimer, which will schedule the next time the circle expands or contracts
-		animationTimer[0] = app_timer_register(6000, main_animation_callback, NULL); 
+		animationTimer = app_timer_register(6000, main_animation_callback, NULL); 
 	
 		// Schedules the last out animation (circle expand) after min * duration of 7 breaths + duration of first circle contraction
 		APP_LOG(APP_LOG_LEVEL_DEBUG, "The timer is set to fire at %d.", s_min_to_breathe * s_breaths_per_minute * 2 * (s_breath_duration + 1000) + 7000);
@@ -565,7 +559,7 @@ static void main_window_unload(Window *window) {
 	layer_destroy(s_inside_text_layer);
 	vibes_cancel();
 	if (s_times_played != 0) {
-		app_timer_cancel(animationTimer[s_times_played]);
+		app_timer_cancel(animationTimer);
 	}
 	window_destroy(s_main_window);
 }
