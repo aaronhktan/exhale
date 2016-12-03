@@ -5,7 +5,7 @@ module.exports = [
 	},
 	{
 		"type": "text",
-		"defaultValue": "Ceci est la page de configuration pour l'app Breathe. Vous utilisez version 1.0 de l'app.",
+		"defaultValue": "Ceci est la page de configuration pour l'app Breathe. Vous utilisez version 1.1 de l'app.",
 	},
 	{
 		"type": "section",
@@ -59,14 +59,25 @@ module.exports = [
 				"description": "Secousses est comme celui du Apple Watch; Tapes tape deux fois.",
 				"options": [
 					{
-						"label": "Secousses",
+						"label": "Secousses - inhalation seulement",
 						"value": "0"
+					},
+					{
+						"label": "Secousses - inhalation et exhalation",
+						"value": "2"
 					},
 					{ 
 						"label": "Tapes", 
 						"value": "1"
 					}
 				]
+			},
+			{
+				"type": "toggle",
+				"messageKey": "heartRateVariation",
+				"defaultValue": false,
+				"label": "Choisir la vitesse de respiration selon le rhythme cardiaque?",
+				"description": "Note: Ceci requiert une montre avec un moniteur cardiaque."
 			},
 			{
 				"type": "slider",

@@ -5,7 +5,7 @@ module.exports = [
 	},
 	{
 		"type": "text",
-		"defaultValue": "Dies sind die Einstellungen für die Breathe-App. Sie benutzen Version 1.0 von Breathe.",
+		"defaultValue": "Dies sind die Einstellungen für die Breathe-App. Sie benutzen Version 1.1 von Breathe.",
 	},
 	{
 		"type": "section",
@@ -59,14 +59,25 @@ module.exports = [
 				"description": "Graduell fühlt sich an wie die Apple-Watch-App, Doppeltippen ist die Standard-Pebble-Vibration.",
 				"options": [
 					{
-						"label": "Graduell",
+						"label": "Graduell - Einatmen nur",
 						"value": "0"
+					},
+					{
+						"label": "Graduell - Einatmen und Ausatmung",
+						"value": "2"
 					},
 					{ 
 						"label": "Doppeltippen", 
 						"value": "1"
 					}
 				]
+			},
+			{
+				"type": "toggle",
+				"messageKey": "heartRateVariation",
+				"defaultValue": false,
+				"label": "Wählen Sie Atemgeschwindigkeit nach Herzfrequenz?",
+				"description" : "Herzfrequenz setzt eine Uhr mit HR-Sensor voraus."
 			},
 			{
 				"type": "slider",

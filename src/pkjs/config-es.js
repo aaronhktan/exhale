@@ -5,7 +5,7 @@ module.exports = [
 	},
 	{
 		"type": "text",
-		"defaultValue": "Esta es la página de ajustes para la app Breathe. Estás usando la versión 1.0 de la app.",
+		"defaultValue": "Esta es la página de ajustes para la app Breathe. Estás usando la versión 1.1 de la app.",
 	},
 	{
 		"type": "section",
@@ -59,14 +59,25 @@ module.exports = [
 				"description": "Sacudidas es como el Apple Watch; Toques es un doble toque.",
 				"options": [
 					{
-						"label": "Sacudidas",
+						"label": "Sacudidas - inhalación solamente",
 						"value": "0"
+					},
+					{
+						"label": "Sacudidas - inhalación y exhalación",
+						"value": "2"
 					},
 					{ 
 						"label": "Toques", 
 						"value": "1"
 					}
 				]
+			},
+			{
+				"type": "toggle",
+				"messageKey": "heartRateVariation",
+				"defaultValue": false,
+				"label": "¿Escoger la velocidad de respiraciones según el ritmo cardiaco?",
+				"description": "NOTA: Esto requiere un reloj con un monitor de ritmo cardiaco."
 			},
 			{
 				"type": "slider",
