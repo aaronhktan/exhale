@@ -74,11 +74,6 @@ module.exports = [
 			},
 			{
 				"type": "toggle",
-				"capabilities": [
-					"NOT_PLATFORM_APLITE", 
-					"NOT_PLATFORM_BASALT",
-					"NOT_PLATFORM_CHALK"
-					],
 				"messageKey": "heartRateVariation",
 				"defaultValue": false,
 				"label": "Wählen Sie Atemgeschwindigkeit nach Herzfrequenz?",
@@ -97,7 +92,7 @@ module.exports = [
 	},
 	{
 		"type": "section",
-		"capabilities": ["HEALTH"],
+		"capabilities": ["NOT_PLATFORM_APLITE"],
 		"items": [
 			{
 				"type": "heading",

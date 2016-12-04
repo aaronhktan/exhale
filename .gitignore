@@ -1,7 +1,0 @@
-.lock-waf_darwin_build
-
-build/*
-
-node_modules/*
-
-wscript
