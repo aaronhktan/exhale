@@ -69,6 +69,13 @@ module.exports = [
 				]
 			},
 			{
+				"type": "toggle",
+				"messageKey": "heartRateVariation",
+				"defaultValue": false,
+				"label": "Choose breathing speed depending on heart rate?",
+				"description": "Note: This requires a watch with a heart rate monitor."
+			},
+			{
 				"type": "slider",
 				"messageKey": "breathsPerMinute",
 				"defaultValue": 7,

@@ -69,6 +69,13 @@ module.exports = [
 				]
 			},
 			{
+				"type": "toggle",
+				"messageKey": "heartRateVariation",
+				"defaultValue": false,
+				"label": "Choisir la vitesse de respiration selon le rhythme cardiaque?",
+				"description": "Note: Ceci requiert une montre avec un moniteur cardiaque."
+			},
+			{
 				"type": "slider",
 				"messageKey": "breathsPerMinute",
 				"defaultValue": 7,

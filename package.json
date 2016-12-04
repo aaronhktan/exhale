@@ -21,7 +21,8 @@
             "rememberDuration",
             "breathsPerMinute",
             "vibrationType",
-            "displayText"
+            "displayText",
+            "heartRateVariation"
         ],
         "projectType": "native",
         "resources": {

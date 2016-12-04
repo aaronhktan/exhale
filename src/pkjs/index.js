@@ -50,6 +50,7 @@ Pebble.addEventListener('webviewclosed', function(e) {
 	console.log('The rememberDuration sent to Pebble is ' + dict[messageKeys.rememberDuration] + '.');
 	console.log('The reminderHoursStart sent to Pebble is ' + dict[messageKeys.reminderHoursStart] + '.');
 	console.log('The breathsPerMinute sent to Pebble is ' + dict[messageKeys.breathsPerMinute] + '.');
+	console.log('The heartRateVariation sent to Pebble is ' + dict[messageKeys.heartRateVariation] + '.');
 	
 	// Send settings values to watch side
 	Pebble.sendAppMessage(dict, function(e) {

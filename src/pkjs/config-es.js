@@ -69,6 +69,13 @@ module.exports = [
 				]
 			},
 			{
+				"type": "toggle",
+				"messageKey": "heartRateVariation",
+				"defaultValue": false,
+				"label": "¿Escoger la velocidad de respiraciones según el ritmo cardiaco?",
+				"description": "NOTA: Esto requiere un reloj con un monitor de ritmo cardiaco."
+			},
+			{
 				"type": "slider",
 				"messageKey": "breathsPerMinute",
 				"defaultValue": 7,

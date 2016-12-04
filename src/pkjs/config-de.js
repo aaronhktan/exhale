@@ -69,6 +69,13 @@ module.exports = [
 				]
 			},
 			{
+				"type": "toggle",
+				"messageKey": "heartRateVariation",
+				"defaultValue": false,
+				"label": "Wählen Sie Atemgeschwindigkeit nach Herzfrequenz?",
+				"description" : "Herzfrequenz setzt eine Uhr mit HR-Sensor voraus."
+			},
+			{
 				"type": "slider",
 				"messageKey": "breathsPerMinute",
 				"defaultValue": 7,
