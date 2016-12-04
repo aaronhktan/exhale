@@ -171,7 +171,7 @@ int settings_get_breathDuration() {
 			case 7:
 			case 8:
 				// Like above, but taking removing 4 seconds because otherwise a decimal would happen. Don't want that happening!
-				return (MILLISECONDS_PER_MINUTE - 4000  - (2000 * settings.breathsPerMinute)) / settings.breathsPerMinute / 2;
+				return (MILLISECONDS_PER_MINUTE - 4000 - (2000 * settings.breathsPerMinute)) / settings.breathsPerMinute / 2;
 				break;
 			default: // 9 breaths per minute
 				return (MILLISECONDS_PER_MINUTE + 3000 - (2000 * settings.breathsPerMinute)) / settings.breathsPerMinute / 2;

@@ -7,7 +7,7 @@
 
 static Window *s_main_window;
 static Layer *s_circle_layer, *s_inside_text_layer, *s_upper_text_layer, *s_lower_text_layer;
-static AppTimer *s_animation_completed_timer, *s_main_animation_ended_timer, *animationTimer, *s_show_relax_text_timer, *s_show_inhale_timer, *s_show_exhale_timer, *s_hide_lower_text_layer, *s_click_provider_timer, *s_interrupt_timer;
+static AppTimer *s_animation_completed_timer, *animationTimer, *s_show_relax_text_timer, *s_show_inhale_timer, *s_show_exhale_timer, *s_hide_lower_text_layer, *s_click_provider_timer, *s_interrupt_timer;
 static GRect bounds;
 static uint8_t s_radius_final, s_radius = 0;
 static int s_min_to_breathe = 1, s_min_breathed_today = 0, s_times_played = 0, s_breath_duration, s_breaths_per_minute, s_current_radius;
@@ -135,7 +135,7 @@ static void hide_lower_text_callback() {
 // Last out animation
 static void main_animation_end(void *data) {
 	
-	int animation_delay;
+	int animation_delay; // No delay
 	int animation_duration;
 	AnimationCurve animation_curve;
 	static AnimationImplementation s_main_animation_end = {
@@ -147,7 +147,7 @@ static void main_animation_end(void *data) {
 	if (complete == 0) {
 		// Sets duration of animation
 		animation_duration = 2000;
-		animation_delay = 2000;
+		animation_delay = 2500;
 		animation_curve = AnimationCurveEaseInOut;
 		
 		if (settings_get_vibrationEnabled() && !quiet_time_is_active()) {
@@ -163,8 +163,8 @@ static void main_animation_end(void *data) {
 		s_hide_lower_text_layer = app_timer_register(animation_duration, hide_lower_text_callback, NULL);
 	} else {
 		s_main_animation_end.update = interrupt_expand_update; // Changes the update procedure
+		animation_delay = 0;
 		animation_duration = 500; // Makes the duration longer
-		animation_delay = 0; // No delay; immediately play this animation
 		animation_curve = AnimationCurveEaseOut; // Feels faster than other curves
 		layer_set_hidden(s_lower_text_layer, true); // Hides any visible text layers
 		layer_set_hidden(s_upper_text_layer, true);
@@ -206,41 +206,104 @@ static void main_animation() {
 	s_times_played++; // Used to keep track to see how many should be played to fill time
 	
 	if (settings_get_vibrationEnabled() && !quiet_time_is_active()) {
+		int segment_length = 0; // Because it is impossible to find the length of a dynamically allocated array
 		switch(settings_get_vibrationType()) {
-			case 0: ;
+			case 0: ; // This is vibrations only on inhale
 				// Vibrations! (play for 0, rest for 1500, play for 25, rest for 25, etc.)
-				static uint32_t segments[52];
+				static uint32_t *segments;
 				switch(s_breaths_per_minute) {
 					case 4: ; // 15000 milliseconds long, with an empty statement after a label before a declaration
-						static const uint32_t four_segments[52] = {0, 2500, 25, 50, 25, 50, 25, 65, 25, 65, 25, 75, 25, 75, 25, 80, 25, 80, 25, 100, 25, 100, 25, 150, 25, 150, 25, 175, 25, 175, 25, 225, 25, 225, 25, 275, 25, 275, 25, 375, 25, 375, 25, 450, 25, 450, 25, 500, 25, 7300};
+						static const uint32_t four_segments[49] = {0, 2500, 25, 50, 25, 50, 25, 65, 25, 65, 25, 75, 25, 75, 25, 80, 25, 80, 25, 100, 25, 100, 25, 150, 25, 150, 25, 175, 25, 175, 25, 225, 25, 225, 25, 275, 25, 275, 25, 375, 25, 375, 25, 450, 25, 450, 25, 500, 25};
+						segment_length = ARRAY_LENGTH(four_segments);
+						segments = (uint32_t *) calloc(segment_length, sizeof(uint32_t));
 						memcpy(segments, four_segments, sizeof(four_segments));
 						break;
-					case 5: ; // 12000 milliseconds long (actually 11665 but who cares)
-						static const uint32_t five_segments[45] = {0, 2000, 25, 50, 25, 50, 25, 65, 25, 65, 25, 75, 25, 75, 25, 80, 25, 80, 25, 100, 25, 100, 25, 150, 25, 150, 25, 175, 25, 175, 25, 225, 25, 225, 25, 275, 25, 275, 25, 375, 25, 375, 25, 6000};
+					case 5: ; // 12000 milliseconds long
+						static const uint32_t five_segments[44] = {0, 2000, 25, 50, 25, 50, 25, 65, 25, 65, 25, 75, 25, 75, 25, 80, 25, 80, 25, 100, 25, 100, 25, 150, 25, 150, 25, 175, 25, 175, 25, 225, 25, 225, 25, 275, 25, 275, 25, 375, 25, 375, 25};
+						segment_length = ARRAY_LENGTH(four_segments);
+						segments = (uint32_t *) calloc(segment_length, sizeof(uint32_t));
 						memcpy(segments, five_segments, sizeof(five_segments));
 						break;
 					case 6:
-					case 7: ; // 8000 milliseconds long (actually 7650 milliseconds long), with an empty statement after a label before a declaration
-						static const uint32_t seven_segments[31] = {0, 1500, 25, 25, 25, 25, 25, 25, 25, 25, 25, 50, 25, 75, 25, 125, 25, 125, 25, 125, 25, 125, 25, 200, 25, 325, 25, 550, 25, 4000};
+					case 7: ; // 8000 milliseconds long
+						static const uint32_t seven_segments[29] = {0, 1500, 25, 25, 25, 25, 25, 25, 25, 25, 25, 50, 25, 75, 25, 125, 25, 125, 25, 125, 25, 125, 25, 200, 25, 325, 25, 550, 25};
+						segment_length = ARRAY_LENGTH(four_segments);
+						segments = (uint32_t *) calloc(segment_length, sizeof(uint32_t));
 						memcpy(segments, seven_segments, sizeof(seven_segments));
 						break;
-					case 8: // 7000 milliseconds long (actually 7000) (wow!!)
+					case 8: // 7000 milliseconds long
 					case 9: ;
-						static const uint32_t nine_segments[29] = {0, 1500, 25, 25, 25, 25, 25, 25, 25, 50, 25, 75, 25, 100, 25, 125, 25, 150, 25, 200, 25, 250, 25, 300, 25, 350, 25, 3500};
+						static const uint32_t nine_segments[27] = {0, 1500, 25, 25, 25, 25, 25, 25, 25, 50, 25, 75, 25, 100, 25, 125, 25, 150, 25, 200, 25, 250, 25, 300, 25, 350, 25};
+						segment_length = ARRAY_LENGTH(four_segments);
+						segments = (uint32_t *) calloc(segment_length, sizeof(uint32_t));
 						memcpy(segments, nine_segments, sizeof(nine_segments));
 						break;
-					default: ; // 6000 milliseconds long (actually 5075)
-						static const uint32_t ten_segments[31] = {0, 1100, 25, 25, 25, 25, 25, 25, 25, 50, 25, 75, 25, 100, 25, 100, 25, 125, 25, 125, 25, 150, 25, 250, 25, 275, 25, 300, 25, 2000};
+					default: ; // 6000 milliseconds long
+						static const uint32_t ten_segments[29] = {0, 1100, 25, 25, 25, 25, 25, 25, 25, 50, 25, 75, 25, 100, 25, 100, 25, 125, 25, 125, 25, 150, 25, 250, 25, 275, 25, 300, 25};
+						segment_length = ARRAY_LENGTH(four_segments);
+						segments = (uint32_t *) calloc(segment_length, sizeof(uint32_t));
 						memcpy(segments, ten_segments, sizeof(ten_segments));
 						break;
 				}
+				APP_LOG(APP_LOG_LEVEL_DEBUG, "The length of the segments array is %d.", segment_length);
 				VibePattern vibes = {
 					.durations = segments,
-					.num_segments = ARRAY_LENGTH(segments),
+					.num_segments = segment_length
 				};
 				vibes_enqueue_custom_pattern(vibes);
+				free(segments);
 				break;
-			default: ;// 1000 delay for animation, 50 play, 100 stop, 50 play, rest for breath duration and delay and subtract (50 + 100 + 50), and vibrate again.
+			case 2: ; // This is vibrations on inhale and exhale
+				static uint32_t *segments_both;
+				switch(s_breaths_per_minute) {
+					case 4: ; // 15000 milliseconds long, with an empty statement after a label before a declaration
+						static const uint32_t four_segments[96] = {0, 2500, 25, 50, 25, 50, 25, 65, 25, 65, 25, 75, 25, 75, 25, 80, 25, 80, 25, 100, 25, 100, 25, 150, 25, 150, 25, 175, 25, 175, 25, 225, 25, 225, 25, 275, 25, 275, 25, 375, 25, 450, 25, 450, 25, 500, 25, 2500, 25, 50, 25, 50, 25, 65, 25, 65, 25, 75, 25, 75, 25, 80, 25, 80, 25, 100, 25, 100, 25, 150, 25, 150, 25, 175, 25, 175, 25, 225, 25, 225, 25, 275, 25, 275, 25, 375, 25, 375, 25, 450, 25, 450, 25, 500, 25};
+						segment_length = ARRAY_LENGTH(four_segments);
+						segments_both = (uint32_t *) calloc(segment_length, sizeof(uint32_t));
+						memcpy(segments_both, four_segments, sizeof(four_segments));
+						break;
+					case 5: ; // 12000 milliseconds long
+						static const uint32_t five_segments[86] = {0, 2000, 25, 50, 25, 50, 25, 65, 25, 65, 25, 75, 25, 75, 25, 80, 25, 80, 25, 100, 25, 100, 25, 150, 25, 150, 25, 175, 25, 175, 25, 225, 25, 225, 25, 275, 25, 275, 25, 375, 25, 375, 25, 2200, 25, 50, 25, 50, 25, 65, 25, 65, 25, 75, 25, 75, 25, 80, 25, 80, 25, 100, 25, 100, 25, 150, 25, 150, 25, 175, 25, 175, 25, 225, 25, 225, 25, 275, 25, 275, 25, 275, 25};
+						segment_length = ARRAY_LENGTH(five_segments);
+						segments_both = (uint32_t *) calloc(segment_length, sizeof(uint32_t));
+						memcpy(segments_both, five_segments, sizeof(five_segments));
+						break;
+					case 6: ; // 8000 milliseconds long
+						static const uint32_t six_segments[60] = {0, 1500, 25, 25, 25, 25, 25, 25, 25, 25, 25, 50, 25, 75, 25, 125, 25, 125, 25, 125, 25, 125, 25, 200, 25, 325, 25, 550, 25, 2600, 25, 25, 25, 25, 25, 25, 25, 25, 25, 50, 25, 75, 25, 125, 25, 125, 25, 125, 25, 125, 25, 200, 25, 325, 25, 550, 25};
+						segment_length = ARRAY_LENGTH(six_segments);
+						segments_both = (uint32_t *) calloc(segment_length, sizeof(uint32_t));
+						memcpy(segments_both, six_segments, sizeof(six_segments));
+						break;
+					case 7: ; // 8000 milliseconds long
+						static const uint32_t seven_segments[58] = {0, 1500, 25, 25, 25, 25, 25, 25, 25, 25, 25, 50, 25, 75, 25, 125, 25, 125, 25, 125, 25, 125, 25, 200, 25, 325, 25, 550, 25, 1800, 25, 25, 25, 25, 25, 25, 25, 25, 25, 50, 25, 75, 25, 125, 25, 125, 25, 125, 25, 125, 25, 200, 25, 325, 25, 550, 25};
+						segment_length = ARRAY_LENGTH(seven_segments);
+						segments_both = (uint32_t *) calloc(segment_length, sizeof(uint32_t));
+						memcpy(segments_both, seven_segments, sizeof(seven_segments));
+						break;
+					case 8: // 7000 milliseconds long
+					case 9: ;
+						static const uint32_t nine_segments[54] = {0, 1500, 25, 25, 25, 25, 25, 25, 25, 50, 25, 75, 25, 100, 25, 125, 25, 150, 25, 200, 25, 250, 25, 300, 25, 350, 25, 1200, 25, 25, 25, 25, 25, 25, 25, 50, 25, 75, 25, 100, 25, 125, 25, 150, 25, 200, 25, 250, 25, 300, 25};
+						segment_length = ARRAY_LENGTH(nine_segments);
+						segments_both = (uint32_t *) calloc(segment_length, sizeof(uint32_t));
+						memcpy(segments_both, nine_segments, sizeof(nine_segments));
+						break;
+					default: ; // 6000 milliseconds long
+						static const uint32_t ten_segments[58] = {0, 1000, 25, 25, 25, 25, 25, 25, 25, 50, 25, 75, 25, 100, 25, 100, 25, 125, 25, 125, 25, 150, 25, 250, 25, 275, 25, 300, 25, 1050, 25, 25, 25, 25, 25, 25, 25, 50, 25, 75, 25, 100, 25, 100, 25, 125, 25, 125, 25, 150, 25, 250, 25, 275, 25};
+						segment_length = ARRAY_LENGTH(ten_segments);
+						segments_both = (uint32_t *) calloc(segment_length, sizeof(uint32_t));
+						memcpy(segments_both, ten_segments, sizeof(ten_segments));
+						break;
+				}
+				APP_LOG(APP_LOG_LEVEL_DEBUG, "The length of the segments array is %d.", segment_length);
+				VibePattern vibes_both = {
+					.durations = segments_both,
+					.num_segments = segment_length,
+				};
+				vibes_enqueue_custom_pattern(vibes_both);
+				free(segments_both);
+				break;
+			default: ; // This is simple vibrations (double tap)
+				// 1000 delay for animation, 50 play, 100 stop, 50 play, rest for breath duration and delay and subtract (50 + 100 + 50), and vibrate again.
 				const uint32_t segments_simple[] = {0, 1000, 50, 100, 50, settings_get_breathDuration() + 1000 - 200, 50, 100, 50, settings_get_breathDuration() - 300};
 				VibePattern vibes_simple = {
 					.durations = segments_simple,
@@ -261,6 +324,8 @@ static void main_animation_callback () {
 			layer_set_hidden(s_lower_text_layer, true);
 		}
 		main_animation();
+	} else if (s_animating) { // This means that the main animation is complete
+		animationTimer = app_timer_register(500, main_animation_end, (void*)0);
 	}
 }
 
@@ -435,10 +500,6 @@ static void back_click_handler(ClickRecognizerRef recognizer, void *context) {
 			app_timer_cancel(s_animation_completed_timer);
 			s_animation_completed_timer = NULL;
 		}
-		if (s_main_animation_ended_timer != NULL) {
-			app_timer_cancel(s_main_animation_ended_timer);
-			s_main_animation_ended_timer = NULL;
-		}
 		if (s_show_relax_text_timer != NULL) {
 			app_timer_cancel(s_show_relax_text_timer);
 			s_show_relax_text_timer = NULL;
@@ -500,7 +561,6 @@ static void select_click_handler(ClickRecognizerRef recognizer, void *context) {
 		APP_LOG(APP_LOG_LEVEL_DEBUG, "The number of minutes to breath is %d.", s_min_to_breathe);
 		APP_LOG(APP_LOG_LEVEL_DEBUG, "The number of breaths per minute is %d.", s_breaths_per_minute);
 		APP_LOG(APP_LOG_LEVEL_DEBUG, "The duration per breath is %d.", s_breath_duration);
-		s_main_animation_ended_timer = app_timer_register(s_min_to_breathe * s_breaths_per_minute * 2 * (s_breath_duration + 1000) + 7000, main_animation_end, (void*)0);
 		/* Schedules the "hide everything and revert to main menu" callback 
 		(which is minutes * number of breaths per minute * duration per minute + duration of opening and closing text) */
 		int s_animation_completed_delay = s_min_to_breathe * s_breaths_per_minute * 2 * (s_breath_duration + 1000) + 11000;

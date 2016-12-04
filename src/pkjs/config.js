@@ -5,7 +5,7 @@ module.exports = [
 	},
 	{
 		"type": "text",
-		"defaultValue": "This is the settings page for the Breathe app. You are running version 1.0 of Breathe.",
+		"defaultValue": "This is the settings page for the Breathe app. You are running version 1.1 of Breathe.",
 	},
 	{
 		"type": "section",
@@ -59,8 +59,12 @@ module.exports = [
 				"description": "Shakes is like the Apple Watch, Taps is double tap.",
 				"options": [
 					{
-						"label": "Shakes",
+						"label": "Shakes - inhale only",
 						"value": "0"
+					},
+					{
+						"label": "Shakes - inhale and exhale",
+						"value": "2"
 					},
 					{ 
 						"label": "Taps", 
