@@ -8,16 +8,16 @@ static char s_current_steps_buffer[22], s_current_heart_rate_buffer[8];
 
 // Updates how many steps there are
 void data_update_steps_buffer() {
-  int thousands = s_current_steps / 1000;
-  int hundreds = s_current_steps % 1000;
-  // Puts the number of steps in a string
+	int thousands = s_current_steps / 1000;
+	int hundreds = s_current_steps % 1000;
+	// Puts the number of steps in a string
 	if(thousands >= 10) { // There's a ten thousands digit!
 			snprintf(s_current_steps_buffer, sizeof(s_current_steps_buffer), localize_get_steps_today_text(thousands), thousands, hundreds);
 	} else if (thousands > 0) { // There's just a thousands digit
 			snprintf(s_current_steps_buffer, sizeof(s_current_steps_buffer), localize_get_steps_today_text(thousands), thousands, hundreds);
 	} else { // There isn't a thousands digit!
 			snprintf(s_current_steps_buffer, sizeof(s_current_steps_buffer), localize_get_steps_today_text(thousands), hundreds);
-  }
+	}
 }
 
 // Updates the current heart rate
@@ -113,7 +113,7 @@ int data_read_breathe_persist_data() {
 		data_write_date_persist_data();
 		min_breathed_today = 0;
 		data_write_breathe_persist_data(min_breathed_today);
-  	return min_breathed_today;
+	return min_breathed_today;
 	}
 	return 0;
 }

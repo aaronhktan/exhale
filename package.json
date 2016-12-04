@@ -1,7 +1,7 @@
 {
     "author": "cheeseisdisgusting@gmail.com",
     "dependencies": {
-        "pebble-clay": "^1.0.3"
+        "pebble-clay": "^1.0.4"
     },
     "keywords": [],
     "name": "breathe",
@@ -16,21 +16,17 @@
             "backgroundColor",
             "circleColor",
             "vibrationEnabled",
-            "heartRateEnabled",
             "reminderHours",
             "reminderHoursStart",
             "rememberDuration",
-            "breathsPerMinute"
+            "breathsPerMinute",
+            "vibrationType",
+            "displayText",
+            "heartRateVariation"
         ],
         "projectType": "native",
         "resources": {
             "media": [
-                {
-                    "file": "data/clock_sequence.pdc",
-                    "name": "CLOCK_SEQUENCE",
-                    "targetPlatforms": null,
-                    "type": "raw"
-                },
                 {
                     "file": "images/icon.png",
                     "menuIcon": true,
@@ -38,6 +34,12 @@
                     "storageFormat": "png",
                     "targetPlatforms": null,
                     "type": "bitmap"
+                },
+                {
+                    "file": "data/clock_sequence.pdc",
+                    "name": "CLOCK_SEQUENCE",
+                    "targetPlatforms": null,
+                    "type": "raw"
                 }
             ]
         },
@@ -54,5 +56,5 @@
             "watchface": false
         }
     },
-    "version": "0.28.0"
+    "version": "1.1.0"
 }

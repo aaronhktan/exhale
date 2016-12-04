@@ -31,23 +31,23 @@ static void next_frame_handler(void *context) {
 // Method to update the PDC layer
 static void canvas_update_proc(Layer *layer, GContext *ctx) {
 	GRect bounds = layer_get_bounds(layer);
-  GSize seq_bounds = gdraw_command_sequence_get_bounds_size(s_command_seq);
+	GSize seq_bounds = gdraw_command_sequence_get_bounds_size(s_command_seq);
 
-  GDrawCommandFrame *frame = gdraw_command_sequence_get_frame_by_index(s_command_seq, s_index); // Grabs frame from PDC
+	GDrawCommandFrame *frame = gdraw_command_sequence_get_frame_by_index(s_command_seq, s_index); // Grabs frame from PDC
 
-  if (frame) { // A next frame was found
-    gdraw_command_frame_draw(ctx, s_command_seq, frame, GPoint(
-      (bounds.size.w - seq_bounds.w) / 2,
-      (bounds.size.h - seq_bounds.h) / 2
-    ));
-  }
+	if (frame) { // A next frame was found
+		gdraw_command_frame_draw(ctx, s_command_seq, frame, GPoint(
+			(bounds.size.w - seq_bounds.w) / 2,
+			(bounds.size.h - seq_bounds.h) / 2
+		));
+	}
 
-  // Advance to the next frame, wrapping if neccessary
-  int num_frames = gdraw_command_sequence_get_num_frames(s_command_seq);
-  s_index++;
-  if (s_index == num_frames) {
-    s_index = 0;
-  }
+// Advance to the next frame, wrapping if neccessary
+int num_frames = gdraw_command_sequence_get_num_frames(s_command_seq);
+s_index++;
+if (s_index == num_frames) {
+s_index = 0;
+}
 	
 	graphics_context_set_fill_color(ctx, GColorBlack);
 	#ifdef PBL_PLATFORM_EMERY
@@ -60,18 +60,18 @@ static void canvas_update_proc(Layer *layer, GContext *ctx) {
 }
 
 static void action_performed_callback(ActionMenu *action_menu, const ActionMenuItem *action, void *context) {
-  // Some amount of minutes was selected; find which one and pass to breathe_window to start
-  s_min_to_breathe = (int)action_menu_item_get_action_data(action);
+	// Some amount of minutes was selected; find which one and pass to breathe_window to start
+	s_min_to_breathe = (int)action_menu_item_get_action_data(action);
 	app_timer_cancel(s_close_timer);
 	window_stack_remove(s_reminder_window, false);
 	breathe_window_push(s_min_to_breathe);
 }
 
 static void init_action_menu() {
-  // Create the root level
-  s_root_level = action_menu_level_create(10);
+	// Create the root level
+	s_root_level = action_menu_level_create(10);
 
-  // Set up the actions for this level, using action context to pass types
+	// Set up the actions for this level, using action context to pass types
 	static char menu_text[11][16];
 	for (int i = 1; i < 11; i++) {
 		static char actionmenu_entry_text[16];
@@ -83,14 +83,14 @@ static void init_action_menu() {
 
 static void select_click_handler(ClickRecognizerRef recognizer, void *context) {
 	// ActionMenu
-  ActionMenuConfig config = (ActionMenuConfig) {
-    .root_level = s_root_level,
-    .colors = {
-      .background = random_color,
-      .foreground = GColorBlack,
-    },
-    .align = ActionMenuAlignCenter
-  };
+	ActionMenuConfig config = (ActionMenuConfig) {
+		.root_level = s_root_level,
+		.colors = {
+			.background = random_color,
+			.foreground = GColorBlack,
+		},
+		.align = ActionMenuAlignCenter
+};
 	
 	// Show the ActionMenu
 	s_action_menu = action_menu_open(&config);
@@ -104,7 +104,7 @@ static void click_config_provider(void *context) {
 static void reminder_window_load(Window *window) {
 	// Information about screen
 	Layer *window_layer = window_get_root_layer(window);
-  GRect bounds = layer_get_bounds(window_layer);
+	GRect bounds = layer_get_bounds(window_layer);
 
 	// Layer for PDC
 	s_canvas_layer = layer_create(bounds);
@@ -112,8 +112,12 @@ static void reminder_window_load(Window *window) {
 	
 	layer_add_child(window_layer, s_canvas_layer);
 	
-	vibes_double_pulse();
-  window_set_background_color(s_reminder_window, PBL_IF_COLOR_ELSE(random_color, GColorWhite));
+	// Only vibrate when the watch isn't in Quiet Time
+	if (!quiet_time_is_active()){
+		vibes_double_pulse();
+	}
+	
+	window_set_background_color(s_reminder_window, PBL_IF_COLOR_ELSE(random_color, GColorWhite));
 	
 	app_timer_register(DELTA, next_frame_handler, NULL);
 	
@@ -136,7 +140,7 @@ static void reminder_window_load(Window *window) {
 static void reminder_window_unload(Window *window) {
 	layer_destroy(s_canvas_layer);
 	layer_destroy(text_layer_get_layer(s_text_layer));
-  gdraw_command_sequence_destroy(s_command_seq);
+	gdraw_command_sequence_destroy(s_command_seq);
 	action_menu_hierarchy_destroy(s_root_level, NULL, NULL);
 	window_destroy(s_reminder_window);
 }

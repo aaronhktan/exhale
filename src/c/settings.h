@@ -10,11 +10,13 @@ typedef struct ClaySettings {
 	GColor circleColor;
 	GColor textColor;
 	bool vibrationEnabled;
-	bool heartRateEnabled;
+	int vibrationType;
+	int displayText;
 	int reminderHours;
 	bool rememberDuration;
 	int reminderHoursStart;
 	int breathsPerMinute;
+	bool heartRateVariation;
 } ClaySettings;
 
 void settings_init();
@@ -25,7 +27,8 @@ GColor settings_get_backgroundColor();
 GColor settings_get_circleColor();
 GColor settings_get_textColor();
 bool settings_get_vibrationEnabled();
-bool settings_get_heartRateEnabled();
+int settings_get_vibrationType();
+int settings_get_displayText();
 int settings_get_reminderHours();
 bool settings_get_rememberDuration();
 int settings_get_reminderHoursStart();

@@ -5,13 +5,14 @@ module.exports = [
 	},
 	{
 		"type": "text",
-		"defaultValue": "Ceci est la page de configuration pour l'app Breathe. Vous utilisez version 0.2.8 de l'app.",
+		"defaultValue": "Ceci est la page de configuration pour l'app Breathe. Vous utilisez version 1.1 de l'app.",
 	},
 	{
 		"type": "section",
 		"items": [
-			{"type": "heading",
-			 "defaultValue": "Couleurs"
+			{
+				"type": "heading",
+			 	"defaultValue": "Couleurs"
 			},
 			{
 				"type": "color",
@@ -34,8 +35,9 @@ module.exports = [
 	{
 		"type": "section",
 		"items": [
-			{"type": "heading",
-			 "defaultValue": "Dans l'app"
+			{
+				"type": "heading",
+			 	"defaultValue": "Dans l'app"
 			},
 			{
 				"type": "toggle",
@@ -50,6 +52,34 @@ module.exports = [
 				"label": "Activer les vibrations pendant les respirations?",
 			},
 			{
+				"type": "select",
+				"messageKey": "vibrationType",
+				"defaultValue": "0",
+				"label": "Type de vibration",
+				"description": "Secousses est comme celui du Apple Watch; Tapes tape deux fois.",
+				"options": [
+					{
+						"label": "Secousses - inhalation seulement",
+						"value": "0"
+					},
+					{
+						"label": "Secousses - inhalation et exhalation",
+						"value": "2"
+					},
+					{ 
+						"label": "Tapes", 
+						"value": "1"
+					}
+				]
+			},
+			{
+				"type": "toggle",
+				"messageKey": "heartRateVariation",
+				"defaultValue": false,
+				"label": "Choisir la vitesse de respiration selon le rhythme cardiaque?",
+				"description": "Note: Ceci requiert une montre avec un moniteur cardiaque."
+			},
+			{
 				"type": "slider",
 				"messageKey": "breathsPerMinute",
 				"defaultValue": 7,
@@ -62,18 +92,33 @@ module.exports = [
 	},
 	{
 		"type": "section",
-		"capabilities": ["NOT_PLATFORM_APLITE", "NOT_PLATFORM_BASALT", "NOT_PLATFORM_CHALK"],
+		"capabilities": ["NOT_PLATFORM_APLITE"],
 		"items": [
-			{"type": "heading",
-			 "defaultValue": "Santé"
+			{
+				"type": "heading",
+				"defaultValue": "Santé"
 			},
 			{
-				"type": "toggle",
-				"messageKey": "heartRateEnabled",
-				"defaultValue": true,
-				"label": "Montrer le rhythme cardiaque",
-				"description": "Si activé, l'app montre le rhythme cardiaque dans le menu principal. Sinon, le nombre de pas marchés aujourd'hui sera montré."
-			}
+				"type": "select",
+				"messageKey": "displayText",
+				"defaultValue": "1",
+				"label": "Montrer...",
+				"description": "Ceci détermine ce qui est montré en haut du menu principal. Montrer le rhythme cardiaque requiert une montre avec un moniteur cardiaque.",
+				"options": [
+					{
+						"label": "Salut",
+						"value": "0"
+					},
+					{ 
+						"label": "Nombre de pas pris aujourd'hui", 
+						"value": "1" 
+					},
+					{ 
+						"label": "Rhythme cardiaque",
+						"value": "2" 
+					}
+				]
+			},
 		]
 	},
 	{
@@ -130,10 +175,10 @@ module.exports = [
 	},
 	{
 		"type": "text",
-		"defaultValue": "<em><center>Un grand merci aux bêta-testeurs: <br>Paula&nbsp;Bosca, Nikita&nbsp;Cheng, Ayush&nbsp;Gupta, Ellen&nbsp;Huang, Yvonne&nbsp;Tan, et David&nbsp;Voicu</center></em>",
+		"defaultValue": "<em><center>Un grand merci aux bêta-testeurs: <br>Paula&nbsp;Bosca, Nikita&nbsp;Cheng, Ayush&nbsp;Gupta, Ellen&nbsp;Huang, Yvonne&nbsp;Tan, David&nbsp;Voicu, /u/dryingsocks, et /u/PiwwowPants</center></em>",
 	},
 	{
-	"type": "submit",
-	"defaultValue": "Sauvegarder mes paramètres"
+		"type": "submit",
+		"defaultValue": "Sauvegarder mes paramètres"
 	}
 ];

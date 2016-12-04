@@ -5,13 +5,14 @@ module.exports = [
 	},
 	{
 		"type": "text",
-		"defaultValue": "This is the settings page for the Breathe app. You are running version 0.2.8 of Breathe.",
+		"defaultValue": "This is the settings page for the Breathe app. You are running version 1.1 of Breathe.",
 	},
 	{
 		"type": "section",
 		"items": [
-			{"type": "heading",
-			 "defaultValue": "Colors"
+			{
+				"type": "heading",
+			 	"defaultValue": "Colors"
 			},
 			{
 				"type": "color",
@@ -34,8 +35,9 @@ module.exports = [
 	{
 		"type": "section",
 		"items": [
-			{"type": "heading",
-			 "defaultValue": "In-App"
+			{
+				"type": "heading",
+				"defaultValue": "In-App"
 			},
 			{
 				"type": "toggle",
@@ -50,6 +52,34 @@ module.exports = [
 				"label": "Enable vibrations on inhale",
 			},
 			{
+				"type": "select",
+				"messageKey": "vibrationType",
+				"defaultValue": "0",
+				"label": "Vibration Type",
+				"description": "Shakes is like the Apple Watch, Taps is double tap.",
+				"options": [
+					{
+						"label": "Shakes - inhale only",
+						"value": "0"
+					},
+					{
+						"label": "Shakes - inhale and exhale",
+						"value": "2"
+					},
+					{ 
+						"label": "Taps", 
+						"value": "1"
+					}
+				]
+			},
+			{
+				"type": "toggle",
+				"messageKey": "heartRateVariation",
+				"defaultValue": false,
+				"label": "Choose breathing speed depending on heart rate?",
+				"description": "Note: This requires a watch with a heart rate monitor."
+			},
+			{
 				"type": "slider",
 				"messageKey": "breathsPerMinute",
 				"defaultValue": 7,
@@ -62,18 +92,33 @@ module.exports = [
 	},
 	{
 		"type": "section",
-		"capabilities": ["NOT_PLATFORM_APLITE", "NOT_PLATFORM_BASALT", "NOT_PLATFORM_CHALK"],
+		"capabilities": ["NOT_PLATFORM_APLITE"],
 		"items": [
-			{"type": "heading",
-			 "defaultValue": "Health"
+			{
+				"type": "heading",
+			 	"defaultValue": "Health"
 			},
 			{
-				"type": "toggle",
-				"messageKey": "heartRateEnabled",
-				"defaultValue": true,
-				"label": "Show heart rate",
-				"description": "If enabled, the app shows the heart rate. If disabled, the app shows the number of steps taken today."
-			}
+				"type": "select",
+				"messageKey": "displayText",
+				"defaultValue": "1",
+				"label": "Show...",
+				"description": "This determines what the app shows at the top part of the main menu. Heart rate requires a watch with a heart rate monitor.",
+				"options": [
+					{
+						"label": "Greeting",
+						"value": "0"
+					},
+					{ 
+						"label": "Steps today", 
+						"value": "1" 
+					},
+					{ 
+						"label": "Heart Rate",
+						"value": "2" 
+					}
+				]
+			},
 		]
 	},
 	{
@@ -81,7 +126,7 @@ module.exports = [
 		"items": [
 			{
 				"type": "heading",
-			 "defaultValue": "Reminders"
+				"defaultValue": "Reminders"
 			},
 			{
 				"type": "select",
@@ -130,10 +175,10 @@ module.exports = [
 	},
 	{
 		"type": "text",
-		"defaultValue": "<em><center>Many thanks to the beta testers: <br>Paula&nbsp;Bosca, Nikita&nbsp;Cheng, Ayush&nbsp;Gupta, Ellen&nbsp;Huang, Yvonne&nbsp;Tan, and David&nbsp;Voicu</center></em>",
+		"defaultValue": "<em><center>Many thanks to the beta testers: <br>Paula&nbsp;Bosca, Nikita&nbsp;Cheng, Ayush&nbsp;Gupta, Ellen&nbsp;Huang, Yvonne&nbsp;Tan, David&nbsp;Voicu, /u/dryingsocks, and /u/PiwwowPants.</center></em>",
 	},
 	{
-	"type": "submit",
-	"defaultValue": "Save Settings"
+		"type": "submit",
+		"defaultValue": "Save Settings"
 	}
 ];
