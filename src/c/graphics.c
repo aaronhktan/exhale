@@ -56,15 +56,12 @@ void graphics_draw_upper_text(GContext *ctx, GRect bounds, bool is_animating, in
 		} else { // Otherwise, show step counts if Pebble Health, and string if not.
 			switch(display_text) {
 				case 0:
-						//No text
-					break;
-				case 1:
 					graphics_draw_text(ctx, greet_text, fonts_get_system_font(FONT_KEY), 
 											 GRect((bounds.size.w - greet_text_bounds.w) / 2, PBL_IF_RECT_ELSE(5, 15), greet_text_bounds.w, greet_text_bounds.h),
 											 GTextOverflowModeWordWrap, GTextAlignmentCenter, NULL);
 					break;
+				case 1:
 				case 2:
-				case 3:
 					graphics_draw_text(ctx, PBL_IF_HEALTH_ELSE(steps_buffer, greet_text), fonts_get_system_font(FONT_KEY), 
 											 GRect((bounds.size.w - greet_text_bounds.w) / 2, PBL_IF_RECT_ELSE(5, 15), greet_text_bounds.w, greet_text_bounds.h),
 											 GTextOverflowModeWordWrap, GTextAlignmentCenter, NULL);

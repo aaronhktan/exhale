@@ -111,20 +111,16 @@ module.exports = [
 				"description": "Esto determina lo que está mostrado en el menu principal. NOTA: El ritmo cardiaco requiere un reloj con un monitor de ritmo cardiaco.",
 				"options": [
 					{
-						"label": "Nada",
-						"value": "0"
-					},
-					{
 						"label": "Saludo",
-						"value": "1"
+						"value": "0"
 					},
 					{ 
 						"label": "Pasos hoy", 
-						"value": "2" 
+						"value": "1" 
 					},
 					{ 
 						"label": "Ritmo cardiaco",
-						"value": "3" 
+						"value": "2" 
 					}
 				]
 			},

@@ -14,9 +14,9 @@ void settings_init() {
 	settings.vibrationType = 0;
 	settings.rememberDuration = false;
 	#if PBL_API_EXISTS(health_service_peek_current_value)
-		settings.displayText = 3;
-	#else
 		settings.displayText = 2;
+	#else
+		settings.displayText = 1;
 	#endif
 	settings.reminderHours = 4;
 	settings.reminderHoursStart = 8;

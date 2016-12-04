@@ -111,20 +111,16 @@ module.exports = [
 				"description": "Ceci détermine ce qui est montré en haut du menu principal. Montrer le rhythme cardiaque requiert une montre avec un moniteur cardiaque.",
 				"options": [
 					{
-						"label": "Rien",
-						"value": "0"
-					},
-					{
 						"label": "Salut",
-						"value": "1"
+						"value": "0"
 					},
 					{ 
 						"label": "Nombre de pas pris aujourd'hui", 
-						"value": "2" 
+						"value": "1" 
 					},
 					{ 
 						"label": "Rhythme cardiaque",
-						"value": "3" 
+						"value": "2" 
 					}
 				]
 			},

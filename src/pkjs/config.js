@@ -111,20 +111,16 @@ module.exports = [
 				"description": "This determines what the app shows at the top part of the main menu. Heart rate requires a watch with a heart rate monitor.",
 				"options": [
 					{
-						"label": "Nothing",
-						"value": "0"
-					},
-					{
 						"label": "Greeting",
-						"value": "1"
+						"value": "0"
 					},
 					{ 
 						"label": "Steps today", 
-						"value": "2" 
+						"value": "1" 
 					},
 					{ 
 						"label": "Heart Rate",
-						"value": "3" 
+						"value": "2" 
 					}
 				]
 			},
