@@ -13,3 +13,4 @@ char * localize_get_heart_rate_text();
 char * localize_get_reminder_action_menu_text();
 char * localize_get_reminder_text();
 char * localize_get_greet_text();
+char * localize_get_snooze_text();

@@ -7,13 +7,14 @@
 
 static Window *s_reminder_window;
 static ActionMenu *s_action_menu;
-static ActionMenuLevel *s_root_level;
+static ActionMenuLevel *s_root_level, *s_snooze_level;
 static int s_min_to_breathe;
 static Layer *s_canvas_layer;
 static TextLayer *s_text_layer;
 static AppTimer *s_close_timer;
 static GDrawCommandSequence *s_command_seq;
 GColor random_color;
+WakeupId id;
 
 int s_index = 0;
 
@@ -67,17 +68,51 @@ static void action_performed_callback(ActionMenu *action_menu, const ActionMenuI
 	breathe_window_push(s_min_to_breathe);
 }
 
+static void snooze_performed_callback(ActionMenu *action_menu, const ActionMenuItem *action, void *context) {
+	// Some amount of minutes to snooze was selected; find out how much and set a new wakeup
+	time_t future_timestamp = time(NULL) + ((int)action_menu_item_get_action_data(action) * SECONDS_PER_MINUTE);
+	
+	// Schedule the wakeup
+	id = wakeup_schedule(future_timestamp, 0, true);
+	
+	// Log when the wakeup is set
+	char future_time_string[9];
+	struct tm *future_time = localtime(&future_timestamp);
+	strftime(future_time_string, sizeof(future_time_string), "%H:%M:%S", future_time);
+	APP_LOG(APP_LOG_LEVEL_DEBUG, "The app is scheduled to wake up at %s.", future_time_string);
+	
+	// Persist the id so future can query it
+	persist_write_int(SNOOZE_WAKEUP, id);
+	APP_LOG(APP_LOG_LEVEL_DEBUG, "The wakeup id is %d.", (int)(persist_read_int(SNOOZE_WAKEUP)));
+	
+	// Quit the app
+	window_stack_pop_all(true);
+}
+
 static void init_action_menu() {
 	// Create the root level
-	s_root_level = action_menu_level_create(10);
+	s_root_level = action_menu_level_create(4);
 
 	// Set up the actions for this level, using action context to pass types
-	static char menu_text[11][16];
-	for (int i = 1; i < 11; i++) {
+	static char menu_text[4][16];
+	for (int i = 1; i < 4; i++) {
 		static char actionmenu_entry_text[16];
 		snprintf(actionmenu_entry_text, sizeof(actionmenu_entry_text), localize_get_reminder_action_menu_text(), i); 
 		strcpy(menu_text[i], actionmenu_entry_text);
 		action_menu_level_add_action(s_root_level, menu_text[i], action_performed_callback, (void *)i);
+	}
+	
+	// Create level for snoozing and add as child to root level
+	s_snooze_level = action_menu_level_create(4);
+	action_menu_level_add_child(s_root_level, s_snooze_level, "Snooze");
+	
+	// Add options to the snooze level
+	static char snooze_text[61][22];
+	for (int i = 15; i <= 60; i += 15) {
+		static char snooze_entry_text[22];
+		snprintf(snooze_entry_text, sizeof(snooze_entry_text), localize_get_snooze_text(), i);
+		strcpy(snooze_text[i], snooze_entry_text);
+		action_menu_level_add_action(s_snooze_level, snooze_text[i], snooze_performed_callback, (void *)i);
 	}
 }
 
@@ -89,7 +124,7 @@ static void select_click_handler(ClickRecognizerRef recognizer, void *context) {
 			.background = random_color,
 			.foreground = GColorBlack,
 		},
-		.align = ActionMenuAlignCenter
+		.align = ActionMenuAlignTop
 };
 	
 	// Show the ActionMenu
