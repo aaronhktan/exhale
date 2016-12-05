@@ -20,6 +20,14 @@ module.exports = function(minified) {
 		}
 	}
 
+	function toggleAppGlance() {
+		if (this.get() !== false) {
+			clayConfig.getItemByMessageKey('appGlanceType').enable();
+		} else {
+			clayConfig.getItemByMessageKey('appGlanceType').disable();
+		}
+	}
+
 	clayConfig.on(clayConfig.EVENTS.AFTER_BUILD, function() {
 		var reminderSelect = clayConfig.getItemByMessageKey('reminderHours');
 		toggleReminder.call(reminderSelect);
@@ -28,5 +36,9 @@ module.exports = function(minified) {
 		var vibrationEnabledToggle = clayConfig.getItemByMessageKey('vibrationEnabled');
 		toggleVibration.call(vibrationEnabledToggle);
 		vibrationEnabledToggle.on('change', toggleVibration);
+
+		var appGlanceEnabledToggle = clayConfig.getItemByMessageKey('appGlanceEnabled');
+		toggleAppGlance.call(appGlanceEnabledToggle);
+		appGlanceEnabledToggle.on('change', toggleAppGlance);
 	});
 };

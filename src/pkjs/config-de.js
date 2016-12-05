@@ -183,6 +183,37 @@ module.exports = [
 		]
 	},
 	{
+		"type": "section",
+		"items": [
+			{
+				"type": "heading",
+				"defaultValue": "App-Blick",
+			},
+			{
+				"type": "toggle",
+				"messageKey": "appGlanceEnabled",
+				"defaultValue": true,
+				"label": "App-Blick-Text im app Menü anzeigen",
+			},
+			{
+				"type": "select",
+				"messageKey": "appGlanceType",
+				"defaultValue": "0",
+				"label": "App-Blick-Typ",
+				"options": [
+					{
+						"label": "Letzte Sitzung Mal",
+						"value": "0"
+					},
+					{
+						"label": "Aktuelle tägliche Summe",
+						"value": "1"
+					}
+				]
+			},
+		]
+	},
+	{
 		"type": "text",
 		"defaultValue": "<em><center>Vielen Dank an die Betatester: <br>Paula&nbsp;Bosca, Nikita&nbsp;Cheng, Ayush&nbsp;Gupta, Ellen&nbsp;Huang, Yvonne&nbsp;Tan, David&nbsp;Voicu, /u/dryingsocks, and /u/PiwwowPants.</center></em>",
 	},

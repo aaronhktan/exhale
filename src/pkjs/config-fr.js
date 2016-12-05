@@ -183,6 +183,37 @@ module.exports = [
 		]
 	},
 	{
+		"type": "section",
+		"items": [
+			{
+				"type": "heading",
+				"defaultValue": "Coup de œil App",
+			},
+			{
+				"type": "toggle",
+				"messageKey": "appGlanceEnabled",
+				"defaultValue": true,
+				"label": "Afficher app bref texte dans le menu app",
+			},
+			{
+				"type": "select",
+				"messageKey": "appGlanceType",
+				"defaultValue": "0",
+				"label": "Type de regard app",
+				"options": [
+					{
+						"label": "Dernière session fois",
+						"value": "0"
+					},
+					{
+						"label": "Total quotidien actuel",
+						"value": "1"
+					}
+				]
+			},
+		]
+	},
+	{
 		"type": "text",
 		"defaultValue": "<em><center>Un grand merci aux bêta-testeurs: <br>Paula&nbsp;Bosca, Nikita&nbsp;Cheng, Ayush&nbsp;Gupta, Ellen&nbsp;Huang, Yvonne&nbsp;Tan, David&nbsp;Voicu, /u/dryingsocks, et /u/PiwwowPants</center></em>",
 	},

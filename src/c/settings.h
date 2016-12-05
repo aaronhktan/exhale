@@ -18,6 +18,8 @@ typedef struct ClaySettings {
 	int reminderHoursStart;
 	int breathsPerMinute;
 	bool heartRateVariation;
+	bool appGlanceEnabled;
+	int appGlanceType;
 } ClaySettings;
 
 void settings_init();
@@ -36,3 +38,5 @@ int settings_get_reminderHoursStart();
 int settings_get_breathsPerMinute();
 int settings_get_breathDuration();
 bool settings_get_heartRateVariation();
+bool settings_get_appGlanceEnabled();
+int settings_get_appGlanceType();
