@@ -382,7 +382,11 @@ static void main_animation() {
 				break;
 			default: ; // This is simple vibrations (double tap)
 				// 1000 delay for animation, 50 play, 100 stop, 50 play, rest for breath duration and delay and subtract (50 + 100 + 50), and vibrate again.
-				const uint32_t segments_simple[] = {0, 1000, 50, 100, 50, settings_get_breathDuration() + 1000 - 200, 50, 100, 50, settings_get_breathDuration() - 300};
+				//const uint32_t segments_simple[] = {0, 1000, 50, 100, 50, settings_get_breathDuration() + 1000 - 200, 50, 100, 50, settings_get_breathDuration() - 300};
+				int vibOn, vibOff;			
+				vibOn = 40+s_breath_duration/1000;
+				vibOff = s_breath_duration/10*2;
+				const uint32_t segments_simple[] = {0, 1000, vibOn, vibOff, vibOn, settings_get_breathDuration() + 1000 - (vibOff+vibOn*2), vibOn, vibOff, vibOn};
 				VibePattern vibes_simple = {
 					.durations = segments_simple,
 					.num_segments = ARRAY_LENGTH(segments_simple),
