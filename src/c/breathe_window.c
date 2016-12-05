@@ -245,7 +245,6 @@ static void main_animation() {
 						memcpy(segments, ten_segments, sizeof(ten_segments));
 						break;
 				}
-				APP_LOG(APP_LOG_LEVEL_DEBUG, "The length of the segments array is %d.", segment_length);
 				VibePattern vibes = {
 					.durations = segments,
 					.num_segments = segment_length
@@ -294,7 +293,6 @@ static void main_animation() {
 						memcpy(segments_both, ten_segments, sizeof(ten_segments));
 						break;
 				}
-				APP_LOG(APP_LOG_LEVEL_DEBUG, "The length of the segments array is %d.", segment_length);
 				VibePattern vibes_both = {
 					.durations = segments_both,
 					.num_segments = segment_length,
