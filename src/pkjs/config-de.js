@@ -74,6 +74,11 @@ module.exports = [
 			},
 			{
 				"type": "toggle",
+				"capabilities": [
+					"NOT_PLATFORM_APLITE", 
+					"NOT_PLATFORM_BASALT",
+					"NOT_PLATFORM_CHALK"
+					],
 				"messageKey": "heartRateVariation",
 				"defaultValue": false,
 				"label": "Wählen Sie Atemgeschwindigkeit nach Herzfrequenz?",
@@ -92,7 +97,7 @@ module.exports = [
 	},
 	{
 		"type": "section",
-		"capabilities": ["NOT_PLATFORM_APLITE"],
+		"capabilities": ["HEALTH"],
 		"items": [
 			{
 				"type": "heading",
@@ -106,16 +111,20 @@ module.exports = [
 				"description": "Legt fest, was im Hauptmenü oben angezeigt wird. Herzfrequenz setzt eine Uhr mit HR-Sensor voraus.",
 				"options": [
 					{
-						"label": "Begrüßung",
+						"label": "Nichts",
 						"value": "0"
+					},
+					{
+						"label": "Begrüßung",
+						"value": "1"
 					},
 					{ 
 						"label": "Schritte", 
-						"value": "1" 
+						"value": "2" 
 					},
 					{ 
 						"label": "Herzfrequenz",
-						"value": "2" 
+						"value": "3" 
 					}
 				]
 			},

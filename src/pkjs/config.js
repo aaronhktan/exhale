@@ -74,6 +74,11 @@ module.exports = [
 			},
 			{
 				"type": "toggle",
+				"capabilities": [
+					"NOT_PLATFORM_APLITE", 
+					"NOT_PLATFORM_BASALT",
+					"NOT_PLATFORM_CHALK"
+					],
 				"messageKey": "heartRateVariation",
 				"defaultValue": false,
 				"label": "Choose breathing speed depending on heart rate?",
@@ -92,7 +97,7 @@ module.exports = [
 	},
 	{
 		"type": "section",
-		"capabilities": ["NOT_PLATFORM_APLITE"],
+		"capabilities": ["HEALTH"],
 		"items": [
 			{
 				"type": "heading",
@@ -106,16 +111,20 @@ module.exports = [
 				"description": "This determines what the app shows at the top part of the main menu. Heart rate requires a watch with a heart rate monitor.",
 				"options": [
 					{
-						"label": "Greeting",
+						"label": "Nothing",
 						"value": "0"
+					},
+					{
+						"label": "Greeting",
+						"value": "1"
 					},
 					{ 
 						"label": "Steps today", 
-						"value": "1" 
+						"value": "2" 
 					},
 					{ 
 						"label": "Heart Rate",
-						"value": "2" 
+						"value": "3" 
 					}
 				]
 			},
