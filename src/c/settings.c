@@ -49,6 +49,8 @@ void settings_init() {
 	settings.reminderHoursStart = 8;
 	settings.breathsPerMinute = 7;
 	settings.heartRateVariation = false;
+	settings.appGlanceEnabled = true;
+	settings.appGlanceType = 0;
 	persist_read_data(SETTINGS_KEY, &settings, sizeof(settings));
 	
 	// Check for storage version and migrate as necessary
@@ -137,6 +139,16 @@ void settings_handle_settings(DictionaryIterator *iter, void *context) {
 	Tuple *heart_rate_variation_t = dict_find(iter, MESSAGE_KEY_heartRateVariation);
 	if (heart_rate_variation_t) {
 		settings.heartRateVariation = heart_rate_variation_t->value->int32 == 1;
+	}
+
+	Tuple *app_glance_enabled_t = dict_find(iter, MESSAGE_KEY_appGlanceEnabled);
+	if (app_glance_enabled_t) {
+		settings.appGlanceEnabled = app_glance_enabled_t->value->int32 == 1;
+	}
+
+	Tuple *app_glance_type_t = dict_find(iter, MESSAGE_KEY_appGlanceType);
+	if (app_glance_type_t) {
+		settings.appGlanceType = app_glance_type_t->value->int8;
 	}
 }
 
@@ -246,4 +258,11 @@ bool settings_get_heartRateVariation() {
 
 int settings_get_version() {
 	return settings_version;
+
+bool settings_get_appGlanceEnabled() {
+	return settings.appGlanceEnabled;
+}
+
+int settings_get_appGlanceType() {
+	return settings.appGlanceType;
 }

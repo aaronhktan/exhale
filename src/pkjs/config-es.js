@@ -183,6 +183,37 @@ module.exports = [
 		]
 	},
 	{
+		"type": "section",
+		"items": [
+			{
+				"type": "heading",
+				"defaultValue": "Vista de la aplicación",
+			},
+			{
+				"type": "toggle",
+				"messageKey": "appGlanceEnabled",
+				"defaultValue": true,
+				"label": "Mostrar la aplicación breve texto en el menú de la aplicación",
+			},
+			{
+				"type": "select",
+				"messageKey": "appGlanceType",
+				"defaultValue": "0",
+				"label": "Tipo de vista de la aplicación",
+				"options": [
+					{
+						"label": "Último tiempo de la sesión",
+						"value": "0"
+					},
+					{
+						"label": "Total diario actual",
+						"value": "1"
+					}
+				]
+			},
+		]
+	},
+	{
 		"type": "text",
 		"defaultValue": "<em><center>Muchas gracias a los probadores beta: <br>Paula&nbsp;Bosca, Nikita&nbsp;Cheng, Ayush&nbsp;Gupta, Ellen&nbsp;Huang, Yvonne&nbsp;Tan, David&nbsp;Voicu, /u/dryingsocks, y /u/PiwwowPants</center></em>",
 	},
