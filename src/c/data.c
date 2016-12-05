@@ -56,7 +56,7 @@ int data_get_current_heart_rate() {
 void data_set_current_heart_rate(int value) {
 	int alpha = 64; // lower alpha -> slower changes
 	s_current_heart_rate = (alpha * value + (256 - alpha) * s_current_heart_rate )/ 256;
-	APP_LOG(APP_LOG_LEVEL_DEBUG, "Raw BPM: %d, avg BPM: %d", value, (int)s_current_heart_rate);
+	//APP_LOG(APP_LOG_LEVEL_DEBUG, "Raw BPM: %d, avg BPM: %d", value, (int)s_current_heart_rate);
 }
 
 void data_set_heart_rate_period(int val){

@@ -130,7 +130,7 @@ static void circle_animation_setup() {
 		.update = radius_expand_update
 	};
 	// Starts animation: duration 1500, delay 250, curve, implementation
-	create_animation(1500, 250, AnimationCurveEaseInOut, &s_circle_impl);
+	create_animation(D_CIRCLE_ANIMATION_DURATION, D_CIRCLE_ANIMATION_DELAY, AnimationCurveEaseInOut, &s_circle_impl);
 }
 
 // First in animation after pressing select button
@@ -139,7 +139,7 @@ static void main_animation_start() {
 		.update = radius_contract_update
 	};
 	// Starts animation: duration 2000, delay 0, curve, implementation
-	create_animation(2000, 0, AnimationCurveEaseInOut, &s_main_animation_start);
+	create_animation(D_START_ANIMATION_DURATION, D_START_ANIMATION_DELAY, AnimationCurveEaseInOut, &s_main_animation_start);
 }
 
 // Hides lower text
@@ -149,6 +149,8 @@ static void hide_lower_text_callback() {
 
 // End animation show text
 static void animation_end_callback(void *data) {
+	APP_LOG(APP_LOG_LEVEL_DEBUG, "animation_end_callback");
+	
 	s_breaths_per_minute = settings_get_breathsPerMinute(); // In case the user changed settings while the they were breathing
 	s_breath_duration = settings_get_breathDuration();
 	s_animation_completed = true;
@@ -208,6 +210,7 @@ static void animation_end_callback(void *data) {
 
 // Last out animation
 static void main_animation_end(void *data) {
+	APP_LOG(APP_LOG_LEVEL_DEBUG, "main_animation_end");
 	
 	int animation_delay; // No delay
 	int animation_duration;
@@ -235,6 +238,9 @@ static void main_animation_end(void *data) {
 		// Show the "Well done text" and then hides it after 2 seconds
 		layer_set_hidden(s_lower_text_layer, false);
 		s_hide_lower_text_layer = app_timer_register(animation_duration, hide_lower_text_callback, NULL);
+		
+		// Next call animation_end_callback to get back to the main menu.
+		s_main_timer = app_timer_register(animation_duration+animation_delay, animation_end_callback, NULL);
 	} else {
 		s_main_animation_end.update = interrupt_expand_update; // Changes the update procedure
 		animation_delay = 0;
@@ -245,9 +251,6 @@ static void main_animation_end(void *data) {
 	}
 
 	create_animation(animation_duration, animation_delay, animation_curve, &s_main_animation_end);
-	
-	// Next call animation_end_callback to get back to the main menu.
-	s_main_timer = app_timer_register(animation_duration+animation_delay, animation_end_callback, NULL);
 }
 
 // Sets up and schedules circle contract and expand
@@ -393,11 +396,13 @@ static void main_animation() {
 // Schedules next animation if the number of times played is less than 7 times the number of minutes (seven breaths per minute)
 static void main_animation_callback () {
 	
-	// Update the breathDuration if in variable HR mode,but only if it's higher.
+	// Update the breathDuration if in variable HR mode, but only if it's higher.
 	if (settings_get_heartRateVariation()) {
 		int newDuration = settings_get_breathDuration();
-		APP_LOG(APP_LOG_LEVEL_DEBUG, "Old duration %d, new %d", s_breath_duration, newDuration);
-		if (newDuration > s_breath_duration) s_breath_duration = newDuration;		
+		if (newDuration > s_breath_duration) {
+			APP_LOG(APP_LOG_LEVEL_DEBUG, "Old duration %d, new %d", s_breath_duration, newDuration);
+			s_breath_duration = newDuration;
+		}
 	}
 	
 	// If we are animating and main timer isn't done yet
@@ -415,6 +420,7 @@ static void main_animation_callback () {
 
 // Called when main timer is done
 static void main_done_callback(void *context) {
+	APP_LOG(APP_LOG_LEVEL_DEBUG, "main_done_callback");
 	s_main_done = true;
 }
 
@@ -432,6 +438,7 @@ static void heartrate_update_callback(void *context) {
 
 // Shows instructions to exhale; first hides the top text and then shows the bottom text
 static void first_breath_out_callback(void *context) {
+	APP_LOG(APP_LOG_LEVEL_DEBUG, "first_breath_out_callback");
 	
 	// Intro done, start main timer 
 	s_main_timer = app_timer_register(s_min_to_breathe*60000, main_done_callback, NULL);
@@ -446,6 +453,7 @@ static void first_breath_out_callback(void *context) {
 
 // Shows instructions to inhale
 static void first_breath_in_callback(void *context) {
+	APP_LOG(APP_LOG_LEVEL_DEBUG, "first_breath_in_callback");
 	
 	// Next Up, first_breath_out_callback
 	s_main_timer = app_timer_register(s_breath_duration, first_breath_out_callback, NULL);
@@ -459,6 +467,7 @@ static void first_breath_in_callback(void *context) {
 
 // Start animation show text
 static void animation_start_callback(void *context) {
+	APP_LOG(APP_LOG_LEVEL_DEBUG, "animation_start_callback");
 	
 	// Next up, first_breath_in_callback
 	s_main_timer = app_timer_register(D_START_ANIMATION_TIME, first_breath_in_callback, NULL);
