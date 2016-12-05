@@ -74,6 +74,11 @@ module.exports = [
 			},
 			{
 				"type": "toggle",
+				"capabilities": [
+					"NOT_PLATFORM_APLITE", 
+					"NOT_PLATFORM_BASALT",
+					"NOT_PLATFORM_CHALK"
+					],
 				"messageKey": "heartRateVariation",
 				"defaultValue": false,
 				"label": "Choisir la vitesse de respiration selon le rhythme cardiaque?",
@@ -92,7 +97,7 @@ module.exports = [
 	},
 	{
 		"type": "section",
-		"capabilities": ["NOT_PLATFORM_APLITE"],
+		"capabilities": ["HEALTH"],
 		"items": [
 			{
 				"type": "heading",
