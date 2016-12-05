@@ -1,5 +1,6 @@
 #include <pebble.h>
 #include "appglance.h"
+#include "src/c/settings.h"
 
 void appglance_update_app_glance(AppGlanceReloadSession *session, size_t limit, void *context) {
 	// This should never happen, but developers should always ensure
@@ -17,7 +18,8 @@ void appglance_update_app_glance(AppGlanceReloadSession *session, size_t limit, 
 		.subtitle_template_string = message
 	},
 	
-	.expiration_time = APP_GLANCE_SLICE_NO_EXPIRATION
+	.expiration_time = (settings_get_appGlanceType() == 0) ? APP_GLANCE_SLICE_NO_EXPIRATION : (time_start_of_today() + SECONDS_PER_DAY)
+		
 	};
 
 	// Add the slice, and check the result

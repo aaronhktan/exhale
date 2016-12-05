@@ -140,11 +140,7 @@ char * localize_get_steps_today_text(int thousands) {
 			}
 		} else if (thousands > 0) { // There's just one thousands digit
 			if (strncmp(localize_get_locale(), "fr", 2) == 0) {
-				#ifdef PBL_ROUND
-					return "\u2764 %d.%03d PAS AUJ.";
-				#else
-					return "\u2764 %d.%03d PAS AUJOURD'HUI";
-				#endif
+				return "\u2764 %d.%03d PAS AUJ.";
 			} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
 				return "\u2764 %d.%03d PASOS HOY";
 			} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
@@ -158,11 +154,7 @@ char * localize_get_steps_today_text(int thousands) {
 			}
 		} else { // There isn't a thousands digit!
 			if (strncmp(localize_get_locale(), "fr", 2) == 0) {
-				#ifdef PBL_ROUND
-					return "\u2764 %d PAS AUJ.";
-				#else
-					return "\u2764 %d PAS AUJOURD'HUI";
-				#endif
+				return "\u2764 %d PAS AUJ.";
 			} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
 				return "\u2764 %d PASOS HOY";
 			} else if (strncmp(localize_get_locale(), "de", 2) == 0) {

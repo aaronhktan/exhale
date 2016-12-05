@@ -64,7 +64,7 @@ static void deinit() {
 		}
 		app_glance_reload(appglance_update_app_glance, app_glance_text); // Reload app glance
 	} else {
-		 app_glance_reload(appglance_update_app_glance, NULL); // Clear app glance completely
+		app_glance_reload(appglance_update_app_glance, NULL); // Clear app glance completely
 	}
 }
 

@@ -112,7 +112,7 @@ static void init_action_menu() {
 		static char snooze_entry_text[22];
 		snprintf(snooze_entry_text, sizeof(snooze_entry_text), localize_get_snooze_text(), i * 10);
 		strcpy(snooze_text[i], snooze_entry_text);
-		action_menu_level_add_action(s_snooze_level, snooze_text[i], snooze_performed_callback, (void *)i);
+		action_menu_level_add_action(s_snooze_level, snooze_text[i], snooze_performed_callback, (void *)(i * 10));
 	}
 }
 
