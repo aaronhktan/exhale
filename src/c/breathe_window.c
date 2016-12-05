@@ -6,9 +6,19 @@
 #include "src/c/settings.h"
 #include "src/c/localize.h"
 
+#define D_START_DELAY 2100
+#define D_START_ANIMATION_TIME 5000
+#define D_BREATH_HOLD_TIME 1000
+#define D_CIRCLE_ANIMATION_DURATION 1500
+#define D_CIRCLE_ANIMATION_DELAY 150
+#define D_START_ANIMATION_DURATION 2000
+#define D_START_ANIMATION_DELAY 0
+#define D_END_ANIMATION_DURATION 2000
+#define D_END_ANIMATION_DELAY 2500
+
 static Window *s_main_window;
 static Layer *s_circle_layer, *s_inside_text_layer, *s_upper_text_layer, *s_lower_text_layer;
-static AppTimer *s_animation_completed_timer, *animationTimer, *s_show_relax_text_timer, *s_show_inhale_timer, *s_show_exhale_timer, *s_hide_lower_text_layer, *s_click_provider_timer, *s_interrupt_timer;
+static AppTimer *s_animation_completed_timer, *animationTimer, *s_hide_lower_text_layer, *s_click_provider_timer, *s_interrupt_timer;
 static GRect bounds;
 static uint8_t s_radius_final, s_radius = 0;
 static int s_min_to_breathe = 1, s_min_breathed_today = 0, s_times_played = 0, s_breath_duration, s_breaths_per_minute, s_current_radius;
@@ -17,6 +27,9 @@ static GPoint s_center;
 static char s_min_to_breathe_text[3] = "1", s_instruct_text[27], s_min_text[25], s_min_today[25], s_greet_text[27], s_start_time[11], s_end_time[11];
 static time_t t;
 static time_t s_start_stamp;
+
+static AppTimer *s_update_hr_timer, *s_main_timer;
+static bool s_main_done;
 
 // ******************************************************************************************* Layer Update Procedures
 // Updates circle
@@ -134,6 +147,65 @@ static void hide_lower_text_callback() {
 	layer_set_hidden(s_lower_text_layer, true);
 }
 
+// End animation show text
+static void animation_end_callback(void *data) {
+	s_breaths_per_minute = settings_get_breathsPerMinute(); // In case the user changed settings while the they were breathing
+	s_breath_duration = settings_get_breathDuration();
+	s_animation_completed = true;
+	s_animating = false;
+	
+	snprintf(s_greet_text, sizeof(s_greet_text), "%s", localize_get_greet_text());
+	
+	// If the user breathes during passage from one day to another (i.e. 12AM) then set number of breaths to 0
+	snprintf(s_end_time, sizeof(s_end_time), data_get_date_today());
+	APP_LOG(APP_LOG_LEVEL_DEBUG, "The date started is %s", s_start_time);
+	APP_LOG(APP_LOG_LEVEL_DEBUG, "The date ended is %s", s_end_time);
+	
+	int complete = (int)data; // This tells us whether the user interrupted their session by pressing back
+
+	if (strcmp(s_start_time, s_end_time) == 0 && complete == 0) { // The date is the same and the user did not interrupt their session
+		// Add number of minutes breathed
+		s_min_breathed_today += s_min_to_breathe;
+		APP_LOG(APP_LOG_LEVEL_DEBUG, "The date started and ended are the same");
+	} else if (complete == 1) { // The user interrupted their session, so only add what was breathed before aborting
+		s_min_breathed_today += floor((time(NULL) - s_start_stamp) / 60);
+	} else { // Not on the same day, so set number to zero
+		s_min_breathed_today = 0;
+		APP_LOG(APP_LOG_LEVEL_DEBUG, "The date started and ended are not the same");
+	}
+	
+	// Display minutes breathed today
+	snprintf(s_min_today, sizeof(s_min_today), localize_get_min_breathed_today_text(), s_min_breathed_today);
+	
+	// Persist the number of minutes breathed in total today
+	data_write_breathe_persist_data(s_min_breathed_today);
+	data_write_date_persist_data();
+	
+	if (complete != 1) {
+		// Persist the duration of minutes if user didn't interrupt their session
+		data_write_last_duration_data(s_min_to_breathe);
+	}
+	
+	// Sets different number of digits for one digit or two digits
+	if (s_min_to_breathe == 10) {
+			snprintf(s_min_to_breathe_text, 3, "%d", s_min_to_breathe);
+	} else {
+		snprintf(s_min_to_breathe_text, 2, "%d", s_min_to_breathe);
+	}
+	
+	// Shows all the layers because breathing is done
+	#ifdef PBL_ROUND
+		set_min_text(s_min_to_breathe, s_min_text);
+		snprintf(s_instruct_text, sizeof(s_instruct_text), localize_get_breathe_text());
+	#endif
+	layer_set_hidden(s_inside_text_layer, false);
+	layer_set_hidden(s_upper_text_layer, false);
+	layer_set_hidden(s_lower_text_layer, false);
+	
+	// restore the HR sample period
+	if (settings_get_heartRateVariation()) data_set_heart_rate_period(0);
+}
+
 // Last out animation
 static void main_animation_end(void *data) {
 	
@@ -148,8 +220,8 @@ static void main_animation_end(void *data) {
 	
 	if (complete == 0) {
 		// Sets duration of animation
-		animation_duration = 2000;
-		animation_delay = 2500;
+		animation_duration = D_END_ANIMATION_DURATION;
+		animation_delay = D_END_ANIMATION_DELAY;
 		animation_curve = AnimationCurveEaseInOut;
 		
 		if (settings_get_vibrationEnabled()) {
@@ -173,6 +245,9 @@ static void main_animation_end(void *data) {
 	}
 
 	create_animation(animation_duration, animation_delay, animation_curve, &s_main_animation_end);
+	
+	// Next call animation_end_callback to get back to the main menu.
+	s_main_timer = app_timer_register(animation_duration+animation_delay, animation_end_callback, NULL);
 }
 
 // Sets up and schedules circle contract and expand
@@ -186,7 +261,7 @@ static void main_animation() {
 	Animation *circle_expand = animation_create();
 	animation_set_duration(circle_expand, s_breath_duration);
 	animation_set_curve(circle_expand, AnimationCurveEaseInOut);
-	animation_set_delay(circle_expand, 1000);
+	animation_set_delay(circle_expand, D_BREATH_HOLD_TIME);
 	static AnimationImplementation s_expand_impl = {
 		.update = radius_expand_update
 	};
@@ -195,7 +270,7 @@ static void main_animation() {
 	// Circle contracts for 3 seconds and delays for 1 second
 	Animation *circle_contract = animation_create();
 	animation_set_duration(circle_contract, s_breath_duration);
-	animation_set_delay(circle_contract, 1000);
+	animation_set_delay(circle_contract, D_BREATH_HOLD_TIME);
 	animation_set_curve(circle_contract, AnimationCurveEaseInOut);
 	static AnimationImplementation s_contract_impl = {
 		.update = radius_contract_update
@@ -317,10 +392,19 @@ static void main_animation() {
 
 // Schedules next animation if the number of times played is less than 7 times the number of minutes (seven breaths per minute)
 static void main_animation_callback () {
-	if (s_times_played < s_breaths_per_minute * s_min_to_breathe && s_animating) { // That means that the time hasn't elapsed and the animations are still going on
+	
+	// Update the breathDuration if in variable HR mode,but only if it's higher.
+	if (settings_get_heartRateVariation()) {
+		int newDuration = settings_get_breathDuration();
+		APP_LOG(APP_LOG_LEVEL_DEBUG, "Old duration %d, new %d", s_breath_duration, newDuration);
+		if (newDuration > s_breath_duration) s_breath_duration = newDuration;		
+	}
+	
+	// If we are animating and main timer isn't done yet
+	if (s_animating && !s_main_done) {
 		animationTimer = app_timer_register(2 * s_breath_duration + 2000, main_animation_callback, NULL);
 		if (!layer_get_hidden(s_upper_text_layer) || !layer_get_hidden(s_lower_text_layer)) {
-			layer_set_hidden(s_upper_text_layer, true);
+			if (!settings_get_heartRateVariation()) layer_set_hidden(s_upper_text_layer, true); // For the HR text
 			layer_set_hidden(s_lower_text_layer, true);
 		}
 		main_animation();
@@ -329,8 +413,43 @@ static void main_animation_callback () {
 	}
 }
 
+// Called when main timer is done
+static void main_done_callback(void *context) {
+	s_main_done = true;
+}
+
+// Update HeartRate in the top slot during a session
+static void heartrate_update_callback(void *context) {
+	if (s_animating) {
+		data_update_heart_rate_buffer();
+		snprintf(s_greet_text, sizeof(s_greet_text), data_get_current_heart_rate_buffer());
+		layer_set_hidden(s_upper_text_layer, false);
+		
+		// Re-schedule the timer
+			s_update_hr_timer = app_timer_register(s_breath_duration, heartrate_update_callback, NULL);
+	}	
+}
+
+// Shows instructions to exhale; first hides the top text and then shows the bottom text
+static void first_breath_out_callback(void *context) {
+	
+	// Intro done, start main timer 
+	s_main_timer = app_timer_register(s_min_to_breathe*60000, main_done_callback, NULL);
+	
+	snprintf(s_min_today, sizeof(s_min_today), localize_get_exhale_text());
+	layer_set_hidden(s_upper_text_layer, true);
+	layer_set_hidden(s_lower_text_layer, false);
+	
+	// Start HR update timer
+		if (settings_get_heartRateVariation()) s_update_hr_timer = app_timer_register(s_breath_duration*2, heartrate_update_callback, NULL);
+}
+
 // Shows instructions to inhale
 static void first_breath_in_callback(void *context) {
+	
+	// Next Up, first_breath_out_callback
+	s_main_timer = app_timer_register(s_breath_duration, first_breath_out_callback, NULL);
+	
 	snprintf(s_greet_text, sizeof(s_greet_text), localize_get_inhale_text());
 	layer_set_hidden(s_upper_text_layer, false);
 	#ifdef PBL_ROUND
@@ -338,15 +457,12 @@ static void first_breath_in_callback(void *context) {
 	#endif
 }
 
-// Shows instructions to exhale; first hides the top text and then shows the bottom text
-static void first_breath_out_callback(void *context) {
-	snprintf(s_min_today, sizeof(s_min_today), localize_get_exhale_text());
-	layer_set_hidden(s_upper_text_layer, true);
-	layer_set_hidden(s_lower_text_layer, false);
-}
-
 // Start animation show text
 static void animation_start_callback(void *context) {
+	
+	// Next up, first_breath_in_callback
+	s_main_timer = app_timer_register(D_START_ANIMATION_TIME, first_breath_in_callback, NULL);
+	
 	// Sets strings as English, change if watch is set to another language
 	char *strings[9] = {"TAKE A MOMENT;", "BE STILL;", "CLEAR YOUR MIND;", "EMPTY YOUR THOUGHTS;", "BE CALM;", "THINK NOTHING;", "RELAX;", "CHILL FOR A SEC;", "SPACE OUT;"};
 	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
@@ -408,62 +524,6 @@ static void animation_start_callback(void *context) {
 	#endif
 }
 
-// End animation show text
-static void animation_end_callback(void *data) {
-	s_breaths_per_minute = settings_get_breathsPerMinute(); // In case the user changed settings while the they were breathing
-	s_breath_duration = settings_get_breathDuration();
-	s_animation_completed = true;
-	s_animating = false;
-	
-	snprintf(s_greet_text, sizeof(s_greet_text), "%s", localize_get_greet_text());
-	
-	// If the user breathes during passage from one day to another (i.e. 12AM) then set number of breaths to 0
-	snprintf(s_end_time, sizeof(s_end_time), data_get_date_today());
-	APP_LOG(APP_LOG_LEVEL_DEBUG, "The date started is %s", s_start_time);
-	APP_LOG(APP_LOG_LEVEL_DEBUG, "The date ended is %s", s_end_time);
-	
-	int complete = (int)data; // This tells us whether the user interrupted their session by pressing back
-
-	if (strcmp(s_start_time, s_end_time) == 0 && complete == 0) { // The date is the same and the user did not interrupt their session
-		// Add number of minutes breathed
-		s_min_breathed_today += s_min_to_breathe;
-		APP_LOG(APP_LOG_LEVEL_DEBUG, "The date started and ended are the same");
-	} else if (complete == 1) { // The user interrupted their session, so only add what was breathed before aborting
-		s_min_breathed_today += floor((time(NULL) - s_start_stamp) / 60);
-	} else { // Not on the same day, so set number to zero
-		s_min_breathed_today = 0;
-		APP_LOG(APP_LOG_LEVEL_DEBUG, "The date started and ended are not the same");
-	}
-	
-	// Display minutes breathed today
-	snprintf(s_min_today, sizeof(s_min_today), localize_get_min_breathed_today_text(), s_min_breathed_today);
-	
-	// Persist the number of minutes breathed in total today
-	data_write_breathe_persist_data(s_min_breathed_today);
-	data_write_date_persist_data();
-	
-	if (complete != 1) {
-		// Persist the duration of minutes if user didn't interrupt their session
-		data_write_last_duration_data(s_min_to_breathe);
-	}
-	
-	// Sets different number of digits for one digit or two digits
-	if (s_min_to_breathe == 10) {
-			snprintf(s_min_to_breathe_text, 3, "%d", s_min_to_breathe);
-	} else {
-		snprintf(s_min_to_breathe_text, 2, "%d", s_min_to_breathe);
-	}
-	
-	// Shows all the layers because breathing is done
-	#ifdef PBL_ROUND
-		set_min_text(s_min_to_breathe, s_min_text);
-		snprintf(s_instruct_text, sizeof(s_instruct_text), localize_get_breathe_text());
-	#endif
-	layer_set_hidden(s_inside_text_layer, false);
-	layer_set_hidden(s_upper_text_layer, false);
-	layer_set_hidden(s_lower_text_layer, false);
-}
-
 // ******************************************************************************************* Click Handlers
 
 static void up_click_handler(ClickRecognizerRef recognizer, void *context) {
@@ -501,21 +561,17 @@ static void back_click_handler(ClickRecognizerRef recognizer, void *context) {
 			app_timer_cancel(s_animation_completed_timer);
 			s_animation_completed_timer = NULL;
 		}
-		if (s_show_relax_text_timer != NULL) {
-			app_timer_cancel(s_show_relax_text_timer);
-			s_show_relax_text_timer = NULL;
-		}
-		if (s_show_inhale_timer != NULL) {
-			app_timer_cancel(s_show_inhale_timer);
-			s_show_inhale_timer = NULL;
-		}
-		if (s_show_exhale_timer != NULL) {
-			app_timer_cancel(s_show_exhale_timer);
-			s_show_exhale_timer = NULL;
-		}
 		if (animationTimer != NULL) {
 			app_timer_cancel(animationTimer);
 			animationTimer = NULL;
+		}
+		if (s_update_hr_timer != NULL) {
+			app_timer_cancel(s_update_hr_timer);
+			s_update_hr_timer = NULL;
+		}
+		if (s_main_timer != NULL) {
+			app_timer_cancel(s_main_timer);
+			s_main_timer = NULL;
 		}
 		
 		// Shows the expand animation
@@ -524,6 +580,7 @@ static void back_click_handler(ClickRecognizerRef recognizer, void *context) {
 		main_animation_end((void*)1);
 		s_interrupt_timer = app_timer_register(525, animation_end_callback, (void*)1);
 		s_animating = false;
+		s_main_done = true;
 	} else {
 		window_stack_pop_all(true);
 	}
@@ -538,6 +595,10 @@ static void select_click_handler(ClickRecognizerRef recognizer, void *context) {
 		s_breath_duration = settings_get_breathDuration();
 		s_animation_completed = false;
 		
+		s_main_done = false;
+		// kick the HR to high gear
+		if (settings_get_heartRateVariation()) data_set_heart_rate_period(1);
+		
 		// Hides all text layers
 		layer_set_hidden(s_inside_text_layer, true);
 		layer_set_hidden(s_upper_text_layer, true);
@@ -545,14 +606,9 @@ static void select_click_handler(ClickRecognizerRef recognizer, void *context) {
 		
 		// Starts the first circle contraction
 		main_animation_start();
-	
-		// Shows encouragement text at 2.1 seconds in
-		s_show_relax_text_timer = app_timer_register(2100, animation_start_callback, NULL);
-		// Shows the instruction to inhale at 7.1 seconds in
-		s_show_inhale_timer = app_timer_register(7100, first_breath_in_callback, NULL);
-		/* Shows the instruction to exhale at after one breathe in
-		Also hides the first instruction */
-		s_show_exhale_timer = app_timer_register(7100 + s_breath_duration, first_breath_out_callback, NULL);
+
+		// Starts the main timer
+		s_main_timer = app_timer_register(D_START_DELAY, animation_start_callback, NULL);
 		
 		// First animationTimer, which will schedule the next time the circle expands or contracts
 		animationTimer = app_timer_register(6000, main_animation_callback, NULL); 
@@ -562,10 +618,6 @@ static void select_click_handler(ClickRecognizerRef recognizer, void *context) {
 		APP_LOG(APP_LOG_LEVEL_DEBUG, "The number of minutes to breath is %d.", s_min_to_breathe);
 		APP_LOG(APP_LOG_LEVEL_DEBUG, "The number of breaths per minute is %d.", s_breaths_per_minute);
 		APP_LOG(APP_LOG_LEVEL_DEBUG, "The duration per breath is %d.", s_breath_duration);
-		/* Schedules the "hide everything and revert to main menu" callback 
-		(which is minutes * number of breaths per minute * duration per minute + duration of opening and closing text) */
-		int s_animation_completed_delay = s_min_to_breathe * s_breaths_per_minute * 2 * (s_breath_duration + 1000) + 11000;
-		s_animation_completed_timer = app_timer_register(s_animation_completed_delay, animation_end_callback, (void*)0);
 		
 		// Gets today's date to compare with the end date after breathing is finished
 		snprintf(s_start_time, sizeof(s_start_time), data_get_date_today());

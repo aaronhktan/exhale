@@ -1,5 +1,6 @@
 #include <pebble.h>
 #include "health.h"
+#include "settings.h"
 
 static void health_handler(HealthEventType event, void *context) {
 	if (event == HealthEventHeartRateUpdate) { // New heart rate measurement

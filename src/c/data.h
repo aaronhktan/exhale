@@ -14,6 +14,8 @@ void data_set_current_steps(int value);
 int data_get_current_heart_rate();
 void data_set_current_heart_rate(int value);
 
+void data_set_heart_rate_period(int val);
+
 void data_update_steps_buffer();
 void data_update_heart_rate_buffer();
 
