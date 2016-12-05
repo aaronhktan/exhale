@@ -150,7 +150,7 @@ static void main_animation_end(void *data) {
 		animation_delay = 2500;
 		animation_curve = AnimationCurveEaseInOut;
 		
-		if (settings_get_vibrationEnabled() && !quiet_time_is_active()) {
+		if (settings_get_vibrationEnabled()) {
 			// Vibration to signal that the thing is ended
 			vibes_double_pulse();
 		}
@@ -205,7 +205,7 @@ static void main_animation() {
 	animation_schedule(circle_animation_sequence);
 	s_times_played++; // Used to keep track to see how many should be played to fill time
 	
-	if (settings_get_vibrationEnabled() && !quiet_time_is_active()) {
+	if (settings_get_vibrationEnabled()) {
 		int segment_length = 0; // Because it is impossible to find the length of a dynamically allocated array
 		switch(settings_get_vibrationType()) {
 			case 0: ; // This is vibrations only on inhale
