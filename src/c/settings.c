@@ -27,6 +27,9 @@ static void migrate_settings_data() {
 				case 2: // This used to mean that they chose the "Vibrate on Inhale and Exhale" option
 					settings.vibrationType = 1; // This has been switched to 1 in Storage Version 2
 			}
+			// App Glance was not a setting in the previous version of storage, so set these before saving.
+			settings.appGlanceEnabled = true;
+			settings.appGlanceType = 0;
 			APP_LOG(APP_LOG_LEVEL_DEBUG, "Settings have been migrated from version 1 to version %d.", current_settings_version);
 			settings_save_settings(); // Save these new settings.
 	}
@@ -258,7 +261,8 @@ bool settings_get_heartRateVariation() {
 
 int settings_get_version() {
 	return settings_version;
-
+}
+	
 bool settings_get_appGlanceEnabled() {
 	return settings.appGlanceEnabled;
 }

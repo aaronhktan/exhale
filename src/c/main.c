@@ -63,8 +63,7 @@ static void deinit() {
 			snprintf(app_glance_text, sizeof(app_glance_text), localize_get_app_glance_text(settings_get_appGlanceType(), data_read_breathe_persist_data()), data_read_breathe_persist_data());
 		}
 		app_glance_reload(appglance_update_app_glance, app_glance_text); // Reload app glance
-	}
-	else {
+	} else {
 		 app_glance_reload(appglance_update_app_glance, NULL); // Clear app glance completely
 	}
 }

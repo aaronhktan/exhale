@@ -202,11 +202,11 @@ module.exports = [
 				"label": "App-Blick-Typ",
 				"options": [
 					{
-						"label": "Letzte Sitzung Mal",
+						"label": "Letzte Sitzung",
 						"value": "0"
 					},
 					{
-						"label": "Aktuelle tägliche Summe",
+						"label": "Gesamt heute",
 						"value": "1"
 					}
 				]
