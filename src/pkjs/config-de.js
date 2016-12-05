@@ -187,26 +187,26 @@ module.exports = [
 		"items": [
 			{
 				"type": "heading",
-				"defaultValue": "App Glance",
+				"defaultValue": "App-Blick",
 			},
 			{
 				"type": "toggle",
 				"messageKey": "appGlanceEnabled",
 				"defaultValue": true,
-				"label": "Display app glance text in the app menu",
+				"label": "App-Blick-Text im app Menü anzeigen",
 			},
 			{
 				"type": "select",
 				"messageKey": "appGlanceType",
 				"defaultValue": "0",
-				"label": "App Glance Type",
+				"label": "App-Blick-Typ",
 				"options": [
 					{
-						"label": "Last session time",
+						"label": "Letzte Sitzung Mal",
 						"value": "0"
 					},
 					{
-						"label": "Current daily total",
+						"label": "Aktuelle tägliche Summe",
 						"value": "1"
 					}
 				]

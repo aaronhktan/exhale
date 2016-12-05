@@ -36,21 +36,21 @@ char * localize_get_app_glance_text(int type, int minutes) {
 			switch (minutes) {
 				case 1:
 				if (strncmp(localize_get_locale(), "fr", 2) == 0) {
-					return "Dernière session: %d minute. Respirez maintenant!";
+					return "Total actuel: %d minute. Respirez maintenant!";
 				} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
-					return "Última sesión: %d minuto. ¡Respira ahora!";
+					return "Total actual: %d minuto. ¡Respira ahora!";
 				} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
-					return "Letzte Sitzung: %d Minute. Atme jetzt!";
+					return "Aktuelle Summe: %d Minute. Atme jetzt!";
 				} else {
 					return "Current total: %d minute. Breathe now!";
 				}
 			default:
 				if (strncmp(localize_get_locale(), "fr", 2) == 0) {
-					return "Dernière session: %d minutes. Respirez maintenant!";
+					return "Total actuel: %d minutes. Respirez maintenant!";
 				} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
-					return "Última sesión: %d minutos. ¡Respira ahora!";
+					return "Total actual: %d minutos. ¡Respira ahora!";
 				} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
-					return "Letzte Sitzung: %d Minuten. Atme jetzt!";
+					return "Aktuelle Summe: %d Minuten. Atme jetzt!";
 				} else {
 					return "Current total: %d minutes. Breathe now!";
 				}
