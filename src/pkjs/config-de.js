@@ -111,16 +111,20 @@ module.exports = [
 				"description": "Legt fest, was im Hauptmenü oben angezeigt wird. Herzfrequenz setzt eine Uhr mit HR-Sensor voraus.",
 				"options": [
 					{
-						"label": "Begrüßung",
+						"label": "Nichts",
 						"value": "0"
+					},
+					{
+						"label": "Begrüßung",
+						"value": "1"
 					},
 					{ 
 						"label": "Schritte", 
-						"value": "1" 
+						"value": "2" 
 					},
 					{ 
 						"label": "Herzfrequenz",
-						"value": "2" 
+						"value": "3" 
 					}
 				]
 			},
