@@ -64,11 +64,11 @@ module.exports = [
 					},
 					{
 						"label": "Shakes - inhale and exhale",
-						"value": "2"
+						"value": "1"
 					},
 					{ 
 						"label": "Taps", 
-						"value": "1"
+						"value": "2"
 					}
 				]
 			},

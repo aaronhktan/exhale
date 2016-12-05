@@ -64,11 +64,11 @@ module.exports = [
 					},
 					{
 						"label": "Secousses - inhalation et exhalation",
-						"value": "2"
+						"value": "1"
 					},
 					{ 
 						"label": "Tapes", 
-						"value": "1"
+						"value": "2"
 					}
 				]
 			},

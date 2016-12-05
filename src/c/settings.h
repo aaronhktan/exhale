@@ -2,6 +2,7 @@
 #include <pebble.h>
 
 #define SETTINGS_KEY 20
+#define SETTINGS_VERSION_KEY 21
 #define MILLISECONDS_PER_MINUTE 60000
 
 // Define settings struct

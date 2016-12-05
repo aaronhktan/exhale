@@ -64,11 +64,11 @@ module.exports = [
 					},
 					{
 						"label": "Graduell - Einatmen und Ausatmung",
-						"value": "2"
+						"value": "1"
 					},
 					{ 
 						"label": "Doppeltippen", 
-						"value": "1"
+						"value": "2"
 					}
 				]
 			},

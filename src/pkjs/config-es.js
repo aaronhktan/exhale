@@ -64,11 +64,11 @@ module.exports = [
 					},
 					{
 						"label": "Sacudidas - inhalación y exhalación",
-						"value": "2"
+						"value": "1"
 					},
 					{ 
 						"label": "Toques", 
-						"value": "1"
+						"value": "2"
 					}
 				]
 			},
