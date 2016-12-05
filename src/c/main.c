@@ -26,11 +26,13 @@ static void init() {
 		}
 	} else {
 		// The app was started by the user; push the standard breathe window
-		if (settings_get_rememberDuration() && data_read_last_duration_data() != 0) { // Set the minutes to breathe to the same as last one, unless the number is zero (meaning they haven't breathed yet)
-			breathe_window_push(data_read_last_duration_data());
-		} else {
-			breathe_window_push(1);
-		}
+// 		if (settings_get_rememberDuration() && data_read_last_duration_data() != 0) { // Set the minutes to breathe to the same as last one, unless the number is zero (meaning they haven't breathed yet)
+// 			breathe_window_push(data_read_last_duration_data());
+// 		} else {
+// 			breathe_window_push(1);
+// 		}
+		
+		// Cancel any snoozed reminders because the user has decided to open the app and presumably doesn't need to be reminded again.
 		if (persist_exists(SNOOZE_WAKEUP)) {
 			if (wakeup_query(persist_read_int(SNOOZE_WAKEUP), NULL)) { // Returns true if the wakeup at this ID is still scheduled
 				// Canceled a snooze timer!
@@ -42,7 +44,7 @@ static void init() {
 		if (settings_get_reminderHours() != 0) {
 			wakeup_schedule_next_wakeup(settings_get_reminderHours(), 0, settings_get_reminderHoursStart());
 		}
-// 		reminder_window_push(); // For testing
+		reminder_window_push(); // For testing
 	}
 }
 

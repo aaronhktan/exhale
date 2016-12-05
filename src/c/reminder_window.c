@@ -103,14 +103,14 @@ static void init_action_menu() {
 	}
 	
 	// Create level for snoozing and add as child to root level
-	s_snooze_level = action_menu_level_create(4);
+	s_snooze_level = action_menu_level_create(5);
 	action_menu_level_add_child(s_root_level, s_snooze_level, "Snooze");
 	
 	// Add options to the snooze level
-	static char snooze_text[61][22];
-	for (int i = 15; i <= 60; i += 15) {
+	static char snooze_text[6][22];
+	for (int i = 1; i <= 5; i++) { // This is used for the index of the array
 		static char snooze_entry_text[22];
-		snprintf(snooze_entry_text, sizeof(snooze_entry_text), localize_get_snooze_text(), i);
+		snprintf(snooze_entry_text, sizeof(snooze_entry_text), localize_get_snooze_text(), i * 10);
 		strcpy(snooze_text[i], snooze_entry_text);
 		action_menu_level_add_action(s_snooze_level, snooze_text[i], snooze_performed_callback, (void *)i);
 	}
@@ -129,6 +129,9 @@ static void select_click_handler(ClickRecognizerRef recognizer, void *context) {
 	
 	// Show the ActionMenu
 	s_action_menu = action_menu_open(&config);
+	
+	// Cancel the automatic close timer because the user interacted with their watch
+	app_timer_cancel(s_close_timer);
 }
 
 static void click_config_provider(void *context) {
