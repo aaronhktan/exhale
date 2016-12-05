@@ -34,3 +34,4 @@ bool settings_get_rememberDuration();
 int settings_get_reminderHoursStart();
 int settings_get_breathsPerMinute();
 int settings_get_breathDuration();
+bool settings_get_heartRateVariation();

@@ -136,7 +136,26 @@ int settings_get_reminderHoursStart(){
 }
 
 int settings_get_breathsPerMinute() {
-	return settings.breathsPerMinute;
+	if (settings.heartRateVariation && data_get_current_heart_rate() != 0) {
+		int heart_rate = data_get_current_heart_rate();
+		if (heart_rate <= 60) {
+			return 4;
+		} else if (heart_rate > 60 && heart_rate <= 65) {
+			return 5;
+		} else if (heart_rate > 65 && heart_rate <= 70) {
+			return 6;
+		} else if (heart_rate > 70 && heart_rate <= 80) {
+			return 7;
+		} else if (heart_rate > 80 && heart_rate <= 90) {
+			return 8;
+		} else if (heart_rate > 90 && heart_rate <= 100) {
+			return 9;
+		} else { // The heart rate is more than 100
+			return 10;
+		} 
+	} else {
+		return settings.breathsPerMinute;
+	}
 }
 
 int settings_get_breathDuration() {
@@ -178,4 +197,8 @@ int settings_get_breathDuration() {
 				break;
 		}
 	}
+}
+
+bool settings_get_heartRateVariation() {
+	return settings.heartRateVariation;
 }
