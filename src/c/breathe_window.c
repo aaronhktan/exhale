@@ -1,4 +1,5 @@
 #include <pebble.h>
+#include "math.h"
 #include "breathe_window.h"
 #include "src/c/data.h"
 #include "src/c/graphics.h"
@@ -15,6 +16,7 @@ static bool s_animation_completed = false, s_animating = false;
 static GPoint s_center;
 static char s_min_to_breathe_text[3] = "1", s_instruct_text[27], s_min_text[25], s_min_today[25], s_greet_text[27], s_start_time[11], s_end_time[11];
 static time_t t;
+static time_t s_start_stamp;
 
 // ******************************************************************************************* Layer Update Procedures
 // Updates circle
@@ -428,7 +430,8 @@ static void animation_end_callback(void *data) {
 		// Add number of minutes breathed
 		s_min_breathed_today += s_min_to_breathe;
 		APP_LOG(APP_LOG_LEVEL_DEBUG, "The date started and ended are the same");
-	} else if (complete == 1) { // The user interrupted their session, so don't add number to their minutes breathed today
+	} else if (complete == 1) { // The user interrupted their session, so only add what was breathed before aborting
+		s_min_breathed_today += floor((time(NULL) - s_start_stamp) / 60);
 	} else { // Not on the same day, so set number to zero
 		s_min_breathed_today = 0;
 		APP_LOG(APP_LOG_LEVEL_DEBUG, "The date started and ended are not the same");
@@ -568,6 +571,9 @@ static void select_click_handler(ClickRecognizerRef recognizer, void *context) {
 		
 		// Gets today's date to compare with the end date after breathing is finished
 		snprintf(s_start_time, sizeof(s_start_time), data_get_date_today());
+
+		// Gets timestamp of start time as the epoch time
+		s_start_stamp = time(NULL);
 	}
 }
 
