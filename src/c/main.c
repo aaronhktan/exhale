@@ -56,7 +56,12 @@ static void deinit() {
 
 	if (settings_get_appGlanceEnabled()) { // Check if app glance is enabled
 		char app_glance_text[79];
-		snprintf(app_glance_text, sizeof(app_glance_text), localize_get_app_glance_text(data_read_last_duration_data()), data_read_last_duration_data());
+		if (settings_get_appGlanceType() == 0) {
+			snprintf(app_glance_text, sizeof(app_glance_text), localize_get_app_glance_text(settings_get_appGlanceType(), data_read_last_duration_data()), data_read_last_duration_data());
+		}
+		else {
+			snprintf(app_glance_text, sizeof(app_glance_text), localize_get_app_glance_text(settings_get_appGlanceType(), data_read_breathe_persist_data()), data_read_breathe_persist_data());
+		}
 		app_glance_reload(appglance_update_app_glance, app_glance_text); // Reload app glance
 	}
 	else {

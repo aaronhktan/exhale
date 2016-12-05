@@ -2,7 +2,7 @@
 
 const char * localize_get_locale();
 
-char * localize_get_app_glance_text(int minutes); 
+char * localize_get_app_glance_text(int type, int minutes); 
 char * localize_get_breathe_text();
 char * localize_get_well_done_text();
 char * localize_get_inhale_text();
