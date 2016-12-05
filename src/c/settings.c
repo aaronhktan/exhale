@@ -258,6 +258,7 @@ bool settings_get_heartRateVariation() {
 
 int settings_get_version() {
 	return settings_version;
+}
 
 bool settings_get_appGlanceEnabled() {
 	return settings.appGlanceEnabled;
