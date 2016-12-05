@@ -254,7 +254,7 @@ static void main_animation() {
 				vibes_enqueue_custom_pattern(vibes);
 				free(segments);
 				break;
-			case 2: ; // This is vibrations on inhale and exhale
+			case 1: ; // This is vibrations on inhale and exhale
 				static uint32_t *segments_both;
 				switch(s_breaths_per_minute) {
 					case 4: ; // 15000 milliseconds long, with an empty statement after a label before a declaration
