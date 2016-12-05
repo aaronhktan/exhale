@@ -74,6 +74,11 @@ module.exports = [
 			},
 			{
 				"type": "toggle",
+				"capabilities": [
+					"NOT_PLATFORM_APLITE", 
+					"NOT_PLATFORM_BASALT",
+					"NOT_PLATFORM_CHALK"
+					],
 				"messageKey": "heartRateVariation",
 				"defaultValue": false,
 				"label": "Choisir la vitesse de respiration selon le rhythme cardiaque?",
@@ -92,7 +97,7 @@ module.exports = [
 	},
 	{
 		"type": "section",
-		"capabilities": ["NOT_PLATFORM_APLITE"],
+		"capabilities": ["HEALTH"],
 		"items": [
 			{
 				"type": "heading",
@@ -106,16 +111,20 @@ module.exports = [
 				"description": "Ceci détermine ce qui est montré en haut du menu principal. Montrer le rhythme cardiaque requiert une montre avec un moniteur cardiaque.",
 				"options": [
 					{
-						"label": "Salut",
+						"label": "Rien",
 						"value": "0"
+					},
+					{
+						"label": "Salut",
+						"value": "1"
 					},
 					{ 
 						"label": "Nombre de pas pris aujourd'hui", 
-						"value": "1" 
+						"value": "2" 
 					},
 					{ 
 						"label": "Rhythme cardiaque",
-						"value": "2" 
+						"value": "3" 
 					}
 				]
 			},
