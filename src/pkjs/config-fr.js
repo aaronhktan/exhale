@@ -183,6 +183,37 @@ module.exports = [
 		]
 	},
 	{
+		"type": "section",
+		"items": [
+			{
+				"type": "heading",
+				"defaultValue": "App Glance",
+			},
+			{
+				"type": "toggle",
+				"messageKey": "appGlanceEnabled",
+				"defaultValue": true,
+				"label": "Display app glance text in the app menu",
+			},
+			{
+				"type": "select",
+				"messageKey": "appGlanceType",
+				"defaultValue": "0",
+				"label": "App Glance Type",
+				"options": [
+					{
+						"label": "Last session time",
+						"value": "0"
+					},
+					{
+						"label": "Current daily total",
+						"value": "1"
+					}
+				]
+			},
+		]
+	},
+	{
 		"type": "text",
 		"defaultValue": "<em><center>Un grand merci aux bêta-testeurs: <br>Paula&nbsp;Bosca, Nikita&nbsp;Cheng, Ayush&nbsp;Gupta, Ellen&nbsp;Huang, Yvonne&nbsp;Tan, David&nbsp;Voicu, /u/dryingsocks, et /u/PiwwowPants</center></em>",
 	},

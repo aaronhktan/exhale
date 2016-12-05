@@ -22,7 +22,9 @@
             "breathsPerMinute",
             "vibrationType",
             "displayText",
-            "heartRateVariation"
+            "heartRateVariation",
+            "appGlanceEnabled",
+            "appGlanceType"
         ],
         "projectType": "native",
         "resources": {
