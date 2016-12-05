@@ -409,7 +409,8 @@ static void main_animation_callback () {
 	if (s_animating && !s_main_done) {
 		animationTimer = app_timer_register(2 * s_breath_duration + 2000, main_animation_callback, NULL);
 		if (!layer_get_hidden(s_upper_text_layer) || !layer_get_hidden(s_lower_text_layer)) {
-			if (!settings_get_heartRateVariation()) layer_set_hidden(s_upper_text_layer, true); // For the HR text
+			if (settings_get_heartRateVariation() && s_times_played > 1) layer_set_hidden(s_upper_text_layer, false); // For the HR text
+			else layer_set_hidden(s_upper_text_layer, true);
 			layer_set_hidden(s_lower_text_layer, true);
 		}
 		main_animation();
