@@ -74,6 +74,11 @@ module.exports = [
 			},
 			{
 				"type": "toggle",
+				"capabilities": [
+					"NOT_PLATFORM_APLITE", 
+					"NOT_PLATFORM_BASALT",
+					"NOT_PLATFORM_CHALK"
+					],
 				"messageKey": "heartRateVariation",
 				"defaultValue": false,
 				"label": "¿Escoger la velocidad de respiraciones según el ritmo cardiaco?",
@@ -92,7 +97,7 @@ module.exports = [
 	},
 	{
 		"type": "section",
-		"capabilities": ["NOT_PLATFORM_APLITE"],
+		"capabilities": ["HEALTH"],
 		"items": [
 			{
 				"type": "heading",
@@ -106,16 +111,20 @@ module.exports = [
 				"description": "Esto determina lo que está mostrado en el menu principal. NOTA: El ritmo cardiaco requiere un reloj con un monitor de ritmo cardiaco.",
 				"options": [
 					{
-						"label": "Saludo",
+						"label": "Nada",
 						"value": "0"
+					},
+					{
+						"label": "Saludo",
+						"value": "1"
 					},
 					{ 
 						"label": "Pasos hoy", 
-						"value": "1" 
+						"value": "2" 
 					},
 					{ 
 						"label": "Ritmo cardiaco",
-						"value": "2" 
+						"value": "3" 
 					}
 				]
 			},

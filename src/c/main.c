@@ -18,16 +18,12 @@ static void init() {
 	wakeup_service_subscribe(wakeup_handler); // Subscribe to Wakeup Service
 	
 	if(launch_reason() == APP_LAUNCH_WAKEUP) { // The app was started by a wakeup event.
-		WakeupId id = 0;
-		int32_t reason = 0;
-		// Get details and handle the event appropriately
-		wakeup_get_launch_event(&id, &reason);
-			// Pushes the reminder window stack
-			reminder_window_push();
-			// If the user still has reminders enabled, schedule next wakeup
-			if (settings_get_reminderHours() != 0) {
-				wakeup_schedule_next_wakeup(settings_get_reminderHours(), reason, settings_get_reminderHoursStart());
-			}
+		// Pushes the reminder window stack
+		reminder_window_push();
+		// If the user still has reminders enabled, schedule next wakeup
+		if (settings_get_reminderHours() != 0) {
+			wakeup_schedule_next_wakeup(settings_get_reminderHours(), 0, settings_get_reminderHoursStart());
+		}
 	} else {
 		// The app was started by the user; push the standard breathe window
 		if (settings_get_rememberDuration() && data_read_last_duration_data() != 0) { // Set the minutes to breathe to the same as last one, unless the number is zero (meaning they haven't breathed yet)
@@ -35,11 +31,20 @@ static void init() {
 		} else {
 			breathe_window_push(1);
 		}
-//		reminder_window_push(); // For testing
-		// Schedule next wakeup, just in case
+		
+		// Cancel any snoozed reminders because the user has decided to open the app and presumably doesn't need to be reminded again.
+		if (persist_exists(SNOOZE_WAKEUP)) {
+			if (wakeup_query(persist_read_int(SNOOZE_WAKEUP), NULL)) { // Returns true if the wakeup at this ID is still scheduled
+				// Canceled a snooze timer!
+				APP_LOG(APP_LOG_LEVEL_DEBUG, "Cancelling a timer at %d.", (int)persist_read_int(SNOOZE_WAKEUP));
+				wakeup_cancel(persist_read_int(SNOOZE_WAKEUP));
+			}
+		}
+		// Schedule next normal wakeup
 		if (settings_get_reminderHours() != 0) {
 			wakeup_schedule_next_wakeup(settings_get_reminderHours(), 0, settings_get_reminderHoursStart());
 		}
+// 		reminder_window_push(); // For testing
 	}
 }
 

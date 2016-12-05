@@ -272,5 +272,18 @@ char * localize_get_greet_text() {
 			return "HALLO!";
 		} else {
 			return "HELLO!";
-		}}
+		}
+	}
+}
+
+char * localize_get_snooze_text() {
+	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+		return "Snooze pendant %d min";
+	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+		return "Recuérdame en %d min";
+	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+		return "Snooze %d min";
+	} else {
+		return "Snooze for %d min";
+	}
 }
