@@ -5,7 +5,7 @@ module.exports = [
 	},
 	{
 		"type": "text",
-		"defaultValue": "Ceci est la page de configuration pour l'app Breathe. Vous utilisez version 1.1 de l'app.",
+		"defaultValue": "Ceci est la page de configuration pour l'app Breathe. Vous utilisez version 1.2 de l'app.",
 	},
 	{
 		"type": "section",
@@ -64,11 +64,11 @@ module.exports = [
 					},
 					{
 						"label": "Secousses - inhalation et exhalation",
-						"value": "2"
+						"value": "1"
 					},
 					{ 
 						"label": "Tapes", 
-						"value": "1"
+						"value": "2"
 					}
 				]
 			},

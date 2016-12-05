@@ -5,7 +5,7 @@ module.exports = [
 	},
 	{
 		"type": "text",
-		"defaultValue": "This is the settings page for the Breathe app. You are running version 1.1 of Breathe.",
+		"defaultValue": "This is the settings page for the Breathe app. You are running version 1.2 of Breathe.",
 	},
 	{
 		"type": "section",
@@ -64,11 +64,11 @@ module.exports = [
 					},
 					{
 						"label": "Shakes - inhale and exhale",
-						"value": "2"
+						"value": "1"
 					},
 					{ 
 						"label": "Taps", 
-						"value": "1"
+						"value": "2"
 					}
 				]
 			},
