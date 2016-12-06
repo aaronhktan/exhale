@@ -41,7 +41,7 @@ static void inside_text_layer_update_proc(Layer *s_inside_text_layer, GContext *
 
 // Draws text at top of screen
 static void upper_text_layer_update_proc(Layer *s_inside_text_layer, GContext *ctx) {
-	graphics_draw_upper_text(ctx, bounds, s_animating, settings_get_heartRateVariation(), settings_get_displayText(), settings_get_textColor(), s_greet_text);
+	graphics_draw_upper_text(ctx, bounds, s_animating, settings_get_displayText(), settings_get_textColor(), s_greet_text);
 }
 
 // Draws text at bottom of screen
