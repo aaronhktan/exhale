@@ -15,6 +15,8 @@ static void health_handler(HealthEventType event, void *context) {
 void health_init() {
 	health_service_events_subscribe(health_handler, NULL);
 	#if PBL_API_EXISTS(health_service_set_heart_rate_sample_period)
-		if (settings_get_heartRateVariation()) health_service_set_heart_rate_sample_period(5); // Sets heart rate sample period to 5 seconds to get fresh data
+	if (settings_get_heartRateVariation()) {
+		health_service_set_heart_rate_sample_period(5); // Sets heart rate sample period to 5 seconds to get fresh data
+	}
 	#endif
 }

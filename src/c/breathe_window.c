@@ -18,18 +18,15 @@
 
 static Window *s_main_window;
 static Layer *s_circle_layer, *s_inside_text_layer, *s_upper_text_layer, *s_lower_text_layer;
-static AppTimer *s_animation_completed_timer, *animationTimer, *s_hide_lower_text_layer, *s_click_provider_timer, *s_interrupt_timer;
+static AppTimer *s_animation_completed_timer, *animationTimer, *s_hide_lower_text_layer, *s_click_provider_timer, *s_interrupt_timer, *s_update_hr_timer, *s_main_timer;
 static GRect bounds;
 static uint8_t s_radius_final, s_radius = 0;
 static int s_min_to_breathe = 1, s_min_breathed_today = 0, s_times_played = 0, s_breath_duration, s_breaths_per_minute, s_current_radius;
-static bool s_animation_completed = false, s_animating = false;
+static bool s_animation_completed = false, s_animating = false, s_main_done;
 static GPoint s_center;
 static char s_min_to_breathe_text[3] = "1", s_instruct_text[27], s_min_text[25], s_min_today[25], s_greet_text[27], s_start_time[11], s_end_time[11];
 static time_t t;
 static time_t s_start_stamp;
-
-static AppTimer *s_update_hr_timer, *s_main_timer;
-static bool s_main_done;
 
 // ******************************************************************************************* Layer Update Procedures
 // Updates circle
@@ -44,7 +41,7 @@ static void inside_text_layer_update_proc(Layer *s_inside_text_layer, GContext *
 
 // Draws text at top of screen
 static void upper_text_layer_update_proc(Layer *s_inside_text_layer, GContext *ctx) {
-	graphics_draw_upper_text(ctx, bounds, s_animating, settings_get_displayText(), settings_get_textColor(), s_greet_text);
+	graphics_draw_upper_text(ctx, bounds, s_animating, settings_get_heartRateVariation(), settings_get_displayText(), settings_get_textColor(), s_greet_text);
 }
 
 // Draws text at bottom of screen
@@ -204,8 +201,10 @@ static void animation_end_callback(void *data) {
 	layer_set_hidden(s_upper_text_layer, false);
 	layer_set_hidden(s_lower_text_layer, false);
 	
-	// restore the HR sample period
-	if (settings_get_heartRateVariation()) data_set_heart_rate_period(0);
+	// Restore the HR sample period
+	if (settings_get_heartRateVariation()) {
+		data_set_heart_rate_period(0);
+	}
 }
 
 // Last out animation
@@ -291,12 +290,12 @@ static void main_animation() {
 			case 0: ; // This is vibrations only on inhale
 				// Vibrations! (play for 0, rest for 1500, play for 25, rest for 25, etc.)
 				static uint32_t *segments;
-				switch(s_breaths_per_minute) {
+				switch(s_breath_duration) {
 					case 4: ; // 15000 milliseconds long, with an empty statement after a label before a declaration
 						static const uint32_t four_segments[49] = {0, 2500, 25, 50, 25, 50, 25, 65, 25, 65, 25, 75, 25, 75, 25, 80, 25, 80, 25, 100, 25, 100, 25, 150, 25, 150, 25, 175, 25, 175, 25, 225, 25, 225, 25, 275, 25, 275, 25, 375, 25, 375, 25, 450, 25, 450, 25, 500, 25};
-						segment_length = ARRAY_LENGTH(four_segments);
-						segments = (uint32_t *) calloc(segment_length, sizeof(uint32_t));
-						memcpy(segments, four_segments, sizeof(four_segments));
+						segment_length = ARRAY_LENGTH(four_segments); // Get size of array
+						segments = (uint32_t *) calloc(segment_length, sizeof(uint32_t)); // Allocate memory equal to size of array to segments and return pointer to segments array
+						memcpy(segments, four_segments, sizeof(four_segments)); // Copy each value of array into segments array
 						break;
 					case 5: ; // 12000 milliseconds long
 						static const uint32_t five_segments[44] = {0, 2000, 25, 50, 25, 50, 25, 65, 25, 65, 25, 75, 25, 75, 25, 80, 25, 80, 25, 100, 25, 100, 25, 150, 25, 150, 25, 175, 25, 175, 25, 225, 25, 225, 25, 275, 25, 275, 25, 375, 25, 375, 25};
@@ -334,7 +333,7 @@ static void main_animation() {
 				break;
 			case 1: ; // This is vibrations on inhale and exhale
 				static uint32_t *segments_both;
-				switch(s_breaths_per_minute) {
+				switch(s_breath_duration) {
 					case 4: ; // 15000 milliseconds long, with an empty statement after a label before a declaration
 						static const uint32_t four_segments[96] = {0, 2500, 25, 50, 25, 50, 25, 65, 25, 65, 25, 75, 25, 75, 25, 80, 25, 80, 25, 100, 25, 100, 25, 150, 25, 150, 25, 175, 25, 175, 25, 225, 25, 225, 25, 275, 25, 275, 25, 375, 25, 450, 25, 450, 25, 500, 25, 2500, 25, 50, 25, 50, 25, 65, 25, 65, 25, 75, 25, 75, 25, 80, 25, 80, 25, 100, 25, 100, 25, 150, 25, 150, 25, 175, 25, 175, 25, 225, 25, 225, 25, 275, 25, 275, 25, 375, 25, 375, 25, 450, 25, 450, 25, 500, 25};
 						segment_length = ARRAY_LENGTH(four_segments);
@@ -381,12 +380,10 @@ static void main_animation() {
 				free(segments_both);
 				break;
 			default: ; // This is simple vibrations (double tap)
-				// 1000 delay for animation, 50 play, 100 stop, 50 play, rest for breath duration and delay and subtract (50 + 100 + 50), and vibrate again.
-				//const uint32_t segments_simple[] = {0, 1000, 50, 100, 50, settings_get_breathDuration() + 1000 - 200, 50, 100, 50, settings_get_breathDuration() - 300};
-				int vibOn, vibOff;			
-				vibOn = 40+s_breath_duration/1000;
-				vibOff = s_breath_duration/10*2;
-				const uint32_t segments_simple[] = {0, 1000, vibOn, vibOff, vibOn, settings_get_breathDuration() + 1000 - (vibOff+vibOn*2), vibOn, vibOff, vibOn};
+				int vib_on, vib_off; // Declare variables for length of vibration on and rest time between vibrations			
+				vib_on = 40 + s_breath_duration / 1000;
+				vib_off = s_breath_duration / 10 * 2;
+				const uint32_t segments_simple[] = {0, 1000, vib_on, vib_off, vib_on, s_breath_duration + 1000 - (vib_off + vib_on * 2), vib_on, vib_off, vib_on};
 				VibePattern vibes_simple = {
 					.durations = segments_simple,
 					.num_segments = ARRAY_LENGTH(segments_simple),
@@ -400,21 +397,23 @@ static void main_animation() {
 // Schedules next animation if the number of times played is less than 7 times the number of minutes (seven breaths per minute)
 static void main_animation_callback () {
 	
-	// Update the breathDuration if in variable HR mode, but only if it's higher.
+	// Update the breathDuration if in variable HR mode, but only if it's higher. (Which means that the breaths are slowing down and people are relaxing! Wow!)
 	if (settings_get_heartRateVariation()) {
-		int newDuration = settings_get_breathDuration();
-		if (newDuration > s_breath_duration) {
-			APP_LOG(APP_LOG_LEVEL_DEBUG, "Old duration %d, new %d", s_breath_duration, newDuration);
-			s_breath_duration = newDuration;
+		int new_duration = settings_get_breathDuration();
+		if (new_duration > s_breath_duration) {
+			APP_LOG(APP_LOG_LEVEL_DEBUG, "Old duration %d, new %d", s_breath_duration, new_duration);
+			s_breath_duration = new_duration;
 		}
+	} else {
+		s_breath_duration = settings_get_breathDuration(); // Check for changes in the breath duration; it may have been changed in the settings
 	}
 	
 	// If we are animating and main timer isn't done yet
 	if (s_animating && !s_main_done) {
-		animationTimer = app_timer_register(2 * s_breath_duration + 2000, main_animation_callback, NULL);
-		if (!layer_get_hidden(s_upper_text_layer) || !layer_get_hidden(s_lower_text_layer)) {
+		animationTimer = app_timer_register(2 * s_breath_duration + 2 * D_BREATH_HOLD_TIME, main_animation_callback, NULL); // Run this method again after duration of breaths and delays
+		if (!layer_get_hidden(s_upper_text_layer) || !layer_get_hidden(s_lower_text_layer)) { // The text layers aren't hidden; this keep if HRV is enabled
 			if (settings_get_heartRateVariation() && s_times_played > 1) layer_set_hidden(s_upper_text_layer, false); // For the HR text
-			else layer_set_hidden(s_upper_text_layer, true);
+			else layer_set_hidden(s_upper_text_layer, true); // HRV isn't enabled, so hide the text layers
 			layer_set_hidden(s_lower_text_layer, true);
 		}
 		main_animation();
@@ -430,14 +429,14 @@ static void main_done_callback(void *context) {
 }
 
 // Update HeartRate in the top slot during a session
-static void heartrate_update_callback(void *context) {
+static void heart_rate_update_callback(void *context) {
 	if (s_animating) {
-		data_update_heart_rate_buffer();
-		snprintf(s_greet_text, sizeof(s_greet_text), data_get_current_heart_rate_buffer());
+		data_update_heart_rate_buffer(); // Update heart rate
+		snprintf(s_greet_text, sizeof(s_greet_text), data_get_current_heart_rate_buffer()); // Show heart rate upon redraw of s_upper_text_layer
 		layer_set_hidden(s_upper_text_layer, false);
 		
 		// Re-schedule the timer
-			s_update_hr_timer = app_timer_register(s_breath_duration, heartrate_update_callback, NULL);
+		s_update_hr_timer = app_timer_register(s_breath_duration, heart_rate_update_callback, NULL);
 	}	
 }
 
@@ -445,15 +444,17 @@ static void heartrate_update_callback(void *context) {
 static void first_breath_out_callback(void *context) {
 	APP_LOG(APP_LOG_LEVEL_DEBUG, "first_breath_out_callback");
 	
-	// Intro done, start main timer 
-	s_main_timer = app_timer_register(s_min_to_breathe*60000, main_done_callback, NULL);
+	// Intro done, start timer for when to stop breathing session 
+	s_main_timer = app_timer_register(s_min_to_breathe * MILLISECONDS_PER_MINUTE, main_done_callback, NULL);
 	
 	snprintf(s_min_today, sizeof(s_min_today), localize_get_exhale_text());
 	layer_set_hidden(s_upper_text_layer, true);
 	layer_set_hidden(s_lower_text_layer, false);
 	
-	// Start HR update timer
-		if (settings_get_heartRateVariation()) s_update_hr_timer = app_timer_register(s_breath_duration*2, heartrate_update_callback, NULL);
+	// Start HR update timer which shows the heart rate in the upper text field after the first breath
+	if (settings_get_heartRateVariation()) {
+		s_update_hr_timer = app_timer_register(s_breath_duration*2, heart_rate_update_callback, NULL);
+	}
 }
 
 // Shows instructions to inhale
@@ -603,15 +604,17 @@ static void back_click_handler(ClickRecognizerRef recognizer, void *context) {
 static void select_click_handler(ClickRecognizerRef recognizer, void *context) {
 	// Only does things if things are not animating
 	if (!s_animating) {
-		s_animating = true;
 		s_times_played = 0;
 		s_breaths_per_minute = settings_get_breathsPerMinute();
 		s_breath_duration = settings_get_breathDuration();
+		s_animating = true;
 		s_animation_completed = false;
-		
 		s_main_done = false;
-		// kick the HR to high gear
-		if (settings_get_heartRateVariation()) data_set_heart_rate_period(1);
+		
+		// Kick the HR to high gear (update every one second!)
+		if (settings_get_heartRateVariation()) {
+			data_set_heart_rate_period(1);
+		}
 		
 		// Hides all text layers
 		layer_set_hidden(s_inside_text_layer, true);
@@ -628,7 +631,6 @@ static void select_click_handler(ClickRecognizerRef recognizer, void *context) {
 		animationTimer = app_timer_register(6000, main_animation_callback, NULL); 
 	
 		// Schedules the last out animation (circle expand) after min * duration of 7 breaths + duration of first circle contraction
-		APP_LOG(APP_LOG_LEVEL_DEBUG, "The timer is set to fire at %d.", s_min_to_breathe * s_breaths_per_minute * 2 * (s_breath_duration + 1000) + 7000);
 		APP_LOG(APP_LOG_LEVEL_DEBUG, "The number of minutes to breath is %d.", s_min_to_breathe);
 		APP_LOG(APP_LOG_LEVEL_DEBUG, "The number of breaths per minute is %d.", s_breaths_per_minute);
 		APP_LOG(APP_LOG_LEVEL_DEBUG, "The duration per breath is %d.", s_breath_duration);
@@ -642,11 +644,11 @@ static void select_click_handler(ClickRecognizerRef recognizer, void *context) {
 }
 
 static void click_config_provider(void *context) {
-  ButtonId id_up = BUTTON_ID_UP;  // The Up button
+	ButtonId id_up = BUTTON_ID_UP;  // The Up button
 	ButtonId id_down = BUTTON_ID_DOWN; // The Down button
 	ButtonId id_select = BUTTON_ID_SELECT; // The Select button
 	ButtonId id_back = BUTTON_ID_BACK;
-  window_single_click_subscribe(id_up, up_click_handler);
+	window_single_click_subscribe(id_up, up_click_handler);
 	window_single_click_subscribe(id_down, down_click_handler);
 	window_single_click_subscribe(id_back, back_click_handler);
 	window_single_click_subscribe(id_select, select_click_handler);

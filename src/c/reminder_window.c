@@ -150,11 +150,6 @@ static void reminder_window_load(Window *window) {
 	
 	layer_add_child(window_layer, s_canvas_layer);
 	
-	// Only vibrate when the watch isn't in Quiet Time
-	if (!quiet_time_is_active()){
-		vibes_double_pulse();
-	}
-	
 	window_set_background_color(s_reminder_window, PBL_IF_COLOR_ELSE(random_color, GColorWhite));
 	
 	app_timer_register(DELTA, next_frame_handler, NULL);
@@ -207,4 +202,9 @@ void reminder_window_push() {
 	window_set_click_config_provider(s_reminder_window, click_config_provider);
 	
 	window_stack_push(s_reminder_window, true);
+	
+		// Only vibrate when the watch isn't in Quiet Time
+	if (!quiet_time_is_active()){
+		vibes_double_pulse();
+	}
 }

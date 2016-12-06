@@ -59,9 +59,10 @@ void data_set_current_heart_rate(int value) {
 	//APP_LOG(APP_LOG_LEVEL_DEBUG, "Raw BPM: %d, avg BPM: %d", value, (int)s_current_heart_rate);
 }
 
+// Sets heart rate sample period to get fresh data
 void data_set_heart_rate_period(int val){
 	#if PBL_API_EXISTS(health_service_set_heart_rate_sample_period)
-		health_service_set_heart_rate_sample_period(val); // Sets heart rate sample period to 5 seconds to get fresh data
+		health_service_set_heart_rate_sample_period(val);
 	#endif
 }
 
@@ -131,6 +132,7 @@ void data_write_last_duration_data(int last_duration) {
 	persist_write_int(LAST_DURATION_KEY, last_duration);
 }
 
+// Get last duration from persistent storage
 int data_read_last_duration_data() {
 	int last_duration = 0;
 	if (persist_exists(LAST_DURATION_KEY)) {
@@ -143,10 +145,12 @@ int data_read_last_duration_data() {
 	return last_duration;
 }
 
+// Store Wakeup id
 void data_write_wakeup_time_data(char* wakeup_time) {
 	persist_write_string(WAKEUP_TIME_KEY, wakeup_time);
 }
 
+// Wakeup time as a string
 char * data_read_wakeup_time_data() {
 	static char wakeup_time[9];
 	if (persist_exists(WAKEUP_TIME_KEY)) {

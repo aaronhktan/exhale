@@ -34,7 +34,7 @@ static GPath *s_up_triangle, *s_down_triangle;
 #endif
 
 // Method for updating the upper text layer
-void graphics_draw_upper_text(GContext *ctx, GRect bounds, bool is_animating, int display_text, GColor textColor, char *greet_text) {
+void graphics_draw_upper_text(GContext *ctx, GRect bounds, bool is_animating, bool heart_rate_variation, int display_text, GColor textColor, char *greet_text) {
 	#if defined(PBL_HEALTH)
 		const char *steps_buffer = data_get_current_steps_buffer(); // Pebble Health exists; fetch the number of steps walked today
 	#endif
