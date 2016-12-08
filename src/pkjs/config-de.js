@@ -5,7 +5,7 @@ module.exports = [
 	},
 	{
 		"type": "text",
-		"defaultValue": "Dies sind die Einstellungen für die Breathe-App. Sie benutzen Version 1.2 von Breathe.",
+		"defaultValue": "Dies sind die Einstellungen für die Breathe-App. Sie benutzen Version 2.0 von Breathe.",
 	},
 	{
 		"type": "section",
@@ -215,7 +215,7 @@ module.exports = [
 	},
 	{
 		"type": "text",
-		"defaultValue": "<em><center>Vielen Dank an die Betatester: <br>Paula&nbsp;Bosca, Nikita&nbsp;Cheng, Ayush&nbsp;Gupta, Ellen&nbsp;Huang, Yvonne&nbsp;Tan, David&nbsp;Voicu, /u/dryingsocks, and /u/PiwwowPants.</center></em>",
+		"defaultValue": "<em><center>Vielen Dank an die Betatester: <br>Paula&nbsp;Bosca, Nikita&nbsp;Cheng, Ayush&nbsp;Gupta, Ellen&nbsp;Huang, Yvonne&nbsp;Tan, David&nbsp;Voicu, /u/dryingsocks, /u/JohnEdwa, and /u/PiwwowPants.</center></em>",
 	},
 	{
 		"type": "submit",

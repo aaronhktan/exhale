@@ -224,34 +224,18 @@ int settings_get_breathDuration() {
 		} else if (heart_rate > 65 && heart_rate <= 70) {
 			return (MILLISECONDS_PER_MINUTE - (2000 * 6)) / 6 / 2;
 		} else if (heart_rate > 70 && heart_rate <= 80) {
-			return (MILLISECONDS_PER_MINUTE - 4000  - (2000 * 7)) / 7 / 2;
+			return (MILLISECONDS_PER_MINUTE - (2000 * 7)) / 7 / 2;
 		} else if (heart_rate > 80 && heart_rate <= 90) {
-			return (MILLISECONDS_PER_MINUTE - 4000  - (2000 * 8)) / 8 / 2;
+			return (MILLISECONDS_PER_MINUTE - (2000 * 8)) / 8 / 2;
 		} else if (heart_rate > 90 && heart_rate <= 100) {
-			return (MILLISECONDS_PER_MINUTE + 3000 - (2000 * 9)) / 9 / 2;
+			return (MILLISECONDS_PER_MINUTE - (2000 * 9)) / 9 / 2;
 		} else { // The heart rate is more than 100
 			return (MILLISECONDS_PER_MINUTE - (2000 * 10)) / 10 / 2;
 		} 
 	} else {
-		switch(settings.breathsPerMinute) {
-			case 4:
-			case 5:
-			case 6:
-			case 10:
-				/* Return one minute minus 2 second delay for each breath, divided by the number of breaths to take
+		/* Return one minute minus 2 second delay for each breath, divided by the number of breaths to take
 				That gives us how many seconds the entire breath should take, so divide by 2 to get inhale/exhale duration */
-				APP_LOG(APP_LOG_LEVEL_DEBUG, "The duration of breaths is %d.", (MILLISECONDS_PER_MINUTE - (2000 * settings.breathsPerMinute)) / settings.breathsPerMinute / 2);
-				return (MILLISECONDS_PER_MINUTE - (2000 * settings.breathsPerMinute)) / settings.breathsPerMinute / 2;
-				break;
-			case 7:
-			case 8:
-				// Like above, but taking removing 4 seconds because otherwise a decimal would happen. Don't want that happening!
-				return (MILLISECONDS_PER_MINUTE - 4000 - (2000 * settings.breathsPerMinute)) / settings.breathsPerMinute / 2;
-				break;
-			default: // 9 breaths per minute
-				return (MILLISECONDS_PER_MINUTE + 3000 - (2000 * settings.breathsPerMinute)) / settings.breathsPerMinute / 2;
-				break;
-		}
+		return (MILLISECONDS_PER_MINUTE - (2000 * settings.breathsPerMinute)) / settings.breathsPerMinute / 2;
 	}
 }
 
