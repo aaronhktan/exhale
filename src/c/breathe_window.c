@@ -146,8 +146,6 @@ static void hide_lower_text_callback() {
 
 // End animation show text
 static void animation_end_callback(void *data) {
-	APP_LOG(APP_LOG_LEVEL_DEBUG, "animation_end_callback");
-	
 	s_breaths_per_minute = settings_get_breathsPerMinute(); // In case the user changed settings while the they were breathing
 	s_breath_duration = settings_get_breathDuration();
 	s_animation_completed = true;
@@ -157,20 +155,16 @@ static void animation_end_callback(void *data) {
 	
 	// If the user breathes during passage from one day to another (i.e. 12AM) then set number of breaths to 0
 	snprintf(s_end_time, sizeof(s_end_time), data_get_date_today());
-	APP_LOG(APP_LOG_LEVEL_DEBUG, "The date started is %s", s_start_time);
-	APP_LOG(APP_LOG_LEVEL_DEBUG, "The date ended is %s", s_end_time);
 	
 	int complete = (int)data; // This tells us whether the user interrupted their session by pressing back
 
 	if (strcmp(s_start_time, s_end_time) == 0 && complete == 0) { // The date is the same and the user did not interrupt their session
 		// Add number of minutes breathed
 		s_min_breathed_today += s_min_to_breathe;
-		APP_LOG(APP_LOG_LEVEL_DEBUG, "The date started and ended are the same");
 	} else if (complete == 1) { // The user interrupted their session, so only add what was breathed before aborting
 		s_min_breathed_today += floor((time(NULL) - s_start_stamp) / 60);
 	} else { // Not on the same day, so set number to zero
 		s_min_breathed_today = 0;
-		APP_LOG(APP_LOG_LEVEL_DEBUG, "The date started and ended are not the same");
 	}
 	
 	// Display minutes breathed today
@@ -201,15 +195,16 @@ static void animation_end_callback(void *data) {
 	layer_set_hidden(s_upper_text_layer, false);
 	layer_set_hidden(s_lower_text_layer, false);
 	
+	#if defined(PBL_HEALTH)
 	// Restore the HR sample period
 	if (settings_get_heartRateVariation()) {
 		data_set_heart_rate_period(0);
 	}
+	#endif
 }
 
 // Last out animation
 static void main_animation_end(void *data) {
-	APP_LOG(APP_LOG_LEVEL_DEBUG, "main_animation_end");
 	
 	int animation_delay; // No delay
 	int animation_duration;
@@ -402,6 +397,7 @@ static void main_animation() {
 // Schedules next animation if the number of times played is less than 7 times the number of minutes (seven breaths per minute)
 static void main_animation_callback () {
 	
+	#if defined(PBL_HEALTH)
 	// Update the breathDuration if in variable HR mode, but only if it's higher. (Which means that the breaths are slowing down and people are relaxing! Wow!)
 	if (settings_get_heartRateVariation() && data_get_current_heart_rate() != 0) {
 		int new_duration = settings_get_breathDuration();
@@ -414,6 +410,10 @@ static void main_animation_callback () {
 		s_breath_duration = settings_get_breathDuration(); // Check for changes in the breath duration; it may have been changed in the settings
 		s_breaths_per_minute = settings_get_breathsPerMinute();
 	}
+	#else
+		s_breath_duration = settings_get_breathDuration(); // Check for changes in the breath duration; it may have been changed in the settings
+		s_breaths_per_minute = settings_get_breathsPerMinute();
+	#endif
 	
 	// If we are animating and main timer isn't done yet
 	if (s_animating && !s_main_done) {
@@ -435,10 +435,10 @@ static void main_animation_callback () {
 
 // Called when main timer is done
 static void main_done_callback(void *context) {
-	APP_LOG(APP_LOG_LEVEL_DEBUG, "main_done_callback");
 	s_main_done = true;
 }
 
+#if defined(PBL_HEALTH)
 // Update HeartRate in the top slot during a session
 static void heart_rate_update_callback(void *context) {
 	if (s_animating) {
@@ -450,10 +450,10 @@ static void heart_rate_update_callback(void *context) {
 		s_update_hr_timer = app_timer_register(s_breath_duration, heart_rate_update_callback, NULL);
 	}	
 }
+#endif
 
 // Shows instructions to exhale; first hides the top text and then shows the bottom text
 static void first_breath_out_callback(void *context) {
-	APP_LOG(APP_LOG_LEVEL_DEBUG, "first_breath_out_callback");
 	
 	// Intro done, start timer for when to stop breathing session 
 	s_main_timer = app_timer_register(s_min_to_breathe * MILLISECONDS_PER_MINUTE - 6000 - D_BREATH_HOLD_TIME - s_breath_duration, main_done_callback, NULL);
@@ -462,15 +462,16 @@ static void first_breath_out_callback(void *context) {
 	layer_set_hidden(s_upper_text_layer, true);
 	layer_set_hidden(s_lower_text_layer, false);
 	
+	#if defined(PBL_HEALTH)
 	// Start HR update timer which shows the heart rate in the upper text field after the first breath
 	if (settings_get_heartRateVariation()) {
 		s_update_hr_timer = app_timer_register(s_breath_duration * 2, heart_rate_update_callback, NULL);
 	}
+	#endif
 }
 
 // Shows instructions to inhale
 static void first_breath_in_callback(void *context) {
-	APP_LOG(APP_LOG_LEVEL_DEBUG, "first_breath_in_callback");
 	
 	// Next Up, first_breath_out_callback
 	s_main_timer = app_timer_register(s_breath_duration, first_breath_out_callback, NULL);
@@ -484,7 +485,6 @@ static void first_breath_in_callback(void *context) {
 
 // Start animation show text
 static void animation_start_callback(void *context) {
-	APP_LOG(APP_LOG_LEVEL_DEBUG, "animation_start_callback");
 	
 	// Next up, first_breath_in_callback
 	s_main_timer = app_timer_register(D_START_ANIMATION_TIME, first_breath_in_callback, NULL);
@@ -602,7 +602,6 @@ static void back_click_handler(ClickRecognizerRef recognizer, void *context) {
 		
 		// Shows the expand animation
 		s_current_radius = s_radius;
-		APP_LOG(APP_LOG_LEVEL_DEBUG, "The radius is %d", s_current_radius);
 		main_animation_end((void*)1);
 		s_interrupt_timer = app_timer_register(525, animation_end_callback, (void*)1);
 		s_animating = false;
@@ -622,10 +621,12 @@ static void select_click_handler(ClickRecognizerRef recognizer, void *context) {
 		s_animation_completed = false;
 		s_main_done = false;
 		
+		#if defined(PBL_HEALTH)
 		// Kick the HR to high gear (update every one second!)
 		if (settings_get_heartRateVariation() && data_get_current_heart_rate() != 0) {
 			data_set_heart_rate_period(1);
 		}
+		#endif
 		
 		// Hides all text layers
 		layer_set_hidden(s_inside_text_layer, true);

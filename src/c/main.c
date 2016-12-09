@@ -12,8 +12,8 @@ static void init() {
 	APP_LOG(APP_LOG_LEVEL_INFO, "You are running version 2.0 of the Breathe app.");
 	#if PBL_HEALTH
 		health_init(); // Subscribe to health service if health API is available
+		data_init(); // Subscribe to data service
 	#endif
-	data_init(); // Subscribe to data service
 	settings_init(); // Subscribe to settings service
 	wakeup_service_subscribe(wakeup_handler); // Subscribe to Wakeup Service
 	

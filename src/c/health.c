@@ -2,6 +2,7 @@
 #include "health.h"
 #include "settings.h"
 
+#if defined(PBL_HEALTH)
 static void health_handler(HealthEventType event, void *context) {
 	if (event == HealthEventHeartRateUpdate) { // New heart rate measurement
 		data_set_current_heart_rate((int)health_service_peek_current_value(HealthMetricHeartRateRawBPM));
@@ -20,3 +21,4 @@ void health_init() {
 	}
 	#endif
 }
+#endif

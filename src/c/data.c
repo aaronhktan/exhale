@@ -2,6 +2,7 @@
 #include "data.h"
 #include "localize.h"
 
+#if defined(PBL_HEALTH)
 static int s_current_steps;
 HealthValue s_current_heart_rate;
 static char s_current_steps_buffer[22], s_current_heart_rate_buffer[8];
@@ -73,6 +74,7 @@ char* data_get_current_steps_buffer() {
 char* data_get_current_heart_rate_buffer() {
 	return s_current_heart_rate_buffer;
 }
+#endif
 
 // Gets today's date
 char *data_get_date_today() {

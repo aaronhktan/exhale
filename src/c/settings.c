@@ -192,6 +192,7 @@ int settings_get_reminderHoursStart(){
 }
 
 int settings_get_breathsPerMinute() {
+	#if defined(PBL_HEALTH)
 	if (settings.heartRateVariation && data_get_current_heart_rate() != 0) {
 		int heart_rate = data_get_current_heart_rate();
 		if (heart_rate <= 60) {
@@ -212,9 +213,13 @@ int settings_get_breathsPerMinute() {
 	} else {
 		return settings.breathsPerMinute;
 	}
+	#else
+		return settings.breathsPerMinute;
+	#endif
 }
 
 int settings_get_breathDuration() {
+	#if defined(PBL_HEALTH)
 	if (settings.heartRateVariation && data_get_current_heart_rate() != 0) { // This means that the user has enabled heart rate variation and the heart rate monitor isn't returning a zero.
 		int heart_rate = data_get_current_heart_rate();
 		if (heart_rate <= 60) {
@@ -237,6 +242,9 @@ int settings_get_breathDuration() {
 				That gives us how many seconds the entire breath should take, so divide by 2 to get inhale/exhale duration */
 		return (MILLISECONDS_PER_MINUTE - (2000 * settings.breathsPerMinute)) / settings.breathsPerMinute / 2;
 	}
+	#else
+		return (MILLISECONDS_PER_MINUTE - (2000 * settings.breathsPerMinute)) / settings.breathsPerMinute / 2;
+	#endif
 }
 
 bool settings_get_heartRateVariation() {
