@@ -1,0 +1,8 @@
+#Ignore lock-waf files
+.lock-waf*
+
+#Ignore all build files
+build/*
+
+#Ignore node modules
+node_modules/*
