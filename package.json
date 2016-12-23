@@ -30,6 +30,30 @@
         "resources": {
             "media": [
                 {
+                    "file": "data/achievement_sequence.pdc",
+                    "name": "ACHIEVEMENT_SEQUENCE",
+                    "targetPlatforms": null,
+                    "type": "raw"
+                },
+                {
+                    "file": "images/achivement-incomplete.png",
+                    "name": "ACHIEVEMENT_INCOMPLETE_PNG",
+                    "targetPlatforms": null,
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/achievement-complete.png",
+                    "name": "ACHIEVEMENT_COMPLETE_ICON",
+                    "targetPlatforms": [
+                        "aplite",
+                        "basalt",
+                        "chalk",
+                        "diorite",
+                        "emery"
+                    ],
+                    "type": "bitmap"
+                },
+                {
                     "file": "images/icon.png",
                     "menuIcon": true,
                     "name": "icon",
@@ -53,10 +77,10 @@
             "diorite",
             "emery"
         ],
-        "uuid": "5d19cf9c-f432-4ed4-b666-6ee3777dcdf6",
+        "uuid": "eb2a144c-0aa1-4e56-82a4-89270370014e",
         "watchapp": {
             "watchface": false
         }
     },
-    "version": "2.0.0"
+    "version": "2.1.0"
 }
