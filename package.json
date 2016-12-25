@@ -1,5 +1,5 @@
 {
-    "author": "cheeseisdisgusting@gmail.com",
+    "author": "cheeseisdisgusting",
     "dependencies": {
         "pebble-clay": "^1.0.4"
     },
@@ -30,18 +30,18 @@
         "resources": {
             "media": [
                 {
+                    "file": "data/alarm_sequence.pdc",
+                    "name": "ALARM_SEQUENCE",
+                    "targetPlatforms": null,
+                    "type": "raw"
+                },
+                {
                     "file": "images/icon.png",
                     "menuIcon": true,
                     "name": "icon",
                     "storageFormat": "png",
                     "targetPlatforms": null,
                     "type": "bitmap"
-                },
-                {
-                    "file": "data/clock_sequence.pdc",
-                    "name": "CLOCK_SEQUENCE",
-                    "targetPlatforms": null,
-                    "type": "raw"
                 }
             ]
         },
@@ -58,5 +58,5 @@
             "watchface": false
         }
     },
-    "version": "2.0.0"
+    "version": "2.1.0"
 }
