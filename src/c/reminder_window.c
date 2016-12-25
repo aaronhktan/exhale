@@ -18,9 +18,9 @@ static ActionMenuLevel *s_root_level, *s_snooze_level;
 static int s_min_to_breathe;
 static Layer *s_canvas_layer;
 static TextLayer *s_text_layer;
-static AppTimer *s_close_timer;
+static AppTimer *s_close_timer, *s_next_frame_timer;
 static GDrawCommandSequence *s_command_seq;
-GColor random_color;
+GColor random_color, text_color;
 WakeupId id;
 
 static int s_index = 0;
@@ -33,7 +33,7 @@ static void close_app() {
 // Finds and displays the next frame in PDC
 static void next_frame_handler(void *context) {
 	layer_mark_dirty(s_canvas_layer);
-	app_timer_register(DELTA, next_frame_handler, NULL);
+	s_next_frame_timer = app_timer_register(DELTA, next_frame_handler, NULL);
 }
 
 // Method to update the PDC layer
@@ -50,20 +50,25 @@ static void canvas_update_proc(Layer *layer, GContext *ctx) {
 		));
 	}
 
-// Advance to the next frame, wrapping if neccessary
-int num_frames = gdraw_command_sequence_get_num_frames(s_command_seq);
-s_index++;
-if (s_index == num_frames) {
-s_index = 0;
-}
+	// Advance to the next frame, wrapping if neccessary
+	int num_frames = gdraw_command_sequence_get_num_frames(s_command_seq);
+	s_index++;
+	if (s_index == num_frames) {
+		s_index = 0;
+	}
 	
-	graphics_context_set_fill_color(ctx, GColorBlack);
-	#ifdef PBL_PLATFORM_EMERY
-		graphics_fill_circle(ctx, GPoint(bounds.size.w + 7, bounds.size.h / 2), 12);
-	#elif PBL_PLATFORM_CHALK
-		graphics_fill_circle(ctx, GPoint(bounds.size.w + 1, bounds.size.h / 2), 12);
+	#if PBL_COLOR
+	graphics_context_set_fill_color(ctx, gcolor_legible_over(random_color));
 	#else
-		graphics_fill_circle(ctx, GPoint(bounds.size.w + 5, bounds.size.h / 2), 10);
+	graphics_context_set_fill_color(ctx, GColorBlack);
+	#endif
+
+	#ifdef PBL_PLATFORM_EMERY
+	graphics_fill_circle(ctx, GPoint(bounds.size.w + 7, bounds.size.h / 2), 12);
+	#elif PBL_PLATFORM_CHALK
+	graphics_fill_circle(ctx, GPoint(bounds.size.w + 1, bounds.size.h / 2), 12);
+	#else
+	graphics_fill_circle(ctx, GPoint(bounds.size.w + 5, bounds.size.h / 2), 10);
 	#endif
 }
 
@@ -151,29 +156,32 @@ static void reminder_window_load(Window *window) {
 	Layer *window_layer = window_get_root_layer(window);
 	GRect bounds = layer_get_bounds(window_layer);
 
+	// Layer for text
+	s_text_layer = text_layer_create(GRect(0, bounds.size.w - PBL_IF_RECT_ELSE(16, 50), bounds.size.w, bounds.size.h / 2));
+	text_layer_set_font(s_text_layer, fonts_get_system_font(FONT_KEY));
+	text_layer_set_background_color(s_text_layer, random_color);
+	text_layer_set_text_color(s_text_layer, text_color);
+	text_layer_set_text_alignment(s_text_layer, GTextAlignmentCenter);
+	
+	text_layer_set_text(s_text_layer, localize_get_reminder_text());
+	
+	layer_add_child(window_layer, text_layer_get_layer(s_text_layer));
+	
 	// Layer for PDC
 	s_canvas_layer = layer_create(bounds);
 	layer_set_update_proc(s_canvas_layer, canvas_update_proc);
 	
 	layer_add_child(window_layer, s_canvas_layer);
 	
-	window_set_background_color(s_reminder_window, PBL_IF_COLOR_ELSE(random_color, GColorWhite));
-	
-	app_timer_register(DELTA, next_frame_handler, NULL);
-	
-	// Layer for text
-	s_text_layer = text_layer_create(GRect(0, bounds.size.w - PBL_IF_RECT_ELSE(16, 50), bounds.size.w, bounds.size.h / 2));
-	text_layer_set_font(s_text_layer, fonts_get_system_font(FONT_KEY));
-	text_layer_set_background_color(s_text_layer, random_color);
-	text_layer_set_text_alignment(s_text_layer, GTextAlignmentCenter);
-	text_layer_set_text(s_text_layer, localize_get_reminder_text());
-	
-	layer_add_child(window_layer, text_layer_get_layer(s_text_layer));
-	
 	init_action_menu();
 	
 	// Start timer to close the app after 30 seconds if the user doesn't respond as to not waste battery
-	s_close_timer = app_timer_register(30000, close_app, NULL);
+	s_close_timer = app_timer_register(30000, close_app, NULL);\
+		
+	// Only vibrate when the watch isn't in Quiet Time
+	if (!quiet_time_is_active()){
+		vibes_double_pulse();
+	}
 }
 
 // DESTROY ALL THE THINGS (hopefully)
@@ -190,28 +198,25 @@ void reminder_window_push() {
 	#if PBL_COLOR
 		random_color = (GColor){ .a = 3, .r = rand() % 4, .g = rand() % 4, .b = rand() % 4 }; // Random color. Cool.
 		while (random_color.r == 0 && random_color.g == 0 && random_color.b == 0) {
-			APP_LOG(APP_LOG_LEVEL_DEBUG, "The random colour generated was black! Oh no!");
 			random_color = (GColor){ .a = 3, .r = rand() % 4, .g = rand() % 4, .b = rand() % 4 }; // To make sure that the background color is not black.
 		}
+		text_color = gcolor_legible_over(random_color);
 	#else
 		random_color = GColorWhite;
+		text_color = GColorBlack;
 	#endif
 	
 	// Create sequence from PDC
-	s_command_seq = gdraw_command_sequence_create_with_resource(RESOURCE_ID_CLOCK_SEQUENCE);
+	s_command_seq = gdraw_command_sequence_create_with_resource(RESOURCE_ID_ALARM_SEQUENCE);
 	
 	s_reminder_window = window_create();
-	
 	window_set_window_handlers(s_reminder_window, (WindowHandlers) {
 		.load = reminder_window_load, 
-		.unload = reminder_window_unload});
-	
+		.unload = reminder_window_unload,
+	});
 	window_set_click_config_provider(s_reminder_window, click_config_provider);
-	
+	window_set_background_color(s_reminder_window, PBL_IF_COLOR_ELSE(random_color, GColorWhite));
 	window_stack_push(s_reminder_window, true);
 	
-		// Only vibrate when the watch isn't in Quiet Time
-	if (!quiet_time_is_active()){
-		vibes_double_pulse();
-	}
+	s_next_frame_timer = app_timer_register(DELTA, next_frame_handler, NULL);
 }

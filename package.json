@@ -1,5 +1,5 @@
 {
-    "author": "cheeseisdisgusting@gmail.com",
+    "author": "cheeseisdisgusting",
     "dependencies": {
         "pebble-clay": "^1.0.4"
     },
@@ -36,6 +36,12 @@
                     "type": "raw"
                 },
                 {
+                    "file": "data/alarm_sequence.pdc",
+                    "name": "ALARM_SEQUENCE",
+                    "targetPlatforms": null,
+                    "type": "raw"
+                },
+                {
                     "file": "images/achivement-incomplete.png",
                     "name": "ACHIEVEMENT_INCOMPLETE_PNG",
                     "targetPlatforms": null,
@@ -60,12 +66,6 @@
                     "storageFormat": "png",
                     "targetPlatforms": null,
                     "type": "bitmap"
-                },
-                {
-                    "file": "data/clock_sequence.pdc",
-                    "name": "CLOCK_SEQUENCE",
-                    "targetPlatforms": null,
-                    "type": "raw"
                 }
             ]
         },
@@ -77,7 +77,7 @@
             "diorite",
             "emery"
         ],
-        "uuid": "eb2a144c-0aa1-4e56-82a4-89270370014e",
+        "uuid": "5d19cf9c-f432-4ed4-b666-6ee3777dcdf6",
         "watchapp": {
             "watchface": false
         }

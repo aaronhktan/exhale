@@ -10,7 +10,7 @@
 #include "src/c/achievement_window.h"
 
 static void init() {
-	APP_LOG(APP_LOG_LEVEL_INFO, "You are running version 2.0 of the Breathe app.");
+	APP_LOG(APP_LOG_LEVEL_INFO, "You are running version 2.1 of the Breathe app.");
 	#if PBL_HEALTH
 		health_init(); // Subscribe to health service if health API is available
 		data_init(); // Subscribe to data service
