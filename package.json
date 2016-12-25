@@ -1,5 +1,5 @@
 {
-    "author": "cheeseisdisgusting@gmail.com",
+    "author": "cheeseisdisgusting",
     "dependencies": {
         "pebble-clay": "^1.0.4"
     },
@@ -53,7 +53,7 @@
             "diorite",
             "emery"
         ],
-        "uuid": "23dabef8-d878-41d0-ba9c-c349c8377a9c",
+        "uuid": "5d19cf9c-f432-4ed4-b666-6ee3777dcdf6",
         "watchapp": {
             "watchface": false
         }
