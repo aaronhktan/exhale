@@ -7,7 +7,11 @@
 #include "src/c/wakeup.h"
 #include "src/c/localize.h"
 #include "src/c/appglance.h"
-#include "src/c/achievement_window.h"
+#if !PBL_PLATFORM_APLITE
+	#include "src/c/achievement.h"
+	#include "src/c/achievement_menu.h"
+	#include "src/c/achievement_window.h"
+#endif
 
 static void init() {
 	APP_LOG(APP_LOG_LEVEL_INFO, "You are running version 2.1 of the Breathe app.");
@@ -16,6 +20,9 @@ static void init() {
 		data_init(); // Subscribe to data service
 	#endif
 	settings_init(); // Subscribe to settings service
+	#if !PBL_PLATFORM_APLITE
+		achievement_init(); // Subscribe to the achievement service
+	#endif
 	wakeup_service_subscribe(wakeup_handler); // Subscribe to Wakeup Service
 	
 	if(launch_reason() == APP_LAUNCH_WAKEUP) { // The app was started by a wakeup event.
@@ -26,27 +33,28 @@ static void init() {
 			wakeup_schedule_next_wakeup(settings_get_reminderHours(), 0, settings_get_reminderHoursStart());
 		}
 	} else {
-// 		// The app was started by the user; push the standard breathe window
-// 		if (settings_get_rememberDuration() && data_read_last_duration_data() != 0) { // Set the minutes to breathe to the same as last one, unless the number is zero (meaning they haven't breathed yet)
-// 			breathe_window_push(data_read_last_duration_data());
-// 		} else {
-// 			breathe_window_push(1);
-// 		}
+		// The app was started by the user; push the standard breathe window
+		if (settings_get_rememberDuration() && data_read_last_duration_data() != 0) { // Set the minutes to breathe to the same as last one, unless the number is zero (meaning they haven't breathed yet)
+			breathe_window_push(data_read_last_duration_data());
+		} else {
+			breathe_window_push(1);
+		}
 		
-// 		// Cancel any snoozed reminders because the user has decided to open the app and presumably doesn't need to be reminded again.
-// 		if (persist_exists(SNOOZE_WAKEUP)) {
-// 			if (wakeup_query(persist_read_int(SNOOZE_WAKEUP), NULL)) { // Returns true if the wakeup at this ID is still scheduled
-// 				// Canceled a snooze timer!
-// 				APP_LOG(APP_LOG_LEVEL_DEBUG, "Cancelling a timer at %d.", (int)persist_read_int(SNOOZE_WAKEUP));
-// 				wakeup_cancel(persist_read_int(SNOOZE_WAKEUP));
-// 			}
-// 		}
-// 		// Schedule next normal wakeup
-// 		if (settings_get_reminderHours() != 0) {
-// 			wakeup_schedule_next_wakeup(settings_get_reminderHours(), 0, settings_get_reminderHoursStart());
-// 		}
+		// Cancel any snoozed reminders because the user has decided to open the app and presumably doesn't need to be reminded again.
+		if (persist_exists(SNOOZE_WAKEUP)) {
+			if (wakeup_query(persist_read_int(SNOOZE_WAKEUP), NULL)) { // Returns true if the wakeup at this ID is still scheduled
+				// Canceled a snooze timer!
+				APP_LOG(APP_LOG_LEVEL_DEBUG, "Cancelling a timer at %d.", (int)persist_read_int(SNOOZE_WAKEUP));
+				wakeup_cancel(persist_read_int(SNOOZE_WAKEUP));
+			}
+		}
+		// Schedule next normal wakeup
+		if (settings_get_reminderHours() != 0) {
+			wakeup_schedule_next_wakeup(settings_get_reminderHours(), 0, settings_get_reminderHoursStart());
+		}
 // 		reminder_window_push(); // For testing
-		achievement_window_push(); // For testing
+// 		achievement_window_push(); // For testing
+// 			achievement_menu_window_push(); // For testing
 	}
 }
 

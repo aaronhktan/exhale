@@ -57,5 +57,8 @@ void achievement_set_eight_minutes_session(char *date_completed, int complete);
 Achievement achievement_get_ten_minutes_session();
 void achievement_set_ten_minutes_session(char *date_completed, int complete);
 
+Achievement achievement_get_changed_settings();
+void achievement_set_changed_settings(char *date_completed, int complete);
+
 Achievement achievement_get_completionist();
 void achievement_set_completionist(char *date_completed, int complete);

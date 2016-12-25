@@ -2,8 +2,9 @@
 #include "achievement.h"
 
 AchievementList achievements;
-int achievements_version = 1;
+int achievements_version = 1; // The current achievement version
 
+// Load the default settings for achievement, and read if there are already achievements
 void achievement_init() {
 	achievements.one_week_streak.complete = 0;
 	achievements.one_month_streak.complete = 0;
@@ -23,11 +24,13 @@ void achievement_init() {
 	persist_write_int(ACHIEVEMENT_VERSION_KEY, 1);
 }
 
+// Save achievements
 void achievement_save_achievements() {
 		persist_write_data(ACHIEVEMENT_KEY, &achievements, sizeof(achievements));
 		persist_write_int(ACHIEVEMENT_VERSION_KEY, 1);
 }
 
+// Getters and setters for each achievement in the AchievementList Struct
 Achievement achievement_get_one_week_streak() {
 	return achievements.one_week_streak;
 }
@@ -125,6 +128,16 @@ Achievement achievement_get_ten_minutes_session() {
 void achievement_set_ten_minutes_session(char *date_completed, int complete) {
 	achievements.ten_minutes_session.date_completed = date_completed;
 	achievements.ten_minutes_session.complete = complete;
+	achievement_save_achievements();
+}
+
+Achievement achievement_get_changed_settings() {
+	return achievements.changed_settings;
+}
+
+void achievement_set_changed_settings(char *date_completed, int complete) {
+	achievements.changed_settings.date_completed = date_completed;
+	achievements.changed_settings.complete = complete;
 	achievement_save_achievements();
 }
 

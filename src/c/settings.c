@@ -2,6 +2,10 @@
 #include "settings.h"
 #include "wakeup.h"
 #include "src/c/data.h"
+#if !PBL_PLATFORM_APLITE
+	#include "src/c/achievement.h"
+	#include "src/c/achievement_window.h"
+#endif
 
 ClaySettings settings;
 
@@ -54,7 +58,13 @@ void settings_init() {
 	settings.heartRateVariation = false;
 	settings.appGlanceEnabled = true;
 	settings.appGlanceType = 0;
-	persist_read_data(SETTINGS_KEY, &settings, sizeof(settings));
+	
+	// Check if settings exists, and then load them
+	if (persist_exists(SETTINGS_KEY)) {
+		persist_read_data(SETTINGS_KEY, &settings, sizeof(settings));
+	} else {
+		settings_save_settings();
+	}
 	
 	// Check for storage version and migrate as necessary
 	if (persist_exists(SETTINGS_VERSION_KEY)) { // This means that the storage version exists.
@@ -153,6 +163,17 @@ void settings_handle_settings(DictionaryIterator *iter, void *context) {
 	if (app_glance_type_t) {
 		settings.appGlanceType = app_glance_type_t->value->int8;
 	}
+	
+	#if !PBL_PLATFORM_APLITE
+		if (achievement_get_changed_settings().complete == 0) {
+			char date_string[11];
+			time_t now = time(NULL);
+			struct tm *t = localtime(&now);
+			strftime(date_string, sizeof(date_string), "%F", t);
+			achievement_set_changed_settings(date_string, 1);
+			achievement_window_push("SETTINGS CHANGED!");
+		}
+	#endif
 }
 
 GColor settings_get_backgroundColor() {

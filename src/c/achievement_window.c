@@ -6,18 +6,22 @@
 
 #ifdef PBL_PLATFORM_EMERY
 	#define FONT_KEY FONT_KEY_GOTHIC_18_BOLD
+	#define LARGE_FONT_KEY FONT_KEY_GOTHIC_24_BOLD
 #elif PBL_PLATFORM_CHALK
 	#define FONT_KEY FONT_KEY_GOTHIC_14_BOLD
+	#define LARGE_FONT_KEY FONT_KEY_GOTHIC_18_BOLD
 #else
 	#define FONT_KEY FONT_KEY_GOTHIC_14_BOLD
+	#define LARGE_FONT_KEY FONT_KEY_GOTHIC_18_BOLD
 #endif
 
 static Window *s_achievement_window;
 static Layer *s_canvas_layer;
-static TextLayer *s_text_layer;
+static TextLayer *s_announce_text_layer, *s_title_layer, *s_description_layer;
 static GDrawCommandSequence *s_command_seq;
-GColor random_color, text_color;
+static GColor random_color, text_color;
 static AppTimer *s_timer;
+static char *s_achievement_text;
 
 static int s_index = 0;
 
@@ -72,14 +76,35 @@ static void achievement_window_load(Window *window) {
 	
 	window_set_background_color(s_achievement_window, PBL_IF_COLOR_ELSE(random_color, GColorWhite));
 	
-	// Layer for text
-	s_text_layer = text_layer_create(GRect(0, 0, bounds.size.w, bounds.size.h / 6));
-	text_layer_set_font(s_text_layer, fonts_get_system_font(FONT_KEY));
-	text_layer_set_background_color(s_text_layer, random_color);
-	text_layer_set_text_alignment(s_text_layer, GTextAlignmentCenter);
-	text_layer_set_text(s_text_layer, localize_get_achievement_text());
+	// Layer for top text
+	s_announce_text_layer = text_layer_create(GRect(0, 0, bounds.size.w, bounds.size.h / 6));
+	text_layer_set_font(s_announce_text_layer, fonts_get_system_font(FONT_KEY));
+	text_layer_set_background_color(s_announce_text_layer, random_color);
+	text_layer_set_text_color(s_announce_text_layer, text_color);
+	text_layer_set_text_alignment(s_announce_text_layer, GTextAlignmentCenter);
+	text_layer_set_text(s_announce_text_layer, localize_get_achievement_text());
 	
-	layer_add_child(window_layer, text_layer_get_layer(s_text_layer));
+	layer_add_child(window_layer, text_layer_get_layer(s_announce_text_layer));
+	
+	// Layer for text with achievement name
+	s_title_layer = text_layer_create(GRect(0, bounds.size.h * 11 / 16, bounds.size.w, bounds.size.h / 6));
+	text_layer_set_font(s_title_layer, fonts_get_system_font(LARGE_FONT_KEY));
+	text_layer_set_background_color(s_title_layer, random_color);
+	text_layer_set_text_color(s_title_layer, text_color);
+	text_layer_set_text_alignment(s_title_layer, GTextAlignmentCenter);
+	text_layer_set_text(s_title_layer, s_achievement_text);
+	
+	layer_add_child(window_layer, text_layer_get_layer(s_title_layer));
+	
+	// Layer for text with achievement description
+	s_description_layer = text_layer_create(GRect(0, bounds.size.h * 13 / 16, bounds.size.w, bounds.size.h / 6));
+	text_layer_set_font(s_description_layer, fonts_get_system_font(FONT_KEY));
+	text_layer_set_background_color(s_description_layer, random_color);
+	text_layer_set_text_color(s_description_layer, text_color);
+	text_layer_set_text_alignment(s_description_layer, GTextAlignmentCenter);
+	text_layer_set_text(s_description_layer, "Change settings for the first time.");
+	
+	layer_add_child(window_layer, text_layer_get_layer(s_description_layer));
 	
 	vibes_double_pulse();
 }
@@ -87,13 +112,15 @@ static void achievement_window_load(Window *window) {
 // DESTROY ALL THE THINGS (hopefully)
 static void achievement_window_unload(Window *window) {
 	layer_destroy(s_canvas_layer);
-	layer_destroy(text_layer_get_layer(s_text_layer));
+	layer_destroy(text_layer_get_layer(s_announce_text_layer));
 	gdraw_command_sequence_destroy(s_command_seq);
 	window_destroy(s_achievement_window);
 }
 
 // Method to open and display this window
-void achievement_window_push() {
+void achievement_window_push(char *achievement) {
+	s_achievement_text = achievement;
+	
 	// Create sequence from PDC
 	s_command_seq = gdraw_command_sequence_create_with_resource(RESOURCE_ID_ACHIEVEMENT_SEQUENCE);
 	
@@ -103,10 +130,11 @@ void achievement_window_push() {
 			APP_LOG(APP_LOG_LEVEL_DEBUG, "The random colour generated was black! Oh no!");
 			random_color = (GColor){ .a = 3, .r = rand() % 4, .g = rand() % 4, .b = rand() % 4 }; // To make sure that the background color is not black.
 		}
+		text_color = gcolor_legible_over(random_color);
 	#else
 		random_color = GColorWhite;
+		text_color = GColorBlack;
 	#endif
-
 	
 	s_achievement_window = window_create();
 	

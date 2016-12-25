@@ -20,8 +20,8 @@ static Layer *s_canvas_layer;
 static TextLayer *s_text_layer;
 static AppTimer *s_close_timer, *s_next_frame_timer;
 static GDrawCommandSequence *s_command_seq;
-GColor random_color, text_color;
-WakeupId id;
+static GColor random_color, text_color;
+static WakeupId id;
 
 static int s_index = 0;
 

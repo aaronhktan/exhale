@@ -5,6 +5,9 @@
 #include "src/c/graphics.h"
 #include "src/c/settings.h"
 #include "src/c/localize.h"
+#if !PBL_PLATFORM_APLITE
+	#include "src/c/achievement_menu.h"
+#endif
 
 #define D_START_DELAY 2100
 #define D_START_ANIMATION_TIME 5000
@@ -576,6 +579,14 @@ static void down_click_handler(ClickRecognizerRef recognizer, void *context) {
 	}
 }
 
+#if !PBL_PLATFORM_APLITE
+static void long_down_click_handler(ClickRecognizerRef regocnizer, void *context) {
+	if ((s_animation_completed) && (!s_animating)) {
+		achievement_menu_window_push();
+	}
+}
+#endif
+
 static void back_click_handler(ClickRecognizerRef recognizer, void *context) {
 	if (s_animating) {
 		// Prevents any further animations
@@ -664,6 +675,9 @@ static void click_config_provider(void *context) {
 	window_single_click_subscribe(id_down, down_click_handler);
 	window_single_click_subscribe(id_back, back_click_handler);
 	window_single_click_subscribe(id_select, select_click_handler);
+	#if !PBL_PLATFORM_APLITE
+		window_long_click_subscribe(id_down, 500, long_down_click_handler, NULL); // Click for 500ms before firing
+	#endif
 }
 
 // ******************************************************************************************* Main App Functions

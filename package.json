@@ -39,7 +39,7 @@
                 },
                 {
                     "file": "images/achivement-incomplete.png",
-                    "name": "ACHIEVEMENT_INCOMPLETE_PNG",
+                    "name": "ACHIEVEMENT_INCOMPLETE_ICON",
                     "targetPlatforms": null,
                     "type": "bitmap"
                 },
@@ -77,7 +77,7 @@
             "diorite",
             "emery"
         ],
-        "uuid": "eb2a144c-0aa1-4e56-82a4-89270370014e",
+        "uuid": "6411788e-3d6a-422d-9dc5-92b46df79177",
         "watchapp": {
             "watchface": false
         }
