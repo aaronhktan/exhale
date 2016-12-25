@@ -30,16 +30,12 @@
         "resources": {
             "media": [
                 {
-                    "file": "data/achievement_sequence.pdc",
-                    "name": "ACHIEVEMENT_SEQUENCE",
+                    "file": "images/icon.png",
+                    "menuIcon": true,
+                    "name": "icon",
+                    "storageFormat": "png",
                     "targetPlatforms": null,
-                    "type": "raw"
-                },
-                {
-                    "file": "data/alarm_sequence.pdc",
-                    "name": "ALARM_SEQUENCE",
-                    "targetPlatforms": null,
-                    "type": "raw"
+                    "type": "bitmap"
                 },
                 {
                     "file": "images/achivement-incomplete.png",
@@ -60,12 +56,16 @@
                     "type": "bitmap"
                 },
                 {
-                    "file": "images/icon.png",
-                    "menuIcon": true,
-                    "name": "icon",
-                    "storageFormat": "png",
+                    "file": "data/alarm_sequence.pdc",
+                    "name": "ALARM_SEQUENCE",
                     "targetPlatforms": null,
-                    "type": "bitmap"
+                    "type": "raw"
+                },
+                {
+                    "file": "data/achievement_sequence.pdc",
+                    "name": "ACHIEVEMENT_SEQUENCE",
+                    "targetPlatforms": null,
+                    "type": "raw"
                 }
             ]
         },
@@ -77,7 +77,7 @@
             "diorite",
             "emery"
         ],
-        "uuid": "5d19cf9c-f432-4ed4-b666-6ee3777dcdf6",
+        "uuid": "eb2a144c-0aa1-4e56-82a4-89270370014e",
         "watchapp": {
             "watchface": false
         }
