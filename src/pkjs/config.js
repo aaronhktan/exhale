@@ -214,6 +214,22 @@ module.exports = [
 		]
 	},
 	{
+		"type": "section",
+		"capabilities": ["NOT_PLATFORM_APLITE"],
+		"items": [
+			{
+				"type": "heading",
+				"defaultValue": "Achievements",
+			},
+			{
+				"type": "toggle",
+				"messageKey": "achievementsEnabled",
+				"defaultValue": true,
+			"label": "Enable achievements"
+			}
+		]
+	},
+	{
 		"type": "text",
 		"defaultValue": "<em><center>Many thanks to the beta testers: <br>Paula&nbsp;Bosca, Nikita&nbsp;Cheng, Ayush&nbsp;Gupta, Ellen&nbsp;Huang, Yvonne&nbsp;Tan, David&nbsp;Voicu, /u/dryingsocks, /u/JohnEdwa, and /u/PiwwowPants.</center></em>",
 	},

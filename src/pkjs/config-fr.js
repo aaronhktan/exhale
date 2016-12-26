@@ -214,6 +214,22 @@ module.exports = [
 		]
 	},
 	{
+		"type": "section",
+		"capabilities": ["NOT_PLATFORM_APLITE"],
+		"items": [
+			{
+				"type": "heading",
+				"defaultValue": "Succès",
+			},
+			{
+				"type": "toggle",
+				"messageKey": "achievementsEnabled",
+				"defaultValue": true,
+			"label": "Activer les succès?"
+			}
+		]
+	},
+	{
 		"type": "text",
 		"defaultValue": "<em><center>Un grand merci aux bêta-testeurs: <br>Paula&nbsp;Bosca, Nikita&nbsp;Cheng, Ayush&nbsp;Gupta, Ellen&nbsp;Huang, Yvonne&nbsp;Tan, David&nbsp;Voicu, /u/dryingsocks, /u/JohnEdwa, et /u/PiwwowPants</center></em>",
 	},

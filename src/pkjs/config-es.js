@@ -214,6 +214,22 @@ module.exports = [
 		]
 	},
 	{
+		"type": "section",
+		"capabilities": ["NOT_PLATFORM_APLITE"],
+		"items": [
+			{
+				"type": "heading",
+				"defaultValue": "Logros",
+			},
+			{
+				"type": "toggle",
+				"messageKey": "achievementsEnabled",
+				"defaultValue": true,
+			"label": "¿Activar los logros?"
+			}
+		]
+	},
+	{
 		"type": "text",
 		"defaultValue": "<em><center>Muchas gracias a los probadores beta: <br>Paula&nbsp;Bosca, Nikita&nbsp;Cheng, Ayush&nbsp;Gupta, Ellen&nbsp;Huang, Yvonne&nbsp;Tan, David&nbsp;Voicu, /u/dryingsocks, /u/JohnEdwa, y /u/PiwwowPants</center></em>",
 	},

@@ -54,6 +54,7 @@ Pebble.addEventListener('webviewclosed', function(e) {
 	console.log('The heartRateVariation sent to Pebble is ' + dict[messageKeys.heartRateVariation] + '.');
 	console.log('The appGlanceEnabled sent to Pebble is ' + dict[messageKeys.appGlanceEnabled] + '.');
 	console.log('The appGlanceType sent to Pebble is ' + dict[messageKeys.appGlanceType] + '.');
+	console.log('The achievementsEnabled sent to Pebble is ' + dict[messageKeys.achievementsEnabled] + '.');
 	
 	// Send settings values to watch side
 	Pebble.sendAppMessage(dict, function(e) {

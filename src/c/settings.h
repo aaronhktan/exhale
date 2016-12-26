@@ -20,6 +20,7 @@ typedef struct ClaySettings {
 	bool heartRateVariation;
 	bool appGlanceEnabled;
 	int appGlanceType;
+	bool achievementsEnabled;
 } ClaySettings;
 
 void settings_init();
@@ -40,3 +41,4 @@ int settings_get_breathDuration();
 bool settings_get_heartRateVariation();
 bool settings_get_appGlanceEnabled();
 int settings_get_appGlanceType();
+bool settings_get_achievementsEnabled();

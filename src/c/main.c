@@ -54,7 +54,7 @@ static void init() {
 		}
 // 		reminder_window_push(); // For testing
 // 		achievement_window_push(); // For testing
-// 			achievement_menu_window_push(); // For testing
+// 		achievement_menu_window_push(); // For testing
 	}
 }
 

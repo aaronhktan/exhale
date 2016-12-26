@@ -581,7 +581,7 @@ static void down_click_handler(ClickRecognizerRef recognizer, void *context) {
 
 #if !PBL_PLATFORM_APLITE
 static void long_down_click_handler(ClickRecognizerRef regocnizer, void *context) {
-	if ((s_animation_completed) && (!s_animating)) {
+	if ((s_animation_completed) && (!s_animating) && settings_get_achievementsEnabled() == true) {
 		achievement_menu_window_push();
 	}
 }

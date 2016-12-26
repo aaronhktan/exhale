@@ -9,10 +9,18 @@
 
 ClaySettings settings;
 
-int settings_version = 1, current_settings_version = 2;
+int settings_version = 1, current_settings_version = 3;
 
 static void migrate_settings_data() {
 	switch (settings_version) { // Not useful now, but might become useful when there are more storage versions.
+		case 2:
+			#if !PBL_PLATFORM_APLITE
+				settings.achievementsEnabled = true;
+			#else
+				settings.achievementsEnabled = false;
+			#endif
+			settings_save_settings();
+			break;
 		default: // Storage Version 1
 			switch(settings.displayText) { // DisplayText keys changed between Storage Version 1 and 2
 				case 0: // In Storage Version 1, this used to mean that a greeting was to be displayed
@@ -58,6 +66,11 @@ void settings_init() {
 	settings.heartRateVariation = false;
 	settings.appGlanceEnabled = true;
 	settings.appGlanceType = 0;
+	#if !PBL_PLATFORM_APLITE
+		settings.achievementsEnabled = true;
+	#else
+		settings.achievementsEnabled = false;
+	#endif
 	
 	// Check if settings exists, and then load them
 	if (persist_exists(SETTINGS_KEY)) {
@@ -70,7 +83,7 @@ void settings_init() {
 	if (persist_exists(SETTINGS_VERSION_KEY)) { // This means that the storage version exists.
 		settings_version = persist_read_int(SETTINGS_VERSION_KEY); // Get storage version and compare with current; if is different, then migrate.
 		APP_LOG(APP_LOG_LEVEL_DEBUG, "The saved settings version is %d.", (int)persist_read_int(SETTINGS_VERSION_KEY));
-		if (!settings_version == current_settings_version) {
+		if (settings_version != current_settings_version) {
 			APP_LOG(APP_LOG_LEVEL_DEBUG, "The saved settings version and current version do not match; performing migration.");
 			migrate_settings_data();
 		}
@@ -164,6 +177,11 @@ void settings_handle_settings(DictionaryIterator *iter, void *context) {
 		settings.appGlanceType = app_glance_type_t->value->int8;
 	}
 	
+	Tuple *achievements_enabled_t = dict_find(iter, MESSAGE_KEY_achievementsEnabled);
+	if (achievements_enabled_t) {
+		settings.achievementsEnabled = achievements_enabled_t->value->int32 == 1;
+	}
+	
 	#if !PBL_PLATFORM_APLITE
 		if (achievement_get_changed_settings().complete == 0) {
 			char date_string[11];
@@ -171,7 +189,9 @@ void settings_handle_settings(DictionaryIterator *iter, void *context) {
 			struct tm *t = localtime(&now);
 			strftime(date_string, sizeof(date_string), "%F", t);
 			achievement_set_changed_settings(date_string, 1);
-			achievement_window_push("SETTINGS CHANGED!");
+			if (settings.achievementsEnabled) {
+				achievement_window_push("SETTINGS CHANGED!");
+			}
 		}
 	#endif
 }
@@ -282,4 +302,8 @@ bool settings_get_appGlanceEnabled() {
 
 int settings_get_appGlanceType() {
 	return settings.appGlanceType;
+}
+
+bool settings_get_achievementsEnabled() {
+	return settings.achievementsEnabled;
 }

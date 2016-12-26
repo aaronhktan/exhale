@@ -24,7 +24,8 @@
             "displayText",
             "heartRateVariation",
             "appGlanceEnabled",
-            "appGlanceType"
+            "appGlanceType",
+            "achievementsEnabled"
         ],
         "projectType": "native",
         "resources": {
@@ -46,13 +47,7 @@
                 {
                     "file": "images/achievement-complete.png",
                     "name": "ACHIEVEMENT_COMPLETE_ICON",
-                    "targetPlatforms": [
-                        "aplite",
-                        "basalt",
-                        "chalk",
-                        "diorite",
-                        "emery"
-                    ],
+                    "targetPlatforms": null,
                     "type": "bitmap"
                 },
                 {
@@ -77,7 +72,7 @@
             "diorite",
             "emery"
         ],
-        "uuid": "6411788e-3d6a-422d-9dc5-92b46df79177",
+        "uuid": "27604a42-996f-46ab-a38f-96cea187dcd8",
         "watchapp": {
             "watchface": false
         }

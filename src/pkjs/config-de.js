@@ -214,6 +214,22 @@ module.exports = [
 		]
 	},
 	{
+		"type": "section",
+		"capabilities": ["NOT_PLATFORM_APLITE"],
+		"items": [
+			{
+				"type": "heading",
+				"defaultValue": "Errungenschaften",
+			},
+			{
+				"type": "toggle",
+				"messageKey": "achievementsEnabled",
+				"defaultValue": true,
+			"label": "Ermöglichen Errungenschaften"
+			}
+		]
+	},
+	{
 		"type": "text",
 		"defaultValue": "<em><center>Vielen Dank an die Betatester: <br>Paula&nbsp;Bosca, Nikita&nbsp;Cheng, Ayush&nbsp;Gupta, Ellen&nbsp;Huang, Yvonne&nbsp;Tan, David&nbsp;Voicu, /u/dryingsocks, /u/JohnEdwa, and /u/PiwwowPants.</center></em>",
 	},
