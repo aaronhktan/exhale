@@ -7,6 +7,7 @@
 #define WAKEUP_TIME_KEY 3
 #define STREAK_DATE_KEY 4
 #define STREAK_LENGTH_KEY 5
+#define TOTAL_MINUTES_BREATHED_KEY 6
 
 void data_init();
 
@@ -39,3 +40,6 @@ void data_set_streak_date_persist_data();
 void data_calculate_streak_length();
 char* data_get_streak_buffer();
 int data_get_streak_length();
+
+int data_get_total_minutes_breathed();
+void data_set_total_minutes_breathed(int value);

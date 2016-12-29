@@ -5,6 +5,7 @@
 #include "settings.h"
 #include "src/c/localize.h"
 #include "src/c/achievement_window.h"
+#include "src/c/data.h"
 
 static Window *s_achievement_window;
 static MenuLayer *s_achievement_layer;
@@ -155,7 +156,7 @@ static void menu_draw_row_callback(GContext* ctx, const Layer *cell_layer, MenuI
 			switch (cell_index->row) {
 				case 0: ;
 					char total_breathed_description[100];
-					snprintf(total_breathed_description, sizeof(total_breathed_description), localize_get_total_breathed_description(), 0);
+					snprintf(total_breathed_description, sizeof(total_breathed_description), localize_get_total_breathed_description(), data_get_total_minutes_breathed());
 					menu_cell_basic_draw(ctx, cell_layer, localize_get_total_breathed_name(), total_breathed_description, NULL);
 					break;
 				case 1: ;

@@ -323,6 +323,9 @@ static void animation_end_callback(void *data) {
 					}
 					break;
 			}
+		
+			// Add the minutes breathed to the total number of minutes breathed
+			data_set_total_minutes_breathed(data_get_total_minutes_breathed() + s_min_to_breathe);
 		#endif
 		
 	} else if (complete == 1) { // The user interrupted their session, so only add what was breathed before aborting

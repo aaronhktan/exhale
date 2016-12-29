@@ -245,4 +245,18 @@ char * data_get_streak_buffer() {
 	snprintf(s_streak_buffer, sizeof(s_streak_buffer), localize_get_streak_text(streak_length), streak_length);
 	return s_streak_buffer;
 }
+
+// Returns the total number of minutes breathed
+int data_get_total_minutes_breathed() {
+	if (persist_exists(TOTAL_MINUTES_BREATHED_KEY)) {
+		return persist_read_int(TOTAL_MINUTES_BREATHED_KEY);
+	} else {
+		return 0;
+	}
+}
+
+// Set the total number of minutes breathed
+void data_set_total_minutes_breathed(int value) {
+	persist_write_int(TOTAL_MINUTES_BREATHED_KEY, value);
+}
 #endif
