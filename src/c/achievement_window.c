@@ -8,7 +8,7 @@
 	#define FONT_KEY FONT_KEY_GOTHIC_18_BOLD
 	#define LARGE_FONT_KEY FONT_KEY_GOTHIC_24_BOLD
 #elif PBL_PLATFORM_CHALK
-	#define FONT_KEY FONT_KEY_GOTHIC_14_BOLD
+	#define FONT_KEY FONT_KEY_GOTHIC_14
 	#define LARGE_FONT_KEY FONT_KEY_GOTHIC_18_BOLD
 #else
 	#define FONT_KEY FONT_KEY_GOTHIC_14_BOLD
@@ -21,7 +21,8 @@ static TextLayer *s_announce_text_layer, *s_title_layer, *s_description_layer;
 static GDrawCommandSequence *s_command_seq;
 static GColor random_color, text_color;
 static AppTimer *s_timer;
-static char *s_achievement_text;
+static char *s_achievement_name, *s_achievement_description;
+static bool s_draw_complete;
 
 static int s_index = 0;
 
@@ -51,6 +52,7 @@ static void canvas_update_proc(Layer *layer, GContext *ctx) {
 	if (s_index == num_frames) {
 		--s_index;
 		app_timer_cancel(s_timer);
+		s_draw_complete = true;
 	}
 	
 // 	graphics_context_set_fill_color(ctx, GColorBlack);
@@ -63,13 +65,49 @@ static void canvas_update_proc(Layer *layer, GContext *ctx) {
 // 	#endif
 }
 
+static void back_click_handler(ClickRecognizerRef recognizer, void *context) {
+	if (s_draw_complete) {
+		window_stack_remove(s_achievement_window, true);
+	}
+}
+
+static void click_config_provider(void *context) {
+	ButtonId id_back = BUTTON_ID_BACK;
+	window_single_click_subscribe(id_back, back_click_handler);
+}
+
 static void achievement_window_load(Window *window) {
 	// Information about screen
 	Layer *window_layer = window_get_root_layer(window);
 	GRect bounds = layer_get_bounds(window_layer);
+	
+	// Layer for text with achievement description
+	s_description_layer = text_layer_create(GRect(bounds.size.w / 12, PBL_IF_RECT_ELSE(bounds.size.h * 11 / 16, bounds.size.h * 9 / 32), bounds.size.w * 5 / 6, bounds.size.h / 3));
+	text_layer_set_text(s_description_layer, s_achievement_description);
+	// Set text location a little bit lower if the text isn't that big
+	#if PBL_RECT
+	if (text_layer_get_content_size(s_description_layer).h < bounds.size.h / 4) {
+		s_description_layer = text_layer_create(GRect(bounds.size.w / 12, bounds.size.h * 3 / 4, bounds.size.w * 5 / 6, bounds.size.h / 3));
+		text_layer_set_text(s_description_layer, s_achievement_description);
+	}
+	#endif
+	text_layer_set_font(s_description_layer, fonts_get_system_font(FONT_KEY));
+	text_layer_set_background_color(s_description_layer, GColorClear);
+	text_layer_set_text_color(s_description_layer, text_color);
+	text_layer_set_text_alignment(s_description_layer, GTextAlignmentCenter);
+	
+	layer_add_child(window_layer, text_layer_get_layer(s_description_layer));
 
 	// Layer for PDC
-	s_canvas_layer = layer_create(bounds);
+	#if PBL_RECT
+	if (text_layer_get_content_size(s_description_layer).h < bounds.size.h / 4) {
+			s_canvas_layer = layer_create(GRect(0, -bounds.size.h / 24, bounds.size.w, bounds.size.h));
+	} else {
+	#endif
+	s_canvas_layer = layer_create(GRect(0, PBL_IF_RECT_ELSE(-bounds.size.h / 12, bounds.size.h / 4), bounds.size.w, bounds.size.h));
+	#if PBL_RECT
+	}
+	#endif
 	layer_set_update_proc(s_canvas_layer, canvas_update_proc);
 	
 	layer_add_child(window_layer, s_canvas_layer);
@@ -77,49 +115,54 @@ static void achievement_window_load(Window *window) {
 	window_set_background_color(s_achievement_window, PBL_IF_COLOR_ELSE(random_color, GColorWhite));
 	
 	// Layer for top text
-	s_announce_text_layer = text_layer_create(GRect(0, 0, bounds.size.w, bounds.size.h / 6));
-	text_layer_set_font(s_announce_text_layer, fonts_get_system_font(FONT_KEY));
-	text_layer_set_background_color(s_announce_text_layer, random_color);
+	s_announce_text_layer = text_layer_create(GRect(0, PBL_IF_RECT_ELSE(0, 15), bounds.size.w, bounds.size.h / 6));
+	text_layer_set_font(s_announce_text_layer, fonts_get_system_font(LARGE_FONT_KEY));
+	text_layer_set_background_color(s_announce_text_layer, GColorClear);
 	text_layer_set_text_color(s_announce_text_layer, text_color);
 	text_layer_set_text_alignment(s_announce_text_layer, GTextAlignmentCenter);
-	text_layer_set_text(s_announce_text_layer, localize_get_achievement_text());
+	#if !PBL_PLATFORM_APLITE
+		text_layer_set_text(s_announce_text_layer, localize_get_achievement_text());
+	#endif
 	
 	layer_add_child(window_layer, text_layer_get_layer(s_announce_text_layer));
 	
 	// Layer for text with achievement name
-	s_title_layer = text_layer_create(GRect(0, bounds.size.h * 11 / 16, bounds.size.w, bounds.size.h / 6));
+	#if PBL_RECT
+	if (text_layer_get_content_size(s_description_layer).h < bounds.size.h / 4) {
+		s_title_layer = text_layer_create(GRect(0, bounds.size.h * 5 / 8, bounds.size.w, bounds.size.h / 6));
+	} else {
+	#endif
+		s_title_layer = text_layer_create(GRect(0, PBL_IF_RECT_ELSE(bounds.size.h * 9 / 16, bounds.size.h * 3 / 16), bounds.size.w, bounds.size.h / 6));
+	#if PBL_RECT
+	}
+	#endif
 	text_layer_set_font(s_title_layer, fonts_get_system_font(LARGE_FONT_KEY));
-	text_layer_set_background_color(s_title_layer, random_color);
+	text_layer_set_background_color(s_title_layer, GColorClear);
 	text_layer_set_text_color(s_title_layer, text_color);
 	text_layer_set_text_alignment(s_title_layer, GTextAlignmentCenter);
-	text_layer_set_text(s_title_layer, s_achievement_text);
+	text_layer_set_text(s_title_layer, s_achievement_name);
 	
 	layer_add_child(window_layer, text_layer_get_layer(s_title_layer));
-	
-	// Layer for text with achievement description
-	s_description_layer = text_layer_create(GRect(0, bounds.size.h * 13 / 16, bounds.size.w, bounds.size.h / 6));
-	text_layer_set_font(s_description_layer, fonts_get_system_font(FONT_KEY));
-	text_layer_set_background_color(s_description_layer, random_color);
-	text_layer_set_text_color(s_description_layer, text_color);
-	text_layer_set_text_alignment(s_description_layer, GTextAlignmentCenter);
-	text_layer_set_text(s_description_layer, "Change settings for the first time.");
-	
-	layer_add_child(window_layer, text_layer_get_layer(s_description_layer));
 	
 	vibes_double_pulse();
 }
 
 // DESTROY ALL THE THINGS (hopefully)
 static void achievement_window_unload(Window *window) {
+	window_destroy(s_achievement_window);
+	gdraw_command_sequence_destroy(s_command_seq);
 	layer_destroy(s_canvas_layer);
 	layer_destroy(text_layer_get_layer(s_announce_text_layer));
-	gdraw_command_sequence_destroy(s_command_seq);
-	window_destroy(s_achievement_window);
+	layer_destroy(text_layer_get_layer(s_title_layer));
+	layer_destroy(text_layer_get_layer(s_description_layer));
+	s_index = 0;
+	s_draw_complete = false;
 }
 
 // Method to open and display this window
-void achievement_window_push(char *achievement) {
-	s_achievement_text = achievement;
+void achievement_window_push(char *achievement_name, char *achievement_description) {
+	s_achievement_name = achievement_name;
+	s_achievement_description = achievement_description;
 	
 	// Create sequence from PDC
 	s_command_seq = gdraw_command_sequence_create_with_resource(RESOURCE_ID_ACHIEVEMENT_SEQUENCE);
@@ -146,4 +189,6 @@ void achievement_window_push(char *achievement) {
 	window_stack_push(s_achievement_window, true);
 	
 	s_timer = app_timer_register(DELTA, next_frame_handler, NULL);
+	
+	window_set_click_config_provider(s_achievement_window, click_config_provider);
 }

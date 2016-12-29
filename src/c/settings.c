@@ -5,6 +5,7 @@
 #if !PBL_PLATFORM_APLITE
 	#include "src/c/achievement.h"
 	#include "src/c/achievement_window.h"
+	#include "src/c/localize.h"
 #endif
 
 ClaySettings settings;
@@ -13,12 +14,13 @@ int settings_version = 1, current_settings_version = 3;
 
 static void migrate_settings_data() {
 	switch (settings_version) { // Not useful now, but might become useful when there are more storage versions.
-		case 2:
+		case 2: // Storage Version 2
 			#if !PBL_PLATFORM_APLITE
 				settings.achievementsEnabled = true;
 			#else
 				settings.achievementsEnabled = false;
 			#endif
+			APP_LOG(APP_LOG_LEVEL_DEBUG, "Settings have been migrated from version 2 to version %d.", current_settings_version);
 			settings_save_settings();
 			break;
 		default: // Storage Version 1
@@ -42,6 +44,13 @@ static void migrate_settings_data() {
 			// App Glance was not a setting in the previous version of storage, so set these before saving.
 			settings.appGlanceEnabled = true;
 			settings.appGlanceType = 0;
+			// Achievements were not available in the previous version of storage, so set these as well.
+			#if !PBL_PLATFORM_APLITE
+				settings.achievementsEnabled = true;
+			#else
+				settings.achievementsEnabled = false;
+			#endif
+			settings.bottomTextType = 0;
 			APP_LOG(APP_LOG_LEVEL_DEBUG, "Settings have been migrated from version 1 to version %d.", current_settings_version);
 			settings_save_settings(); // Save these new settings.
 	}
@@ -50,7 +59,7 @@ static void migrate_settings_data() {
 // Sets default settings and then loads custom ones if set
 void settings_init() {
 	settings.backgroundColor = GColorBlack;
-	settings.circleColor = PBL_IF_COLOR_ELSE(GColorJaegerGreen, GColorWhite);
+	settings.circleColor = PBL_IF_COLOR_ELSE(GColorVividCerulean, GColorWhite);
 	settings.textColor = GColorWhite;
 	settings.vibrationEnabled = true;
 	settings.vibrationType = 0;
@@ -71,6 +80,7 @@ void settings_init() {
 	#else
 		settings.achievementsEnabled = false;
 	#endif
+	settings.bottomTextType = 0;
 	
 	// Check if settings exists, and then load them
 	if (persist_exists(SETTINGS_KEY)) {
@@ -96,7 +106,7 @@ void settings_init() {
 // Saves settings
 void settings_save_settings() {
 		persist_write_data(SETTINGS_KEY, &settings, sizeof(settings));
-		persist_write_int(SETTINGS_VERSION_KEY, 2);
+		persist_write_int(SETTINGS_VERSION_KEY, 3);
 }
 
 // Receives and applies settings from phone
@@ -182,15 +192,16 @@ void settings_handle_settings(DictionaryIterator *iter, void *context) {
 		settings.achievementsEnabled = achievements_enabled_t->value->int32 == 1;
 	}
 	
+	Tuple *bottom_text_type_t = dict_find(iter, MESSAGE_KEY_bottomTextType);
+	if (bottom_text_type_t) {
+		settings.bottomTextType = bottom_text_type_t->value->int8;
+	}
+	
 	#if !PBL_PLATFORM_APLITE
 		if (achievement_get_changed_settings().complete == 0) {
-			char date_string[11];
-			time_t now = time(NULL);
-			struct tm *t = localtime(&now);
-			strftime(date_string, sizeof(date_string), "%F", t);
-			achievement_set_changed_settings(date_string, 1);
+			achievement_set_changed_settings(data_get_date_today(), 1);
 			if (settings.achievementsEnabled) {
-				achievement_window_push("SETTINGS CHANGED!");
+				achievement_window_push(localize_get_changed_settings_name(), localize_get_changed_settings_description());
 			}
 		}
 	#endif
@@ -306,4 +317,8 @@ int settings_get_appGlanceType() {
 
 bool settings_get_achievementsEnabled() {
 	return settings.achievementsEnabled;
+}
+
+int settings_get_bottomTextType() {
+	return settings.bottomTextType;
 }

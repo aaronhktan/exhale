@@ -14,7 +14,7 @@
 #endif
 
 static void init() {
-	APP_LOG(APP_LOG_LEVEL_INFO, "You are running version 2.1 of the Breathe app.");
+	APP_LOG(APP_LOG_LEVEL_INFO, "You are running version 2.2 of the Breathe app.");
 	#if PBL_HEALTH
 		health_init(); // Subscribe to health service if health API is available
 		data_init(); // Subscribe to data service
@@ -53,7 +53,11 @@ static void init() {
 			wakeup_schedule_next_wakeup(settings_get_reminderHours(), 0, settings_get_reminderHoursStart());
 		}
 // 		reminder_window_push(); // For testing
-// 		achievement_window_push(); // For testing
+// 		#if !PBL_PLATFORM_APLITE
+// 			char description[100];
+// 			snprintf(description, sizeof(description), localize_get_minutes_session_description(), 10);
+// 			achievement_window_push(localize_get_thirty_minutes_day_name(), description); // For testing
+// 		#endif
 // 		achievement_menu_window_push(); // For testing
 	}
 }

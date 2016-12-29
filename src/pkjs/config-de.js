@@ -5,7 +5,7 @@ module.exports = [
 	},
 	{
 		"type": "text",
-		"defaultValue": "Dies sind die Einstellungen für die Breathe-App. Sie benutzen Version 2.1 von Breathe.",
+		"defaultValue": "Dies sind die Einstellungen für die Breathe-App. Sie benutzen Version 2.2 von Breathe.",
 	},
 	{
 		"type": "section",
@@ -25,7 +25,7 @@ module.exports = [
 			{
 				"type": "color",
 				"messageKey": "circleColor",
-				"defaultValue": "00AA55",
+				"defaultValue": "00AAFF",
 				"label": "Kreisfarbe",
 				"sunlight": true,
 				"capabilities": ["COLOR"]
@@ -226,7 +226,23 @@ module.exports = [
 				"messageKey": "achievementsEnabled",
 				"defaultValue": true,
 			"label": "Ermöglichen Errungenschaften"
-			}
+			},
+			{
+				"type": "select",
+				"messageKey": "bottomTextType",
+				"defaultValue": "0",
+				"label": "Legt fest, war im Hauptmenü untere angezeigt wird",
+				"options": [
+					{
+						"label": "Gesamt heute",
+						"value": "0"
+					},
+					{
+						"label": "Siegesserie",
+						"value": "1"
+					}
+				]
+			},
 		]
 	},
 	{

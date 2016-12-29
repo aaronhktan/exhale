@@ -5,7 +5,7 @@ module.exports = [
 	},
 	{
 		"type": "text",
-		"defaultValue": "This is the settings page for the Breathe app. You are running version 2.1 of Breathe.",
+		"defaultValue": "This is the settings page for the Breathe app. You are running version 2.2 of Breathe.",
 	},
 	{
 		"type": "section",
@@ -25,7 +25,7 @@ module.exports = [
 			{
 				"type": "color",
 				"messageKey": "circleColor",
-				"defaultValue": "00AA55",
+				"defaultValue": "00AAFF",
 				"label": "Circle Color",
 				"sunlight": true,
 				"capabilities": ["COLOR"]
@@ -226,7 +226,23 @@ module.exports = [
 				"messageKey": "achievementsEnabled",
 				"defaultValue": true,
 			"label": "Enable achievements"
-			}
+			},
+			{
+				"type": "select",
+				"messageKey": "bottomTextType",
+				"defaultValue": "0",
+				"label": "Bottom Text Type",
+				"options": [
+					{
+						"label": "Total today",
+						"value": "0"
+					},
+					{
+						"label": "Streak",
+						"value": "1"
+					}
+				]
+			},
 		]
 	},
 	{

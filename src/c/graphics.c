@@ -94,15 +94,32 @@ void graphics_draw_upper_text(GContext *ctx, GRect bounds, bool is_animating, in
 }
 
 // Method for updating the lower text layer
-void graphics_draw_lower_text(GContext *ctx, GRect bounds, bool is_animating, GColor textColor, char *min_today) {
+void graphics_draw_lower_text(GContext *ctx, GRect bounds, bool is_animating, int bottom_text, GColor textColor, char *min_today) {
+	
 	graphics_context_set_text_color(ctx, (is_animating) ? textColor : PBL_IF_COLOR_ELSE(GColorDarkGray, textColor)); // Like above, sets text color to dark gray on main menu, but white for other sections
 	GSize today_text_bounds = graphics_text_layout_get_content_size("TODAY: 10,000 MINUTES", fonts_get_system_font(FONT_KEY),
 																																	GRect(0, 0, bounds.size.w, bounds.size.h),
 																																	GTextOverflowModeWordWrap, GTextAlignmentCenter);
-
-	graphics_draw_text(ctx, min_today, fonts_get_system_font(FONT_KEY), 
-										 GRect((bounds.size.w - today_text_bounds.w) / 2, bounds.size.h - today_text_bounds.h - PBL_IF_RECT_ELSE(8, 20), today_text_bounds.w, today_text_bounds.h),
-										 GTextOverflowModeWordWrap, GTextAlignmentCenter, NULL);
+	if (is_animating) {
+		graphics_draw_text(ctx, min_today, fonts_get_system_font(FONT_KEY), 
+											 GRect((bounds.size.w - today_text_bounds.w) / 2, bounds.size.h - today_text_bounds.h - PBL_IF_RECT_ELSE(8, 20), today_text_bounds.w, today_text_bounds.h),
+											 GTextOverflowModeWordWrap, GTextAlignmentCenter, NULL);
+	} else {
+		switch(bottom_text) {
+			#if !PBL_PLATFORM_APLITE
+			case 1: // This means that it's the streak
+				graphics_draw_text(ctx, data_get_streak_buffer(), fonts_get_system_font(FONT_KEY), 
+													 GRect((bounds.size.w - today_text_bounds.w) / 2, bounds.size.h - today_text_bounds.h - PBL_IF_RECT_ELSE(8, 20), today_text_bounds.w, today_text_bounds.h),
+													 GTextOverflowModeWordWrap, GTextAlignmentCenter, NULL);
+				break;
+			#endif
+			default: // This means that it's the total today
+				graphics_draw_text(ctx, min_today, fonts_get_system_font(FONT_KEY), 
+													 GRect((bounds.size.w - today_text_bounds.w) / 2, bounds.size.h - today_text_bounds.h - PBL_IF_RECT_ELSE(8, 20), today_text_bounds.w, today_text_bounds.h),
+													 GTextOverflowModeWordWrap, GTextAlignmentCenter, NULL);
+				break;
+		}
+	}
 }
 
 // Method for updating the inner text, triangles, and the semicircle on the right center of the screen

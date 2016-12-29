@@ -62,3 +62,5 @@ void achievement_set_changed_settings(char *date_completed, int complete);
 
 Achievement achievement_get_completionist();
 void achievement_set_completionist(char *date_completed, int complete);
+
+bool achievement_get_all_complete();

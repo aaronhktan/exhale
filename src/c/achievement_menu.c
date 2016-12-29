@@ -1,14 +1,18 @@
+#if !PBL_PLATFORM_APLITE
 #include <pebble.h>
 #include "achievement_menu.h"
 #include "achievement.h"
 #include "settings.h"
+#include "src/c/localize.h"
+#include "src/c/achievement_window.h"
 
 static Window *s_achievement_window;
 static MenuLayer *s_achievement_layer;
 static GBitmap *s_achievement_complete, *s_achievement_incomplete;
 
-#define NUM_MENU_SECTIONS 1
-#define NUM_MENU_ITEMS 12
+#define NUM_MENU_SECTIONS 2
+#define NUM_ACHIEVEMENT_MENU_ITEMS 12
+#define NUM_STATS_MENU_ITEMS 2
 
 
 static uint16_t menu_get_num_sections_callback(MenuLayer *menu_layer, void *data) {
@@ -16,7 +20,14 @@ static uint16_t menu_get_num_sections_callback(MenuLayer *menu_layer, void *data
 }
 
 static uint16_t menu_get_num_rows_callback(MenuLayer *menu_layer, uint16_t section_index, void *data) {
-	return NUM_MENU_ITEMS;
+	switch (section_index) {
+    case 0:
+      return NUM_ACHIEVEMENT_MENU_ITEMS;
+    case 1:
+      return NUM_STATS_MENU_ITEMS;
+    default:
+      return 0;
+  }
 }
 
 static int16_t menu_get_header_height_callback(MenuLayer *menu_layer, uint16_t section_index, void *data) {
@@ -24,96 +35,191 @@ static int16_t menu_get_header_height_callback(MenuLayer *menu_layer, uint16_t s
 }
 
 static void menu_draw_header_callback(GContext* ctx, const Layer *cell_layer, uint16_t section_index, void *data) {
-  menu_cell_basic_header_draw(ctx, cell_layer, "Achievements");
+  // Determine which section we're working with
+  switch (section_index) {
+    case 0:
+      // Draw title text in the section header
+      menu_cell_basic_header_draw(ctx, cell_layer, localize_get_achievements_section_title());
+      break;
+    case 1:
+      menu_cell_basic_header_draw(ctx, cell_layer, localize_get_stats_section_title());
+      break;
+  }
 }
 
 static void menu_draw_row_callback(GContext* ctx, const Layer *cell_layer, MenuIndex *cell_index, void *data) {
-	// Use the row to specify which item we'll draw
-	switch (cell_index->row) {
-		case 0:
-			if (achievement_get_one_week_streak().complete == 1) { // User has completed the achievement, draw completed icon
-				menu_cell_basic_draw(ctx, cell_layer, "7 Days Alive", "One week streak!", s_achievement_complete);
-			} else { // User hasn't compelted the achievement, draw incomplete icon
-				menu_cell_basic_draw(ctx, cell_layer, "Locked", "Keep breathing!", s_achievement_incomplete);
+	// Determine which section we're going to draw in
+  switch (cell_index->section) {
+    case 0:
+			// Use the row to specify which item we'll draw
+			switch (cell_index->row) {
+				case 0:
+					if (achievement_get_one_week_streak().complete == 1) { // User has completed the achievement, draw completed icon
+						menu_cell_basic_draw(ctx, cell_layer, localize_get_one_week_streak_name(), localize_get_one_week_streak_description(), s_achievement_complete);
+					} else { // User hasn't compelted the achievement, draw incomplete icon
+						menu_cell_basic_draw(ctx, cell_layer, localize_get_locked_title(), localize_get_locked_description(), s_achievement_incomplete);
+					}
+				break;
+				case 1:
+					if (achievement_get_one_month_streak().complete == 1) {
+						menu_cell_basic_draw(ctx, cell_layer, localize_get_one_month_streak_name(), localize_get_one_month_streak_description(), s_achievement_complete);
+					} else {
+						menu_cell_basic_draw(ctx, cell_layer, localize_get_locked_title(), localize_get_locked_description(), s_achievement_incomplete);
+					}
+				break;
+				case 2:
+					if (achievement_get_one_year_streak().complete == 1) {
+						menu_cell_basic_draw(ctx, cell_layer, localize_get_one_year_streak_name(), localize_get_one_year_streak_description(), s_achievement_complete);
+					} else {
+						menu_cell_basic_draw(ctx, cell_layer, localize_get_locked_title(), localize_get_locked_description(), s_achievement_incomplete);
+					}
+				break;
+				case 3:
+					if (achievement_get_five_minutes_day().complete == 1) {
+						char five_minutes_day_description[100];
+						snprintf(five_minutes_day_description, sizeof(five_minutes_day_description), localize_get_minutes_day_description(), 5);
+						menu_cell_basic_draw(ctx, cell_layer, localize_get_five_minutes_day_name(), five_minutes_day_description, s_achievement_complete);
+					} else {
+						menu_cell_basic_draw(ctx, cell_layer, localize_get_locked_title(), localize_get_locked_description(), s_achievement_incomplete);
+					}
+				break;
+				case 4:
+					if (achievement_get_ten_minutes_day().complete == 1) {
+						char ten_minutes_day_description[100];
+						snprintf(ten_minutes_day_description, sizeof(ten_minutes_day_description), localize_get_minutes_day_description(), 10);
+						menu_cell_basic_draw(ctx, cell_layer, localize_get_ten_minutes_day_name(), ten_minutes_day_description, s_achievement_complete);
+					} else {
+						menu_cell_basic_draw(ctx, cell_layer, localize_get_locked_title(), localize_get_locked_description(), s_achievement_incomplete);
+					}
+				break;
+				case 5:
+					if (achievement_get_thirty_minutes_day().complete == 1) {
+						char thirty_minutes_day_description[100];
+						snprintf(thirty_minutes_day_description, sizeof(thirty_minutes_day_description), localize_get_minutes_day_description(), 30);
+						menu_cell_basic_draw(ctx, cell_layer, localize_get_thirty_minutes_day_name(), thirty_minutes_day_description, s_achievement_complete);
+					} else {
+						menu_cell_basic_draw(ctx, cell_layer, localize_get_locked_title(), localize_get_locked_description(), s_achievement_incomplete);
+					}
+				break;
+				case 6:
+					if (achievement_get_one_hour_day().complete == 1) {
+						menu_cell_basic_draw(ctx, cell_layer, localize_get_one_hour_day_name(), localize_get_one_hour_day_description(), s_achievement_complete);
+					} else {
+						menu_cell_basic_draw(ctx, cell_layer, localize_get_locked_title(), localize_get_locked_description(), s_achievement_incomplete);
+					}
+				break;
+				case 7:
+					if (achievement_get_five_minutes_session().complete == 1) {
+						char five_minutes_session_description[100];
+						snprintf(five_minutes_session_description, sizeof(five_minutes_session_description), localize_get_minutes_session_description(), 5);
+						menu_cell_basic_draw(ctx, cell_layer, localize_get_five_minutes_session_name(), five_minutes_session_description, s_achievement_complete);
+					} else {
+						menu_cell_basic_draw(ctx, cell_layer, localize_get_locked_title(), localize_get_locked_description(), s_achievement_incomplete);
+					}
+				break;
+				case 8:
+					if (achievement_get_eight_minutes_session().complete == 1) {
+						char eight_minutes_session_description[100];
+						snprintf(eight_minutes_session_description, sizeof(eight_minutes_session_description), localize_get_minutes_session_description(), 8);
+						menu_cell_basic_draw(ctx, cell_layer, localize_get_eight_minutes_session_name(), eight_minutes_session_description, s_achievement_complete);
+					} else {
+						menu_cell_basic_draw(ctx, cell_layer, localize_get_locked_title(), localize_get_locked_description(), s_achievement_incomplete);
+					}
+				break;
+				case 9:
+					if (achievement_get_ten_minutes_session().complete == 1) {
+						char ten_minutes_session_description[100];
+						snprintf(ten_minutes_session_description, sizeof(ten_minutes_session_description), localize_get_minutes_session_description(), 10);
+						menu_cell_basic_draw(ctx, cell_layer, localize_get_ten_minutes_session_name(), ten_minutes_session_description, s_achievement_complete);
+					} else {
+						menu_cell_basic_draw(ctx, cell_layer, localize_get_locked_title(), localize_get_locked_description(), s_achievement_incomplete);
+					}
+				break;
+				case 10:
+					if (achievement_get_changed_settings().complete == 1) {
+						menu_cell_basic_draw(ctx, cell_layer, localize_get_changed_settings_name(), localize_get_changed_settings_description(), s_achievement_complete);
+					} else {
+						menu_cell_basic_draw(ctx, cell_layer, localize_get_locked_title(), localize_get_locked_description(), s_achievement_incomplete);
+					}
+				break;
+				case 11:
+					if (achievement_get_completionist().complete == 1) {
+						menu_cell_basic_draw(ctx, cell_layer, localize_get_completionist_name(), localize_get_completionist_description(), s_achievement_complete);
+					} else {
+						menu_cell_basic_draw(ctx, cell_layer, localize_get_locked_title(), localize_get_locked_description(), s_achievement_incomplete);
+					}
+				break;
 			}
 			break;
 		case 1:
-			if (achievement_get_one_month_streak().complete == 1) {
-				menu_cell_basic_draw(ctx, cell_layer, "1 Month", "One month streak!", s_achievement_complete);
-			} else {
-				menu_cell_basic_draw(ctx, cell_layer, "Locked", "Keep breathing!", s_achievement_incomplete);
+			switch (cell_index->row) {
+				case 0: ;
+					char total_breathed_description[100];
+					snprintf(total_breathed_description, sizeof(total_breathed_description), localize_get_total_breathed_description(), 0);
+					menu_cell_basic_draw(ctx, cell_layer, localize_get_total_breathed_name(), total_breathed_description, NULL);
+					break;
+				case 1: ;
+					char longest_streak_description[100];
+					snprintf(longest_streak_description, sizeof(longest_streak_description), localize_get_longest_streak_description(), 0);
+					menu_cell_basic_draw(ctx, cell_layer, localize_get_longest_streak_name(), longest_streak_description, NULL);
+					break;
 			}
-			break;
-		case 2:
-			if (achievement_get_one_year_streak().complete == 1) {
-				menu_cell_basic_draw(ctx, cell_layer, "1 Year", "One year streak!", s_achievement_complete);
-			} else {
-				menu_cell_basic_draw(ctx, cell_layer, "Locked", "Keep breathing!", s_achievement_incomplete);
-			}
-			break;
-		case 3:
-			if (achievement_get_five_minutes_day().complete == 1) {
-				menu_cell_basic_draw(ctx, cell_layer, "5 Minutes", "5 minutes in 1 day", s_achievement_complete);
-			} else {
-				menu_cell_basic_draw(ctx, cell_layer, "Locked", "Keep breathing!", s_achievement_incomplete);
-			}
-			break;
-		case 4:
-			if (achievement_get_ten_minutes_day().complete == 1) {
-				menu_cell_basic_draw(ctx, cell_layer, "10 Minutes", "10 minutes in 1 day", s_achievement_complete);
-			} else {
-				menu_cell_basic_draw(ctx, cell_layer, "Locked", "Keep breathing!", s_achievement_incomplete);
-			}
-			break;
-		case 5:
-			if (achievement_get_thirty_minutes_day().complete == 1) {
-				menu_cell_basic_draw(ctx, cell_layer, "30 Minutes", "30 minutes in 1 day", s_achievement_complete);
-			} else {
-				menu_cell_basic_draw(ctx, cell_layer, "Locked", "Keep breathing!", s_achievement_incomplete);
-			}
-			break;
-		case 6:
-			if (achievement_get_one_hour_day().complete == 1) {
-				menu_cell_basic_draw(ctx, cell_layer, "1 hour", "1 hour in 1 day", s_achievement_complete);
-			} else {
-				menu_cell_basic_draw(ctx, cell_layer, "Locked", "Keep breathing!", s_achievement_incomplete);
-			}
-			break;
-		case 7:
-			if (achievement_get_five_minutes_session().complete == 1) {
-				menu_cell_basic_draw(ctx, cell_layer, "5 Minutes", "5 minutes in 1 session", s_achievement_complete);
-			} else {
-				menu_cell_basic_draw(ctx, cell_layer, "Locked", "Keep breathing!", s_achievement_incomplete);
-			}
-			break;
-		case 8:
-			if (achievement_get_eight_minutes_session().complete == 1) {
-				menu_cell_basic_draw(ctx, cell_layer, "8 Minutes", "8 minutes in 1 session", s_achievement_complete);
-			} else {
-				menu_cell_basic_draw(ctx, cell_layer, "Locked", "Keep breathing!", s_achievement_incomplete);
-			}
-			break;
-		case 9:
-			if (achievement_get_thirty_minutes_day().complete == 1) {
-				menu_cell_basic_draw(ctx, cell_layer, "30 Minutes", "30 minutes in 1 day", s_achievement_complete);
-			} else {
-				menu_cell_basic_draw(ctx, cell_layer, "Locked", "Keep breathing!", s_achievement_incomplete);
-			}
-			break;
-		case 10:
-			if (achievement_get_changed_settings().complete == 1) {
-				menu_cell_basic_draw(ctx, cell_layer, "Customizer", "Changed settings", s_achievement_complete);
-			} else {
-				menu_cell_basic_draw(ctx, cell_layer, "Locked", "Keep breathing!", s_achievement_incomplete);
-			}
-		break;
-		case 11:
-			if (achievement_get_completionist().complete == 1) {
-				menu_cell_basic_draw(ctx, cell_layer, "Completionist", "Gotten all achievements", s_achievement_complete);
-			} else {
-				menu_cell_basic_draw(ctx, cell_layer, "Locked", "Keep breathing!", s_achievement_incomplete);
-			}
-		break;
+	}
+}
+		
+static void menu_select_callback(MenuLayer *menu_layer, MenuIndex *cell_index, void *data) {
+	if (cell_index->section == 0) {
+		switch (cell_index->row) {
+			case 0:
+				achievement_window_push(localize_get_one_week_streak_name(), localize_get_one_week_streak_description());
+				break;
+			case 1:
+				achievement_window_push(localize_get_one_month_streak_name(), localize_get_one_month_streak_description());
+				break;
+			case 2:
+				achievement_window_push(localize_get_one_year_streak_name(), localize_get_one_year_streak_description());
+				break;
+			case 3: ;
+				char * five_minutes_day_description = "1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+				snprintf(five_minutes_day_description, 33, localize_get_minutes_day_description(), 5);
+				achievement_window_push(localize_get_five_minutes_day_name(), five_minutes_day_description);
+				break;
+			case 4: ;
+				char * ten_minutes_day_description = "1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ!";
+				snprintf(ten_minutes_day_description, 34, localize_get_minutes_day_description(), 10);
+				achievement_window_push(localize_get_ten_minutes_day_name(), ten_minutes_day_description);
+				break;
+			case 5: ;
+				char * thirty_minutes_day_description = "1234567890ABCDEFGHIJKLMNOPQRSTUVWXY";;
+				snprintf(thirty_minutes_day_description, 34, localize_get_minutes_day_description(), 30);
+				achievement_window_push(localize_get_thirty_minutes_day_name(), thirty_minutes_day_description);
+				break;
+			case 6:
+				achievement_window_push(localize_get_one_hour_day_name(), localize_get_one_hour_day_description());
+				break;
+			case 7: ;
+				char * five_minutes_session_description = "1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ!";
+				snprintf(five_minutes_session_description, 37, localize_get_minutes_session_description(), 5);
+				achievement_window_push(localize_get_five_minutes_session_name(), five_minutes_session_description);
+				break;
+			case 8: ;
+				char * eight_minutes_session_description = "1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ!";
+				snprintf(eight_minutes_session_description, 37, localize_get_minutes_session_description(), 8);
+				APP_LOG(APP_LOG_LEVEL_DEBUG, eight_minutes_session_description);
+				achievement_window_push(localize_get_eight_minutes_session_name(), eight_minutes_session_description);
+				break;
+			case 9: ;
+				char * ten_minutes_session_description = "1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ!@";;
+				snprintf(ten_minutes_session_description, 38, localize_get_minutes_session_description(), 10);
+				achievement_window_push(localize_get_ten_minutes_session_name(), ten_minutes_session_description);
+				break;
+			case 10:
+				achievement_window_push(localize_get_changed_settings_name(), localize_get_changed_settings_description());
+				break;
+			case 11:
+				achievement_window_push(localize_get_completionist_name(), localize_get_completionist_description());
+				break;
+		}
 	}
 }
 
@@ -135,7 +241,8 @@ void achievement_window_load(Window *window) {
     .get_num_rows = menu_get_num_rows_callback,
 		.draw_header = menu_draw_header_callback,
     .get_header_height = menu_get_header_height_callback,
-    .draw_row = menu_draw_row_callback
+    .draw_row = menu_draw_row_callback,
+		.select_click = menu_select_callback,
   });
 	
 	// Bind the menu layer's click config provider to the window for interactivity
@@ -158,3 +265,4 @@ void achievement_menu_window_push() {
 	});
 	window_stack_push(s_achievement_window, true);
 }
+#endif

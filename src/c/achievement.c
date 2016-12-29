@@ -150,3 +150,14 @@ void achievement_set_completionist(char *date_completed, int complete) {
 	achievements.completionist.complete = complete;
 	achievement_save_achievements();
 }
+
+bool achievement_get_all_complete() {
+	if (achievements.five_minutes_session.complete == 1 && achievements.eight_minutes_session.complete == 1 && achievements.ten_minutes_session.complete == 1 && 
+		 achievements.changed_settings.complete == 1 && achievements.one_week_streak.complete == 1 && achievements.one_month_streak.complete == 1 &&
+		 achievements.one_year_streak.complete == 1 && achievements.five_minutes_day.complete == 1 && achievements.ten_minutes_day.complete == 1 &&
+		 achievements.thirty_minutes_day.complete == 1 && achievements.one_hour_day.complete == 1) {
+		return true;
+	} else {
+		return false;
+	}
+}

@@ -25,7 +25,8 @@
             "heartRateVariation",
             "appGlanceEnabled",
             "appGlanceType",
-            "achievementsEnabled"
+            "achievementsEnabled",
+            "bottomTextType"
         ],
         "projectType": "native",
         "resources": {
@@ -72,10 +73,10 @@
             "diorite",
             "emery"
         ],
-        "uuid": "27604a42-996f-46ab-a38f-96cea187dcd8",
+        "uuid": "6b9d3890-09f1-4789-8b45-568e0ce87ad1",
         "watchapp": {
             "watchface": false
         }
     },
-    "version": "2.1.0"
+    "version": "2.2.0"
 }
