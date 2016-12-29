@@ -8,6 +8,7 @@
 #define STREAK_DATE_KEY 4
 #define STREAK_LENGTH_KEY 5
 #define TOTAL_MINUTES_BREATHED_KEY 6
+#define LONGEST_STREAK_KEY 7
 
 void data_init();
 
@@ -43,3 +44,5 @@ int data_get_streak_length();
 
 int data_get_total_minutes_breathed();
 void data_set_total_minutes_breathed(int value);
+int data_get_longest_streak();
+void data_set_longest_streak(int value);

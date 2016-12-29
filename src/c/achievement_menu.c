@@ -161,7 +161,7 @@ static void menu_draw_row_callback(GContext* ctx, const Layer *cell_layer, MenuI
 					break;
 				case 1: ;
 					char longest_streak_description[100];
-					snprintf(longest_streak_description, sizeof(longest_streak_description), localize_get_longest_streak_description(), 0);
+					snprintf(longest_streak_description, sizeof(longest_streak_description), localize_get_longest_streak_description(data_get_longest_streak()), data_get_longest_streak());
 					menu_cell_basic_draw(ctx, cell_layer, localize_get_longest_streak_name(), longest_streak_description, NULL);
 					break;
 			}
@@ -172,53 +172,77 @@ static void menu_select_callback(MenuLayer *menu_layer, MenuIndex *cell_index, v
 	if (cell_index->section == 0) {
 		switch (cell_index->row) {
 			case 0:
-				achievement_window_push(localize_get_one_week_streak_name(), localize_get_one_week_streak_description());
+				if (achievement_get_one_week_streak().complete) {
+					achievement_window_push(localize_get_one_week_streak_name(), localize_get_one_week_streak_description());
+				}
 				break;
 			case 1:
-				achievement_window_push(localize_get_one_month_streak_name(), localize_get_one_month_streak_description());
+				if (achievement_get_one_month_streak().complete) {				
+					achievement_window_push(localize_get_one_month_streak_name(), localize_get_one_month_streak_description());
+				}
 				break;
 			case 2:
-				achievement_window_push(localize_get_one_year_streak_name(), localize_get_one_year_streak_description());
+				if (achievement_get_one_year_streak().complete) {					
+					achievement_window_push(localize_get_one_year_streak_name(), localize_get_one_year_streak_description());
+				}
 				break;
 			case 3: ;
-				char * five_minutes_day_description = "1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-				snprintf(five_minutes_day_description, 33, localize_get_minutes_day_description(), 5);
-				achievement_window_push(localize_get_five_minutes_day_name(), five_minutes_day_description);
+				if (achievement_get_five_minutes_day().complete) {
+					char * five_minutes_day_description = "1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+					snprintf(five_minutes_day_description, 33, localize_get_minutes_day_description(), 5);
+					achievement_window_push(localize_get_five_minutes_day_name(), five_minutes_day_description);
+				}
 				break;
 			case 4: ;
-				char * ten_minutes_day_description = "1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ!";
-				snprintf(ten_minutes_day_description, 34, localize_get_minutes_day_description(), 10);
-				achievement_window_push(localize_get_ten_minutes_day_name(), ten_minutes_day_description);
+				if (achievement_get_ten_minutes_day().complete) {
+					char * ten_minutes_day_description = "1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ!";
+					snprintf(ten_minutes_day_description, 34, localize_get_minutes_day_description(), 10);
+					achievement_window_push(localize_get_ten_minutes_day_name(), ten_minutes_day_description);
+				}
 				break;
 			case 5: ;
-				char * thirty_minutes_day_description = "1234567890ABCDEFGHIJKLMNOPQRSTUVWXY";;
-				snprintf(thirty_minutes_day_description, 34, localize_get_minutes_day_description(), 30);
-				achievement_window_push(localize_get_thirty_minutes_day_name(), thirty_minutes_day_description);
+				if (achievement_get_thirty_minutes_day().complete) {
+					char * thirty_minutes_day_description = "1234567890ABCDEFGHIJKLMNOPQRSTUVWXY";;
+					snprintf(thirty_minutes_day_description, 34, localize_get_minutes_day_description(), 30);
+					achievement_window_push(localize_get_thirty_minutes_day_name(), thirty_minutes_day_description);
+				}
 				break;
 			case 6:
-				achievement_window_push(localize_get_one_hour_day_name(), localize_get_one_hour_day_description());
+				if (achievement_get_one_hour_day().complete) {
+					achievement_window_push(localize_get_one_hour_day_name(), localize_get_one_hour_day_description());
+				}
 				break;
 			case 7: ;
-				char * five_minutes_session_description = "1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ!";
-				snprintf(five_minutes_session_description, 37, localize_get_minutes_session_description(), 5);
-				achievement_window_push(localize_get_five_minutes_session_name(), five_minutes_session_description);
+				if (achievement_get_five_minutes_session().complete) {
+					char * five_minutes_session_description = "1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ!";
+					snprintf(five_minutes_session_description, 37, localize_get_minutes_session_description(), 5);
+					achievement_window_push(localize_get_five_minutes_session_name(), five_minutes_session_description);
+				}
 				break;
 			case 8: ;
-				char * eight_minutes_session_description = "1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ!";
-				snprintf(eight_minutes_session_description, 37, localize_get_minutes_session_description(), 8);
-				APP_LOG(APP_LOG_LEVEL_DEBUG, eight_minutes_session_description);
-				achievement_window_push(localize_get_eight_minutes_session_name(), eight_minutes_session_description);
+				if (achievement_get_eight_minutes_session().complete) {
+					char * eight_minutes_session_description = "1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ!";
+					snprintf(eight_minutes_session_description, 37, localize_get_minutes_session_description(), 8);
+					APP_LOG(APP_LOG_LEVEL_DEBUG, eight_minutes_session_description);
+					achievement_window_push(localize_get_eight_minutes_session_name(), eight_minutes_session_description);
+				}
 				break;
 			case 9: ;
-				char * ten_minutes_session_description = "1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ!@";;
-				snprintf(ten_minutes_session_description, 38, localize_get_minutes_session_description(), 10);
-				achievement_window_push(localize_get_ten_minutes_session_name(), ten_minutes_session_description);
+				if (achievement_get_ten_minutes_session().complete) {
+					char * ten_minutes_session_description = "1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ!@";;
+					snprintf(ten_minutes_session_description, 38, localize_get_minutes_session_description(), 10);
+					achievement_window_push(localize_get_ten_minutes_session_name(), ten_minutes_session_description);
+				}
 				break;
 			case 10:
-				achievement_window_push(localize_get_changed_settings_name(), localize_get_changed_settings_description());
+				if (achievement_get_changed_settings().complete) {
+					achievement_window_push(localize_get_changed_settings_name(), localize_get_changed_settings_description());
+				}
 				break;
 			case 11:
-				achievement_window_push(localize_get_completionist_name(), localize_get_completionist_description());
+				if (achievement_get_completionist().complete) {
+					achievement_window_push(localize_get_completionist_name(), localize_get_completionist_description());
+				}
 				break;
 		}
 	}

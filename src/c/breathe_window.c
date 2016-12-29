@@ -172,6 +172,14 @@ static void animation_end_callback(void *data) {
 			// Save the date of this breathing session as struct tm for streak
 			data_calculate_streak_length();
 		
+			// Check whether it's the longest streak and save if it is
+			if (data_get_longest_streak() < data_get_streak_length()) {
+				data_set_longest_streak(data_get_streak_length());
+			}
+		
+			// Add the minutes breathed to the total number of minutes breathed
+			data_set_total_minutes_breathed(data_get_total_minutes_breathed() + s_min_to_breathe);
+		
 			// String to hold the description
 			char description[100];
 		
@@ -323,9 +331,6 @@ static void animation_end_callback(void *data) {
 					}
 					break;
 			}
-		
-			// Add the minutes breathed to the total number of minutes breathed
-			data_set_total_minutes_breathed(data_get_total_minutes_breathed() + s_min_to_breathe);
 		#endif
 		
 	} else if (complete == 1) { // The user interrupted their session, so only add what was breathed before aborting

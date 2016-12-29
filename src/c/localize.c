@@ -675,15 +675,27 @@ char * localize_get_snooze_text() {
 		}
 	}
 
-	char * localize_get_longest_streak_description() {
-		if (strncmp(localize_get_locale(), "fr", 2) == 0) {
-			return "%d journées";
-		} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
-			return "%d días";
-		} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
-			return "%d Tage";
+	char * localize_get_longest_streak_description(int days) {
+		if (days > 1) {
+			if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+				return "%d journées";
+			} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+				return "%d días";
+			} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+				return "%d Tage";
+			} else {
+				return "%d days";
+			}
 		} else {
-			return "%d days";
+			if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+				return "%d journée";
+			} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+				return "%d día";
+			} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+				return "%d Tag";
+			} else {
+				return "%d day";
+			}
 		}
 	}
 #endif

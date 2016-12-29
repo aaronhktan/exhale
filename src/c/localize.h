@@ -48,5 +48,5 @@ char * localize_get_snooze_text();
 	char * localize_get_total_breathed_name();
 	char * localize_get_total_breathed_description();
 	char * localize_get_longest_streak_name();
-	char * localize_get_longest_streak_description();
+	char * localize_get_longest_streak_description(int days);
 #endif

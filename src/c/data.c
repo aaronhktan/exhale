@@ -154,7 +154,7 @@ char * data_read_wakeup_time_data() {
 	if (persist_exists(WAKEUP_TIME_KEY)) {
 		persist_read_string(WAKEUP_TIME_KEY, wakeup_time, sizeof(wakeup_time));
 	} else {
-		snprintf(wakeup_time, sizeof(wakeup_time), "oh no");
+		snprintf(wakeup_time, sizeof(wakeup_time), "Uh-oh. Something went very wrong.");
 	}
 	return wakeup_time;
 }
@@ -162,23 +162,19 @@ char * data_read_wakeup_time_data() {
 #if !PBL_PLATFORM_APLITE
 // Store today's date as the date for streak calculation as struct tm
 void data_set_streak_date_persist_data() {
-	APP_LOG(APP_LOG_LEVEL_DEBUG, "Writing date to persist...");
-	time_t temp = time(NULL);
-	struct tm *tick_time = localtime(&temp);
-	tick_time->tm_sec = 0;
-	tick_time->tm_min	= 0;
-	tick_time->tm_hour = 0;
-	APP_LOG(APP_LOG_LEVEL_DEBUG, "The date that was set in persist had YYYY-MM-DD: %d-%d-%d.", tick_time->tm_year, tick_time->tm_mon, tick_time->tm_mday);
-	persist_write_data(STREAK_DATE_KEY, &tick_time, sizeof(tm));
+	time_t now = time(NULL);
+	struct tm *now_time = localtime(&now);
+	now_time->tm_sec = 0;
+	now_time->tm_min	= 0;
+	now_time->tm_hour = 0;
+	persist_write_data(STREAK_DATE_KEY, &now_time, sizeof(now_time));
 }
 
 // Get length of stored streak from persistent storage
 int data_get_streak_length() {
 	if (!persist_exists(STREAK_LENGTH_KEY)) { // There is no streak
-		APP_LOG(APP_LOG_LEVEL_DEBUG, "There is no streak stored in persist.");
 		return 0;
 	} else {
-		APP_LOG(APP_LOG_LEVEL_DEBUG, "There is a streak stored in persist and it is %d.", persist_read_int(STREAK_LENGTH_KEY));
 		return persist_read_int(STREAK_LENGTH_KEY);
 	}
 }
@@ -201,19 +197,27 @@ void data_calculate_streak_length() {
 	
 	// Get the last date and convert to time_t to use with difftime
 	// By default, last date is today's date with year set to 1900.
-	struct tm *last_time = localtime(&temp);
+	struct tm *last_time;
 	if (persist_exists(STREAK_DATE_KEY)) {
-		APP_LOG(APP_LOG_LEVEL_DEBUG, "There is a time stored in persist. Reading...");
+		APP_LOG(APP_LOG_LEVEL_DEBUG, "There is a time stored in persist. Reading.");
+// 		last_time = localtime(&temp);
+// 		last_time->tm_year = 116;
+// 		last_time->tm_mon = 11;
+// 		last_time->tm_mday = 26;
+// 		last_time->tm_sec = 0;
+// 		last_time->tm_min	= 0;
+// 		last_time->tm_hour = 0;
 		persist_read_data(STREAK_DATE_KEY, &last_time, sizeof(last_time));
 	} else {
 		APP_LOG(APP_LOG_LEVEL_DEBUG, "There is no time stored in persist.");
+		last_time = localtime(&temp);
 		last_time->tm_year = 0; // Set default year to 1900 if it's the first time the user has launched the app
 		last_time->tm_sec = 0;
 		last_time->tm_min	= 0;
 		last_time->tm_hour = 0;
 	}
-	APP_LOG(APP_LOG_LEVEL_DEBUG, "The YYYY-MM-DD read from persist is %d, %d, %d.", last_time->tm_year, last_time->tm_mon, last_time->tm_mday);
 	time_t last_time_t = mktime(last_time);
+	APP_LOG(APP_LOG_LEVEL_DEBUG, "The now time and last time are %d and %d.", today_time_t, last_time_t);
 
 	if (last_time->tm_year == 0) { // This means that the user has not breathed with the app before
 		if (!persist_exists(STREAK_LENGTH_KEY)) {
@@ -225,9 +229,8 @@ void data_calculate_streak_length() {
 		data_set_streak_length(1);
 		APP_LOG(APP_LOG_LEVEL_DEBUG, "The streak is 1 day because more than 1 has passed.");
 		// This means that it's been more than a day; so streak is one day
-	} else if (difftime(today_time_t, last_time_t == 0)) {
-			APP_LOG(APP_LOG_LEVEL_DEBUG, "The user breathed more than once on the same day.");
-			// This means that the user has breathed again on the same day and it's not the first time they've breathed with the app; no change in streak length
+	} else if (difftime(today_time_t, last_time_t) == 0) {
+		// This means that the user has breathed again on the same day and it's not the first time they've breathed with the app; no change in streak length
 	} else {
 		APP_LOG(APP_LOG_LEVEL_DEBUG, "Streak exists and it's the first time they've breathed today.");
 		data_set_streak_length(data_get_streak_length() + 1);
@@ -235,6 +238,7 @@ void data_calculate_streak_length() {
 	}
 	
 	data_set_streak_date_persist_data();
+	APP_LOG(APP_LOG_LEVEL_DEBUG, "The streak is %d.", data_get_streak_length());
 	APP_LOG(APP_LOG_LEVEL_DEBUG, "Finished calculating streak length");
 }
 
@@ -258,5 +262,19 @@ int data_get_total_minutes_breathed() {
 // Set the total number of minutes breathed
 void data_set_total_minutes_breathed(int value) {
 	persist_write_int(TOTAL_MINUTES_BREATHED_KEY, value);
+}
+
+// Returns the longest streak
+int data_get_longest_streak() {
+	if (persist_exists(LONGEST_STREAK_KEY)) {
+		return persist_read_int(LONGEST_STREAK_KEY);
+	} else {
+		return 0;
+	}
+}
+
+// Set the longest streak
+void data_set_longest_streak(int value) {
+	persist_write_int(LONGEST_STREAK_KEY, value);
 }
 #endif
