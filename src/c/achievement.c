@@ -18,7 +18,7 @@ void achievement_init() {
 	achievements.ten_minutes_session.complete = 0;
 	achievements.changed_settings.complete = 0;
 	achievements.completionist.complete = 0;
-	if (persist_exists(ACHIEVEMENT_KEY)){
+	if (persist_exists(ACHIEVEMENT_KEY)) {
 		persist_read_data(ACHIEVEMENT_KEY, &achievements, sizeof(achievements));
 	}
 	persist_write_int(ACHIEVEMENT_VERSION_KEY, 1);

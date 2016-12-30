@@ -332,25 +332,49 @@ char * localize_get_snooze_text() {
 	}
 
 	char * localize_get_streak_text(int streak_length) {
-		if (streak_length == 1) {
-			if (strncmp(localize_get_locale(), "fr", 2) == 0) {
-				return "%d JOUR DE SUITE";
-			} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
-				return "RACHA: %d DÍA";
-			} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
-				return "SIEGESSERIE: %d TAG";
+		if (streak_length >= data_get_longest_streak()) {
+			if (streak_length == 1) {
+				if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+					return "\U0001F389 %d JOUR DE SUITE";
+				} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+					return "\U0001F389 RACHA: %d DÍA";
+				} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+					return "\U0001F389 SIEGESSERIE: %d TAG";
+				} else {
+					return "\U0001F389 STREAK: %d DAY";
+				}
 			} else {
-				return "STREAK: %d DAY";
+				if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+					return "\U0001F389 %d JOURS DE SUITE";
+				} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+					return "\U0001F389 RACHA: %d DÍAS";
+				} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+					return "\U0001F389 SIEGESSERIE: %d TAGE";
+				} else {
+					return "\U0001F389 STREAK: %d DAYS";
+				}
 			}
 		} else {
-			if (strncmp(localize_get_locale(), "fr", 2) == 0) {
-				return "%d JOURS DE SUITE";
-			} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
-				return "RACHA: %d DÍAS";
-			} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
-				return "SIEGESSERIE: %d TAGE";
+			if (streak_length == 1) {
+				if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+					return "%d JOUR DE SUITE";
+				} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+					return "RACHA: %d DÍA";
+				} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+					return "SIEGESSERIE: %d TAG";
+				} else {
+					return "STREAK: %d DAY";
+				}
 			} else {
-				return "STREAK: %d DAYS";
+				if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+					return "%d JOURS DE SUITE";
+				} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+					return "RACHA: %d DÍAS";
+				} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+					return "SIEGESSERIE: %d TAGE";
+				} else {
+					return "STREAK: %d DAYS";
+				}
 			}
 		}
 	}
@@ -676,19 +700,19 @@ char * localize_get_snooze_text() {
 	}
 
 	char * localize_get_longest_streak_description(int days) {
-		if (days > 1) {
+		if (days != 1) {
 			if (strncmp(localize_get_locale(), "fr", 2) == 0) {
-				return "%d journées";
+				return "%d jours de suite";
 			} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
-				return "%d días";
+				return "%d días seguidos";
 			} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
-				return "%d Tage";
+				return "%d Tage ganz oder";
 			} else {
-				return "%d days";
+				return "%d days in a row";
 			}
 		} else {
 			if (strncmp(localize_get_locale(), "fr", 2) == 0) {
-				return "%d journée";
+				return "%d jour";
 			} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
 				return "%d día";
 			} else if (strncmp(localize_get_locale(), "de", 2) == 0) {

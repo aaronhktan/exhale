@@ -229,7 +229,7 @@ static void menu_select_callback(MenuLayer *menu_layer, MenuIndex *cell_index, v
 				break;
 			case 9: ;
 				if (achievement_get_ten_minutes_session().complete) {
-					char * ten_minutes_session_description = "1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ!@";;
+					char * ten_minutes_session_description = "1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ!@";
 					snprintf(ten_minutes_session_description, 38, localize_get_minutes_session_description(), 10);
 					achievement_window_push(localize_get_ten_minutes_session_name(), ten_minutes_session_description);
 				}

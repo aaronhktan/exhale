@@ -172,7 +172,30 @@ void data_set_streak_date_persist_data() {
 
 // Get length of stored streak from persistent storage
 int data_get_streak_length() {
-	if (!persist_exists(STREAK_LENGTH_KEY)) { // There is no streak
+	// Get today's time
+	time_t temp = time(NULL);
+	struct tm *today = localtime(&temp);
+	today->tm_sec = 0;
+	today->tm_min	= 0;
+	today->tm_hour = 0;
+	time_t today_time_t = mktime(today);
+	
+		// Get the last date and convert to time_t to use with difftime
+	// By default, last date is today's date with year set to 1900.
+	struct tm *last_time;
+	if (persist_exists(STREAK_DATE_KEY)) {
+		persist_read_data(STREAK_DATE_KEY, &last_time, sizeof(last_time));
+	} else {
+		last_time = localtime(&temp);
+		last_time->tm_year = 0;
+		last_time->tm_sec = 0;
+		last_time->tm_min	= 0;
+		last_time->tm_hour = 0;
+	}
+	time_t last_time_t = mktime(last_time);
+	
+	if (!persist_exists(STREAK_LENGTH_KEY) || (difftime(today_time_t, last_time_t) > SECONDS_PER_DAY && last_time->tm_year != 0)) { 
+		// There is no streak in persist, or the length of time since the last time breathed is more than one day
 		return 0;
 	} else {
 		return persist_read_int(STREAK_LENGTH_KEY);
@@ -186,7 +209,7 @@ static void data_set_streak_length(int value) {
 
 // Returns how long the streak is continued
 void data_calculate_streak_length() {
-	APP_LOG(APP_LOG_LEVEL_DEBUG, "Streak length was calculated!");
+	APP_LOG(APP_LOG_LEVEL_DEBUG, "Streak length is being calculated!");
 	// Get today's date
 	time_t temp = time(NULL);
 	struct tm *today = localtime(&temp);
@@ -200,6 +223,7 @@ void data_calculate_streak_length() {
 	struct tm *last_time;
 	if (persist_exists(STREAK_DATE_KEY)) {
 		APP_LOG(APP_LOG_LEVEL_DEBUG, "There is a time stored in persist. Reading.");
+//		Comment out unless testing
 // 		last_time = localtime(&temp);
 // 		last_time->tm_year = 116;
 // 		last_time->tm_mon = 11;
