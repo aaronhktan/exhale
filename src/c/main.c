@@ -11,6 +11,7 @@
 	#include "src/c/achievement.h"
 	#include "src/c/achievement_menu.h"
 	#include "src/c/achievement_window.h"
+	#include "src/c/new_version_window.h"
 #endif
 
 static void init() {
@@ -53,11 +54,14 @@ static void init() {
 			wakeup_schedule_next_wakeup(settings_get_reminderHours(), 0, settings_get_reminderHoursStart());
 		}
 // 		reminder_window_push(); // For testing
-// 		#if !PBL_PLATFORM_APLITE
+		#if !PBL_PLATFORM_APLITE
 // 			char description[100];
 // 			snprintf(description, sizeof(description), localize_get_minutes_session_description(), 10);
 // 			achievement_window_push(localize_get_thirty_minutes_day_name(), description); // For testing
-// 		#endif
+				if ((!persist_exists(SEEN_NEW_VERSION_KEY) || persist_read_bool(SEEN_NEW_VERSION_KEY) == false) || (!persist_exists(SEEN_NEW_VERSION_NUMBER_KEY) || persist_read_int(SEEN_NEW_VERSION_NUMBER_KEY) != 22)) {
+					new_version_window_push(); // For testing
+				}
+		#endif
 // 		achievement_menu_window_push(); // For testing
 	}
 }
