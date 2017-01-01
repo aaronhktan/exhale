@@ -58,9 +58,9 @@ static void init() {
 // 			char description[100];
 // 			snprintf(description, sizeof(description), localize_get_minutes_session_description(), 10);
 // 			achievement_window_push(localize_get_thirty_minutes_day_name(), description); // For testing
-				if ((!persist_exists(SEEN_NEW_VERSION_KEY) || persist_read_bool(SEEN_NEW_VERSION_KEY) == false) || (!persist_exists(SEEN_NEW_VERSION_NUMBER_KEY) || persist_read_int(SEEN_NEW_VERSION_NUMBER_KEY) != 22)) {
+// 				if ((!persist_exists(SEEN_NEW_VERSION_KEY) || persist_read_bool(SEEN_NEW_VERSION_KEY) == false) || (!persist_exists(SEEN_NEW_VERSION_NUMBER_KEY) || persist_read_int(SEEN_NEW_VERSION_NUMBER_KEY) != 22)) {
 					new_version_window_push(); // For testing
-				}
+// 				}
 		#endif
 // 		achievement_menu_window_push(); // For testing
 	}

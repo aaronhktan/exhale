@@ -21,12 +21,12 @@ static void anim_stopped_handler(Animation *animation, bool finished, void *cont
 }
 
 static void background_update_proc(Layer *layer, GContext *ctx) {
-  graphics_context_set_fill_color(ctx, GColorIslamicGreen);
+  graphics_context_set_fill_color(ctx, PBL_IF_COLOR_ELSE(settings_get_circleColor(), GColorDarkGray));
   graphics_fill_rect(ctx, layer_get_bounds(layer), 0, 0);
 }
 
 static void text_background_update_proc(Layer *layer, GContext *ctx) {
-  graphics_context_set_fill_color(ctx, GColorWhite);
+  graphics_context_set_fill_color(ctx, PBL_IF_COLOR_ELSE(settings_get_backgroundColor(), GColorWhite));
   graphics_fill_rect(ctx, layer_get_bounds(layer), 0, 0);
 }
 
@@ -65,7 +65,7 @@ static void window_load(Window *window) {
   text_layer_set_background_color(s_title_layer, GColorClear);
   text_layer_set_text_alignment(s_title_layer, PBL_IF_ROUND_ELSE(GTextAlignmentCenter, GTextAlignmentLeft));
   text_layer_set_font(s_title_layer, fonts_get_system_font(FONT_KEY_GOTHIC_24_BOLD));
-	text_layer_set_text_color(s_title_layer, gcolor_legible_over(GColorIslamicGreen));
+	text_layer_set_text_color(s_title_layer, gcolor_legible_over(PBL_IF_COLOR_ELSE(settings_get_circleColor(), GColorWhite)));
   layer_add_child(window_layer, text_layer_get_layer(s_title_layer));
 	
   s_label_layer = text_layer_create(GRect(NEW_VERSION_WINDOW_MARGIN, bounds.size.h + NEW_VERSION_WINDOW_MARGIN + bitmap_bounds.size.h + 50, bounds.size.w - (2 * NEW_VERSION_WINDOW_MARGIN), bounds.size.h));
@@ -73,7 +73,7 @@ static void window_load(Window *window) {
   text_layer_set_background_color(s_label_layer, GColorClear);
   text_layer_set_text_alignment(s_label_layer, PBL_IF_ROUND_ELSE(GTextAlignmentCenter, GTextAlignmentLeft));
   text_layer_set_font(s_label_layer, fonts_get_system_font(FONT_KEY_GOTHIC_14));
-	text_layer_set_text_color(s_label_layer, gcolor_legible_over(GColorIslamicGreen));
+	text_layer_set_text_color(s_label_layer, gcolor_legible_over(PBL_IF_COLOR_ELSE(settings_get_backgroundColor(), GColorWhite)));
   layer_add_child(window_layer, text_layer_get_layer(s_label_layer));
 }
 

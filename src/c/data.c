@@ -180,7 +180,7 @@ int data_get_streak_length() {
 	today->tm_hour = 0;
 	time_t today_time_t = mktime(today);
 	
-		// Get the last date and convert to time_t to use with difftime
+	// Get the last date and convert to time_t to use with difftime
 	// By default, last date is today's date with year set to 1900.
 	struct tm *last_time;
 	if (persist_exists(STREAK_DATE_KEY)) {
@@ -198,6 +198,7 @@ int data_get_streak_length() {
 		// There is no streak in persist, or the length of time since the last time breathed is more than one day
 		return 0;
 	} else {
+		APP_LOG(APP_LOG_LEVEL_DEBUG, "The today time is %d, the last time is %d, and the difftime is %d.", today_time_t, last_time_t, difftime(today_time_t, last_time_t));
 		return persist_read_int(STREAK_LENGTH_KEY);
 	}
 }
