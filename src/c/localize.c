@@ -9,7 +9,7 @@ const char * localize_get_locale() {
 
 char * localize_get_app_glance_text(int type, int minutes) {
 	switch (type) {
-		case 0:
+		case 2: // La
 			switch (minutes) {
 				case 1:
 				if (strncmp(localize_get_locale(), "fr", 2) == 0) {
@@ -31,6 +31,29 @@ char * localize_get_app_glance_text(int type, int minutes) {
 				} else {
 					return "Last session: %d minutes. Breathe now!";
 				}
+			}
+		case 0:
+			switch (minutes) {
+				case 1:
+					if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+						return "%d jour de suite. Respirez maintenant!";
+					} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+						return "%d día seguido. ¡Respira ahora!";
+					} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+						return "%d Tag ganz oder. Atme jetzt!";
+					} else {
+						return "%d day in a row. Breathe now!";
+					}
+				default:
+					if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+						return "%d jours de suite. Respirez maintenant!";
+					} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+						return "%d días seguidos. ¡Respira ahora!";
+					} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+						return "%d Tag ganz oder. Atme jetzt!";
+					} else {
+						return "%d day in a row. Breathe now!";
+					}
 			}
 		default:
 			switch (minutes) {
@@ -332,29 +355,74 @@ char * localize_get_snooze_text() {
 	}
 
 	char * localize_get_streak_text(int streak_length) {
-		if (streak_length >= data_get_longest_streak()) {
+		
+		if (streak_length >= data_get_longest_streak() && data_get_today_epoch_time() == data_get_streak_date_persist_data()) { // This means that it's the longest streak and user has breathed today
 			if (streak_length == 1) {
 				if (strncmp(localize_get_locale(), "fr", 2) == 0) {
-					return "\U0001F389 %d JOUR DE SUITE";
+					return "\U0001F44D %d JOUR DE SUITE \U0001F389";
 				} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
-					return "\U0001F389 RACHA: %d DÍA";
+					return "\U0001F44D RACHA: %d DÍA \U0001F389";
 				} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
-					return "\U0001F389 SIEGESSERIE: %d TAG";
+					return "\U0001F44D SIEGESSERIE: %d TAG \U0001F389";
 				} else {
-					return "\U0001F389 STREAK: %d DAY";
+					return "\U0001F44D STREAK: %d DAY \U0001F389";
 				}
 			} else {
 				if (strncmp(localize_get_locale(), "fr", 2) == 0) {
-					return "\U0001F389 %d JOURS DE SUITE";
+					return "\U0001F44D %d JOURS DE SUITE \U0001F389";
 				} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
-					return "\U0001F389 RACHA: %d DÍAS";
+					return "\U0001F44D RACHA: %d DÍAS \U0001F389";
 				} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
-					return "\U0001F389 SIEGESSERIE: %d TAGE";
+					return "\U0001F44D SIEGESSERIE: %d TAGE \U0001F389";
 				} else {
-					return "\U0001F389 STREAK: %d DAYS";
+					return "\U0001F44D STREAK: %d DAYS \U0001F389";
 				}
 			}
-		} else {
+		} else if (streak_length >= data_get_longest_streak() && data_get_today_epoch_time() != data_get_streak_date_persist_data()) { // This means that it's the longest streak but user has not breathed today
+			if (streak_length == 1) {
+				if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+					return "%d JOUR DE SUITE \U0001F389";
+				} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+					return "RACHA: %d DÍA \U0001F389";
+				} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+					return "SIEGESSERIE: %d TAG \U0001F389";
+				} else {
+					return "STREAK: %d DAY \U0001F389";
+				}
+			} else {
+				if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+					return "%d JOURS DE SUITE \U0001F389";
+				} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+					return "RACHA: %d DÍAS \U0001F389";
+				} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+					return "SIEGESSERIE: %d TAGE \U0001F389";
+				} else {
+					return "STREAK: %d DAYS \U0001F389";
+				}
+			}
+		} else if (data_get_today_epoch_time() == data_get_streak_date_persist_data()) { // This means that it's not the longest streak but the user has breathed today
+			if (streak_length == 1) {
+				if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+					return "\U0001F44D %d JOUR DE SUITE";
+				} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+					return "\U0001F44D RACHA: %d DÍA";
+				} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+					return "\U0001F44D SIEGESSERIE: %d TAG";
+				} else {
+					return "\U0001F44D STREAK: %d DAY";
+				}
+			} else {
+				if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+					return "\U0001F44D %d JOURS DE SUITE";
+				} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+					return "\U0001F44D RACHA: %d DÍAS";
+				} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+					return "\U0001F44D SIEGESSERIE: %d TAGE";
+				} else {
+					return "\U0001F44D STREAK: %d DAYS";
+				}
+			}
+		} else { // This means that it's not the longest streak and the user has not breathed today.
 			if (streak_length == 1) {
 				if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 					return "%d JOUR DE SUITE";
@@ -375,7 +443,7 @@ char * localize_get_snooze_text() {
 				} else {
 					return "STREAK: %d DAYS";
 				}
-			}
+			}			
 		}
 	}
 
@@ -720,6 +788,30 @@ char * localize_get_snooze_text() {
 			} else {
 				return "%d day";
 			}
+		}
+	}
+
+	char * localize_get_new_version_title() {
+		if (strncmp(localize_get_locale(), "es", 2) == 0) {
+			return "¡Versión 2.2!";
+		} else {
+			return "Version 2.2!";
+		}
+	}
+
+	char * localize_get_new_version_description() {
+		if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+			return PBL_IF_RECT_ELSE("\nAppuyez longuement sur le bouton \"bas\" pour voir des succès et des statistiques.\nLaissez un \u2764 sur l'App Store si vous aimez cette app!",
+															"\n\nAppuyez longuement sur le bouton \"bas\" pour voir des succès et des statistiques.\nLaissez un \u2764 sur l'App Store\nsi vous aimez cette\napp!");
+		} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+			return PBL_IF_RECT_ELSE("\nNUEVO:\nCon una pulsación larga del botón abajo se puede ver logros y estadísticas.\n¡Da un \u2764 en el App Store si te gusta esta app!",
+															"\n\nCon una pulsación larga del botón abajo se puede ver\nlogros y estadísticas.\n¡Da un \u2764 en el App Store\nsi te gusta esta\napp!");
+		} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+			return PBL_IF_RECT_ELSE("\nLange drücken Sie die Abwärtstaste, um Errungenschaften und Statistiken zu sehen.\nLassen Sie ein \u2764 auf dem App Store, wenn Sie diese App gefällt!",
+															"\n\nLange drücken Sie die Abwärtstaste, um Errungenschaften und Statistiken zu sehen.");
+		} else {
+			return PBL_IF_RECT_ELSE("\nNEW FEATURES:\n\nLong press the down button to see achievements and stats.\nLeave a \u2764 on the Store if you like this app!",
+															"\n\nNEW FEATURES:\nLong press the down button to see achievements and stats.\nLeave a \u2764 on the Store if\nyou like this app!");
 		}
 	}
 #endif

@@ -208,6 +208,11 @@ module.exports = [
 					{
 						"label": "Current daily total",
 						"value": "1"
+					},
+					{
+						"label": "Streak",
+						"capabilities": ["NOT_PLATFORM_APLITE"],
+						"value": "2"
 					}
 				]
 			},

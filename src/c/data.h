@@ -37,7 +37,9 @@ int data_read_last_duration_data();
 void data_write_wakeup_time_data(char* wakeup_time);
 char* data_read_wakeup_time_data();
 
+int data_get_today_epoch_time();
 void data_set_streak_date_persist_data();
+int data_get_streak_date_persist_data();
 void data_calculate_streak_length();
 char* data_get_streak_buffer();
 int data_get_streak_length();

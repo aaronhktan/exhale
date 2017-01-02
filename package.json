@@ -4,13 +4,13 @@
         "pebble-clay": "^1.0.4"
     },
     "keywords": [],
-    "name": "breathe",
+    "name": "breathe-beta",
     "pebble": {
         "capabilities": [
             "configurable",
             "health"
         ],
-        "displayName": "Breathe",
+        "displayName": "Breathe (Beta)",
         "enableMultiJS": true,
         "messageKeys": [
             "backgroundColor",

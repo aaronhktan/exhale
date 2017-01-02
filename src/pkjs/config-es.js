@@ -240,6 +240,11 @@ module.exports = [
 					{
 						"label": "Racha",
 						"value": "1"
+					},
+					{
+						"label": "Racha",
+						"capabilities": ["NOT_PLATFORM_APLITE"],
+						"value": "2"
 					}
 				]
 			},

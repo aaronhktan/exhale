@@ -34,6 +34,7 @@ static void init() {
 			wakeup_schedule_next_wakeup(settings_get_reminderHours(), 0, settings_get_reminderHoursStart());
 		}
 	} else {
+		// 		reminder_window_push(); // For testing
 		// The app was started by the user; push the standard breathe window
 		if (settings_get_rememberDuration() && data_read_last_duration_data() != 0) { // Set the minutes to breathe to the same as last one, unless the number is zero (meaning they haven't breathed yet)
 			breathe_window_push(data_read_last_duration_data());
@@ -53,14 +54,18 @@ static void init() {
 		if (settings_get_reminderHours() != 0) {
 			wakeup_schedule_next_wakeup(settings_get_reminderHours(), 0, settings_get_reminderHoursStart());
 		}
-// 		reminder_window_push(); // For testing
+		
+		// Push the new version alert if the user has not previously seen it.
 		#if !PBL_PLATFORM_APLITE
 // 			char description[100];
 // 			snprintf(description, sizeof(description), localize_get_minutes_session_description(), 10);
 // 			achievement_window_push(localize_get_thirty_minutes_day_name(), description); // For testing
-// 				if ((!persist_exists(SEEN_NEW_VERSION_KEY) || persist_read_bool(SEEN_NEW_VERSION_KEY) == false) || (!persist_exists(SEEN_NEW_VERSION_NUMBER_KEY) || persist_read_int(SEEN_NEW_VERSION_NUMBER_KEY) != 22)) {
-					new_version_window_push(); // For testing
-// 				}
+				if ((!persist_exists(SEEN_NEW_VERSION_KEY)) || (persist_read_bool(SEEN_NEW_VERSION_KEY) == false) || (!persist_exists(SEEN_NEW_VERSION_NUMBER_KEY) || persist_read_int(SEEN_NEW_VERSION_NUMBER_KEY) != 22)) {
+// 						data_set_streak_date_persist_data();		
+						new_version_window_push(); // For testing
+				} else {
+					APP_LOG(APP_LOG_LEVEL_DEBUG, "The user has already seen the new version page!");
+				}
 		#endif
 // 		achievement_menu_window_push(); // For testing
 	}
@@ -74,11 +79,17 @@ static void deinit() {
 
 	if (settings_get_appGlanceEnabled()) { // Check if app glance is enabled
 		char app_glance_text[79];
-		if (settings_get_appGlanceType() == 0) { // Show last session time on app glance
-			snprintf(app_glance_text, sizeof(app_glance_text), localize_get_app_glance_text(settings_get_appGlanceType(), data_read_last_duration_data()), data_read_last_duration_data());
-		}
-		else { // Show total daily time on app glance
-			snprintf(app_glance_text, sizeof(app_glance_text), localize_get_app_glance_text(settings_get_appGlanceType(), data_read_breathe_persist_data()), data_read_breathe_persist_data());
+		switch(settings_get_appGlanceType()) { 
+			case 2: // Show last session time on app glance
+				snprintf(app_glance_text, sizeof(app_glance_text), localize_get_app_glance_text(settings_get_appGlanceType(), data_read_last_duration_data()), data_read_last_duration_data());
+				break;
+			case 1: // Show total daily time on app glance
+				snprintf(app_glance_text, sizeof(app_glance_text), localize_get_app_glance_text(settings_get_appGlanceType(), data_read_breathe_persist_data()), data_read_breathe_persist_data());
+				break;
+			#if !PBL_PLATFORM_APLITE
+			case 0: // Show streak on app glance
+				snprintf(app_glance_text, sizeof(app_glance_text), localize_get_app_glance_text(settings_get_appGlanceType(), data_get_streak_length()), data_get_streak_length());
+			#endif
 		}
 		app_glance_reload(appglance_update_app_glance, app_glance_text); // Reload app glance
 	} else {

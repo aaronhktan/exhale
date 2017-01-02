@@ -208,6 +208,11 @@ module.exports = [
 					{
 						"label": "Gesamt heute",
 						"value": "1"
+					},
+					{
+						"label": "Siegesserie",
+						"capabilities": ["NOT_PLATFORM_APLITE"],
+						"value": "2"
 					}
 				]
 			},

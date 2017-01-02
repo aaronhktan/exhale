@@ -1,6 +1,8 @@
+#if !PBL_PLATFORM_APLITE
 #include <pebble.h>
 #include "new_version_window.h"
 #include "settings.h"
+#include "src/c/localize.h"
 
 /**
  * Dialog message UI pattern, from https://github.com/pebble-examples/ui-patterns/ with some modifications
@@ -61,7 +63,7 @@ static void window_load(Window *window) {
   layer_add_child(window_layer, s_icon_layer);
 
 	s_title_layer = text_layer_create(GRect(NEW_VERSION_WINDOW_MARGIN, bounds.size.h + NEW_VERSION_WINDOW_MARGIN + bitmap_bounds.size.h, bounds.size.w - (2 * NEW_VERSION_WINDOW_MARGIN), bounds.size.h));
-  text_layer_set_text(s_title_layer, NEW_VERSION_WINDOW_TITLE);
+  text_layer_set_text(s_title_layer, localize_get_new_version_title());
   text_layer_set_background_color(s_title_layer, GColorClear);
   text_layer_set_text_alignment(s_title_layer, PBL_IF_ROUND_ELSE(GTextAlignmentCenter, GTextAlignmentLeft));
   text_layer_set_font(s_title_layer, fonts_get_system_font(FONT_KEY_GOTHIC_24_BOLD));
@@ -69,7 +71,7 @@ static void window_load(Window *window) {
   layer_add_child(window_layer, text_layer_get_layer(s_title_layer));
 	
   s_label_layer = text_layer_create(GRect(NEW_VERSION_WINDOW_MARGIN, bounds.size.h + NEW_VERSION_WINDOW_MARGIN + bitmap_bounds.size.h + 50, bounds.size.w - (2 * NEW_VERSION_WINDOW_MARGIN), bounds.size.h));
-  text_layer_set_text(s_label_layer, NEW_VERSION_WINDOW_MESSAGE);
+  text_layer_set_text(s_label_layer, localize_get_new_version_description());
   text_layer_set_background_color(s_label_layer, GColorClear);
   text_layer_set_text_alignment(s_label_layer, PBL_IF_ROUND_ELSE(GTextAlignmentCenter, GTextAlignmentLeft));
   text_layer_set_font(s_label_layer, fonts_get_system_font(FONT_KEY_GOTHIC_14));
@@ -152,3 +154,4 @@ void new_version_window_push() {
 	persist_write_int(SEEN_NEW_VERSION_NUMBER_KEY, 22);
 	persist_write_bool(SEEN_NEW_VERSION_KEY, true);
 }
+#endif

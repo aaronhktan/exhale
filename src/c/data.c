@@ -160,18 +160,38 @@ char * data_read_wakeup_time_data() {
 }
 
 #if !PBL_PLATFORM_APLITE
-// Store today's date as the date for streak calculation as struct tm
-void data_set_streak_date_persist_data() {
+// Get today's date as epoch time
+int data_get_today_epoch_time() {
 	time_t now = time(NULL);
 	struct tm *now_time = localtime(&now);
+		// For testing
+// 	now_time->tm_year = 116;
+// 	now_time->tm_mon = 11;
+// 	now_time->tm_mday = 30;
+	// End testing zone
 	now_time->tm_sec = 0;
 	now_time->tm_min	= 0;
 	now_time->tm_hour = 0;
-	persist_write_data(STREAK_DATE_KEY, &now_time, sizeof(now_time));
+	time_t now_time_t = mktime(now_time);
+	return now_time_t;
 }
 
-// Get length of stored streak from persistent storage
-int data_get_streak_length() {
+// Store today's date as the date for streak calculation as struct tm
+void data_set_streak_date_persist_data() {
+	APP_LOG(APP_LOG_LEVEL_DEBUG, "The set now time is %d.", data_get_today_epoch_time());
+	persist_write_int(STREAK_DATE_KEY, data_get_today_epoch_time());
+}
+
+// Get last date as epoch time
+int data_get_streak_date_persist_data() {
+	if (persist_exists(STREAK_DATE_KEY)) {
+		return persist_read_int(STREAK_DATE_KEY);
+	} else {
+		return 631170000; // Epoch time stamp for 1900-01-01
+	}
+}
+
+static int data_calculate_time_difference() {
 	// Get today's time
 	time_t temp = time(NULL);
 	struct tm *today = localtime(&temp);
@@ -180,25 +200,22 @@ int data_get_streak_length() {
 	today->tm_hour = 0;
 	time_t today_time_t = mktime(today);
 	
+	// Get the last date time
+	int last_time = data_get_streak_date_persist_data();
+	
+	return today_time_t - last_time;
+}
+
+// Get length of stored streak from persistent storage
+int data_get_streak_length() {
 	// Get the last date and convert to time_t to use with difftime
 	// By default, last date is today's date with year set to 1900.
-	struct tm *last_time;
-	if (persist_exists(STREAK_DATE_KEY)) {
-		persist_read_data(STREAK_DATE_KEY, &last_time, sizeof(last_time));
-	} else {
-		last_time = localtime(&temp);
-		last_time->tm_year = 0;
-		last_time->tm_sec = 0;
-		last_time->tm_min	= 0;
-		last_time->tm_hour = 0;
-	}
-	time_t last_time_t = mktime(last_time);
+	APP_LOG(APP_LOG_LEVEL_DEBUG, "The last time is %d, and the difftime is %d.", data_get_streak_date_persist_data(), data_calculate_time_difference());
 	
-	if (!persist_exists(STREAK_LENGTH_KEY) || (difftime(today_time_t, last_time_t) > SECONDS_PER_DAY && last_time->tm_year != 0)) { 
+	if (!persist_exists(STREAK_LENGTH_KEY) || ((data_calculate_time_difference() > SECONDS_PER_DAY) && data_get_streak_date_persist_data() != 631170000)) { 
 		// There is no streak in persist, or the length of time since the last time breathed is more than one day
 		return 0;
 	} else {
-		APP_LOG(APP_LOG_LEVEL_DEBUG, "The today time is %d, the last time is %d, and the difftime is %d.", today_time_t, last_time_t, difftime(today_time_t, last_time_t));
 		return persist_read_int(STREAK_LENGTH_KEY);
 	}
 }
@@ -211,50 +228,14 @@ static void data_set_streak_length(int value) {
 // Returns how long the streak is continued
 void data_calculate_streak_length() {
 	APP_LOG(APP_LOG_LEVEL_DEBUG, "Streak length is being calculated!");
-	// Get today's date
-	time_t temp = time(NULL);
-	struct tm *today = localtime(&temp);
-	today->tm_sec = 0;
-	today->tm_min	= 0;
-	today->tm_hour = 0;
-	time_t today_time_t = mktime(today);
-	
-	// Get the last date and convert to time_t to use with difftime
-	// By default, last date is today's date with year set to 1900.
-	struct tm *last_time;
-	if (persist_exists(STREAK_DATE_KEY)) {
-		APP_LOG(APP_LOG_LEVEL_DEBUG, "There is a time stored in persist. Reading.");
-//		Comment out unless testing
-// 		last_time = localtime(&temp);
-// 		last_time->tm_year = 116;
-// 		last_time->tm_mon = 11;
-// 		last_time->tm_mday = 26;
-// 		last_time->tm_sec = 0;
-// 		last_time->tm_min	= 0;
-// 		last_time->tm_hour = 0;
-		persist_read_data(STREAK_DATE_KEY, &last_time, sizeof(last_time));
-	} else {
-		APP_LOG(APP_LOG_LEVEL_DEBUG, "There is no time stored in persist.");
-		last_time = localtime(&temp);
-		last_time->tm_year = 0; // Set default year to 1900 if it's the first time the user has launched the app
-		last_time->tm_sec = 0;
-		last_time->tm_min	= 0;
-		last_time->tm_hour = 0;
-	}
-	time_t last_time_t = mktime(last_time);
-	APP_LOG(APP_LOG_LEVEL_DEBUG, "The now time and last time are %d and %d.", today_time_t, last_time_t);
-
-	if (last_time->tm_year == 0) { // This means that the user has not breathed with the app before
-		if (!persist_exists(STREAK_LENGTH_KEY)) {
-			APP_LOG(APP_LOG_LEVEL_DEBUG, "The user has breathed for the first time and the streak is 1 day.");
-			data_set_streak_length(1);
-			// This means that this the first time the user has breathed with the app
-		}
-	} else if (difftime(today_time_t, last_time_t) > SECONDS_PER_DAY) { // difftime returns the difference between the two dates in seconds
+	if (data_get_streak_date_persist_data() == 631170000) { // This means that the user has not breathed with the app before (since the timestamp is 1900-01-01)
+		APP_LOG(APP_LOG_LEVEL_DEBUG, "The user has breathed for the first time and the streak is 1 day.");
+		data_set_streak_length(1);
+	} else if (data_calculate_time_difference() > SECONDS_PER_DAY) { // difftime returns the difference between the two dates in seconds
 		data_set_streak_length(1);
 		APP_LOG(APP_LOG_LEVEL_DEBUG, "The streak is 1 day because more than 1 has passed.");
 		// This means that it's been more than a day; so streak is one day
-	} else if (difftime(today_time_t, last_time_t) == 0) {
+	} else if (data_calculate_time_difference() == 0) {
 		// This means that the user has breathed again on the same day and it's not the first time they've breathed with the app; no change in streak length
 	} else {
 		APP_LOG(APP_LOG_LEVEL_DEBUG, "Streak exists and it's the first time they've breathed today.");
