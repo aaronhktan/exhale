@@ -40,6 +40,7 @@ Pebble.addEventListener('webviewclosed', function(e) {
 	dict[messageKeys.displayText] = parseInt(dict[messageKeys.displayText]);
 	dict[messageKeys.vibrationType] = parseInt(dict[messageKeys.vibrationType]);
 	dict[messageKeys.appGlanceType] = parseInt(dict[messageKeys.appGlanceType]);
+	dict[messageKeys.bottomTextType] = parseInt(dict[messageKeys.bottomTextType]);
 	
 	// Log all the settings for fun
 	console.log('The reminderHours sent to Pebble is ' + dict[messageKeys.reminderHours] + '.');
@@ -54,6 +55,8 @@ Pebble.addEventListener('webviewclosed', function(e) {
 	console.log('The heartRateVariation sent to Pebble is ' + dict[messageKeys.heartRateVariation] + '.');
 	console.log('The appGlanceEnabled sent to Pebble is ' + dict[messageKeys.appGlanceEnabled] + '.');
 	console.log('The appGlanceType sent to Pebble is ' + dict[messageKeys.appGlanceType] + '.');
+	console.log('The achievementsEnabled sent to Pebble is ' + dict[messageKeys.achievementsEnabled] + '.');
+	console.log('The bottomTextType sent to Pebble is ' + dict[messageKeys.bottomTextType] + '.');
 	
 	// Send settings values to watch side
 	Pebble.sendAppMessage(dict, function(e) {

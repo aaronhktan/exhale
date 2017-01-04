@@ -5,6 +5,11 @@
 #include "src/c/graphics.h"
 #include "src/c/settings.h"
 #include "src/c/localize.h"
+#if !PBL_PLATFORM_APLITE
+	#include "src/c/achievement.h"
+	#include "src/c/achievement_window.h"
+	#include "src/c/achievement_menu.h"
+#endif
 
 #define D_START_DELAY 2100
 #define D_START_ANIMATION_TIME 5000
@@ -22,7 +27,7 @@ static AppTimer *s_animation_completed_timer, *animationTimer, *s_hide_lower_tex
 static GRect bounds;
 static uint8_t s_radius_final, s_radius = 0;
 static int s_min_to_breathe = 1, s_min_breathed_today = 0, s_times_played = 0, s_breath_duration, s_breaths_per_minute, s_current_radius;
-static bool s_animation_completed = false, s_animating = false, s_main_done;
+static bool s_animation_completed = false, s_animating = false, s_main_done, s_achievement_window_pushed = false;
 static GPoint s_center;
 static char s_min_to_breathe_text[3] = "1", s_instruct_text[27], s_min_text[25], s_min_today[25], s_greet_text[27], s_start_time[11], s_end_time[11];
 static time_t t;
@@ -46,7 +51,7 @@ static void upper_text_layer_update_proc(Layer *s_inside_text_layer, GContext *c
 
 // Draws text at bottom of screen
 static void lower_text_layer_update_proc(Layer *s_inside_text_layer, GContext *ctx) {
-	graphics_draw_lower_text(ctx, bounds, s_animating, settings_get_textColor(), s_min_today);
+	graphics_draw_lower_text(ctx, bounds, s_animating, settings_get_bottomTextType(), settings_get_textColor(), s_min_today);
 }
 
 // ******************************************************************************************* Animation Stuff
@@ -161,6 +166,173 @@ static void animation_end_callback(void *data) {
 	if (strcmp(s_start_time, s_end_time) == 0 && complete == 0) { // The date is the same and the user did not interrupt their session
 		// Add number of minutes breathed
 		s_min_breathed_today += s_min_to_breathe;
+		
+		// Achievements
+		#if !PBL_PLATFORM_APLITE
+			// Save the date of this breathing session as struct tm for streak
+			data_calculate_streak_length();
+		
+			// Check whether it's the longest streak and save if it is
+			if (data_get_longest_streak() < data_get_streak_length()) {
+				data_set_longest_streak(data_get_streak_length());
+			}
+		
+			// Add the minutes breathed to the total number of minutes breathed
+			data_set_total_minutes_breathed(data_get_total_minutes_breathed() + s_min_to_breathe);
+		
+			// String to hold the description
+			char * description = "1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ!@";
+		
+			// Show achievements for 5, 8, and 10 minutes breathed in this session if achievements are enabled
+			switch (s_min_to_breathe) {
+				case 5:
+					if (achievement_get_five_minutes_session().complete == 0) {
+						achievement_set_five_minutes_session(data_get_date_today(), 1);
+						if (settings_get_achievementsEnabled() && !s_achievement_window_pushed) {
+							s_achievement_window_pushed = true;
+							snprintf(description, 37, localize_get_minutes_session_description(), 5);
+							achievement_window_push(localize_get_five_minutes_session_name(), description);
+						}
+						if (achievement_get_all_complete()) {
+							achievement_set_completionist(data_get_date_today(), 1);
+						}
+					}
+					break;
+				case 8:
+					if (achievement_get_eight_minutes_session().complete == 0) {
+						achievement_set_eight_minutes_session(data_get_date_today(), 1);
+						if (settings_get_achievementsEnabled() && !s_achievement_window_pushed) {
+							s_achievement_window_pushed = true;
+							snprintf(description, 37, localize_get_minutes_session_description(), 8);
+							achievement_window_push(localize_get_eight_minutes_session_name(), description);
+						}
+						if (achievement_get_all_complete()) {
+							achievement_set_completionist(data_get_date_today(), 1);
+						}
+					}
+					break;
+				case 10:
+					if (achievement_get_ten_minutes_session().complete == 0) {
+						achievement_set_ten_minutes_session(data_get_date_today(), 1);
+						if (settings_get_achievementsEnabled() && !s_achievement_window_pushed) {
+							s_achievement_window_pushed = true;
+							snprintf(description, 38, localize_get_minutes_session_description(), 10);
+							achievement_window_push(localize_get_ten_minutes_session_name(), description);
+						}
+						if (achievement_get_all_complete()) {
+							achievement_set_completionist(data_get_date_today(), 1);
+						}
+					}
+					break;
+			}
+		
+			// Show achievements for 5, 10, 30 and 50 minutes breathed in one day if achievements are enabled
+			int achievement_case = 0;
+			if (s_min_breathed_today >= 60) {
+				achievement_case = 60;
+			} else if (s_min_breathed_today < 60 && s_min_breathed_today >= 30) {
+				achievement_case = 30;
+			} else if (s_min_breathed_today < 30 && s_min_breathed_today >= 10) {
+				achievement_case = 10;
+			} else if (s_min_breathed_today < 10 && s_min_breathed_today >= 5) {
+				achievement_case = 5;
+			}
+			switch (achievement_case) {
+				case 10: // 10 is first because we have to check for 10 min in one day and 5 in one day
+					if (achievement_get_ten_minutes_day().complete == 0) {
+						achievement_set_ten_minutes_day(data_get_date_today(), 1);
+						if (settings_get_achievementsEnabled() && !s_achievement_window_pushed) {
+							s_achievement_window_pushed = true;
+							snprintf(description, 34, localize_get_minutes_day_description(), 10);							
+							achievement_window_push(localize_get_ten_minutes_day_name(), description);
+						}
+						if (achievement_get_all_complete()) {
+							achievement_set_completionist(data_get_date_today(), 1);
+						}
+					}
+				case 5:
+					if (achievement_get_five_minutes_day().complete == 0) {
+						achievement_set_five_minutes_day(data_get_date_today(), 1);
+						if (settings_get_achievementsEnabled() && !s_achievement_window_pushed) {
+							s_achievement_window_pushed = true;
+							snprintf(description, 33, localize_get_minutes_day_description(), 5);							
+							achievement_window_push(localize_get_five_minutes_day_name(), description);
+						}
+						if (achievement_get_all_complete()) {
+							achievement_set_completionist(data_get_date_today(), 1);
+						}
+					}
+					break;
+				case 30:
+					if (achievement_get_thirty_minutes_day().complete == 0) {
+						achievement_set_thirty_minutes_day(data_get_date_today(), 1);
+						if (settings_get_achievementsEnabled() && !s_achievement_window_pushed) {
+							s_achievement_window_pushed = true;
+							snprintf(description, 34, localize_get_minutes_day_description(), 30);
+							achievement_window_push(localize_get_thirty_minutes_day_name(), description);
+						}
+						if (achievement_get_all_complete()) {
+							achievement_set_completionist(data_get_date_today(), 1);
+						}
+					}
+					break;
+				case 60:
+					if (achievement_get_one_hour_day().complete == 0) {
+						achievement_set_one_hour_day(data_get_date_today(), 1);
+						if (settings_get_achievementsEnabled() && !s_achievement_window_pushed) {
+							s_achievement_window_pushed = true;
+							achievement_window_push(localize_get_one_hour_day_name(), localize_get_one_hour_day_description());
+						}
+						if (achievement_get_all_complete()) {
+							achievement_set_completionist(data_get_date_today(), 1);
+						}
+					}
+					break;
+				default:
+					break;
+			}
+		
+			// Show achievements for one week, one month, and one year streak if achievements are enabled
+			switch(data_get_streak_length()) {
+				case 7:
+					if (achievement_get_one_week_streak().complete == 0) {
+						achievement_set_one_week_streak(data_get_date_today(), 1);
+						if (settings_get_achievementsEnabled() && !s_achievement_window_pushed) {
+							s_achievement_window_pushed = true;
+							achievement_window_push(localize_get_one_week_streak_name(), localize_get_one_week_streak_description());
+						}
+						if (achievement_get_all_complete()) {
+							achievement_set_completionist(data_get_date_today(), 1);
+						}
+					}
+					break;
+				case 30:
+					if (achievement_get_one_month_streak().complete == 0) {
+						achievement_set_one_month_streak(data_get_date_today(), 1);
+						if (settings_get_achievementsEnabled() && !s_achievement_window_pushed) {
+							s_achievement_window_pushed = true;
+							achievement_window_push(localize_get_one_month_streak_name(), localize_get_one_month_streak_description());
+						}
+						if (achievement_get_all_complete()) {
+							achievement_set_completionist(data_get_date_today(), 1);
+						}
+					}
+					break;
+				case 365:
+					if (achievement_get_one_year_streak().complete == 0) {
+						achievement_set_one_year_streak(data_get_date_today(), 1);
+						if (settings_get_achievementsEnabled() && !s_achievement_window_pushed) {
+							s_achievement_window_pushed = true;
+							achievement_window_push(localize_get_one_year_streak_name(), localize_get_one_year_streak_description());
+						}
+						if (achievement_get_all_complete()) {
+							achievement_set_completionist(data_get_date_today(), 1);
+						}
+					}
+					break;
+			}
+		#endif
+		
 	} else if (complete == 1) { // The user interrupted their session, so only add what was breathed before aborting
 		s_min_breathed_today += floor((time(NULL) - s_start_stamp) / 60);
 	} else { // Not on the same day, so set number to zero
@@ -234,7 +406,7 @@ static void main_animation_end(void *data) {
 		s_hide_lower_text_layer = app_timer_register(animation_duration, hide_lower_text_callback, NULL);
 		
 		// Next call animation_end_callback to get back to the main menu.
-		s_main_timer = app_timer_register(animation_duration+animation_delay, animation_end_callback, NULL);
+		s_main_timer = app_timer_register(animation_duration + animation_delay, animation_end_callback, NULL);
 	} else {
 		s_main_animation_end.update = interrupt_expand_update; // Changes the update procedure
 		animation_delay = 0;
@@ -394,7 +566,7 @@ static void main_animation() {
 		}
 }
 
-// Schedules next animation if the number of times played is less than 7 times the number of minutes (seven breaths per minute)
+// Schedules next animation if the number of times played is less than the number of minutes
 static void main_animation_callback () {
 	
 	#if defined(PBL_HEALTH)
@@ -576,6 +748,14 @@ static void down_click_handler(ClickRecognizerRef recognizer, void *context) {
 	}
 }
 
+#if !PBL_PLATFORM_APLITE
+static void long_down_click_handler(ClickRecognizerRef regocnizer, void *context) {
+	if ((s_animation_completed) && (!s_animating) && settings_get_achievementsEnabled() == true) {
+		achievement_menu_window_push();
+	}
+}
+#endif
+
 static void back_click_handler(ClickRecognizerRef recognizer, void *context) {
 	if (s_animating) {
 		// Prevents any further animations
@@ -645,7 +825,7 @@ static void select_click_handler(ClickRecognizerRef recognizer, void *context) {
 		// First animationTimer, which will schedule the next time the circle expands or contracts
 		animationTimer = app_timer_register(6000, main_animation_callback, NULL); 
 	
-		// Schedules the last out animation (circle expand) after min * duration of 7 breaths + duration of first circle contraction
+		// Schedules the last out animation (circle expand) after min * duration of breaths + duration of first circle contraction
 		APP_LOG(APP_LOG_LEVEL_DEBUG, "The number of minutes to breath is %d.", s_min_to_breathe);
 		APP_LOG(APP_LOG_LEVEL_DEBUG, "The number of breaths per minute is %d.", s_breaths_per_minute);
 		APP_LOG(APP_LOG_LEVEL_DEBUG, "The duration per breath is %d.", s_breath_duration);
@@ -664,6 +844,9 @@ static void click_config_provider(void *context) {
 	window_single_click_subscribe(id_down, down_click_handler);
 	window_single_click_subscribe(id_back, back_click_handler);
 	window_single_click_subscribe(id_select, select_click_handler);
+	#if !PBL_PLATFORM_APLITE
+		window_long_click_subscribe(id_down, 500, long_down_click_handler, NULL); // Click for 500ms before firing
+	#endif
 }
 
 // ******************************************************************************************* Main App Functions

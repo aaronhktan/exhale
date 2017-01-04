@@ -5,7 +5,7 @@ module.exports = [
 	},
 	{
 		"type": "text",
-		"defaultValue": "Esta es la página de ajustes para la app Breathe. Estás usando la versión 2.1 de la app.",
+		"defaultValue": "Esta es la página de ajustes para la app Breathe. Estás usando la versión 2.2 de la app.",
 	},
 	{
 		"type": "section",
@@ -25,7 +25,7 @@ module.exports = [
 			{
 				"type": "color",
 				"messageKey": "circleColor",
-				"defaultValue": "00AA55",
+				"defaultValue": "00AAFF",
 				"label": "Color del círculo",
 				"sunlight": true,
 				"capabilities": ["COLOR"]
@@ -208,6 +208,43 @@ module.exports = [
 					{
 						"label": "Total hoy",
 						"value": "1"
+					}
+				]
+			},
+		]
+	},
+	{
+		"type": "section",
+		"capabilities": ["NOT_PLATFORM_APLITE"],
+		"items": [
+			{
+				"type": "heading",
+				"defaultValue": "Logros",
+			},
+			{
+				"type": "toggle",
+				"messageKey": "achievementsEnabled",
+				"defaultValue": true,
+			"label": "¿Activar los logros?"
+			},
+			{
+				"type": "select",
+				"messageKey": "bottomTextType",
+				"defaultValue": "0",
+				"label": "Tipo de texto en la parte inferior del menú principal",
+				"options": [
+					{
+						"label": "Total hoy",
+						"value": "0"
+					},
+					{
+						"label": "Racha",
+						"value": "1"
+					},
+					{
+						"label": "Racha",
+						"capabilities": ["NOT_PLATFORM_APLITE"],
+						"value": "2"
 					}
 				]
 			},

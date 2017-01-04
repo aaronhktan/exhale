@@ -18,7 +18,7 @@ void appglance_update_app_glance(AppGlanceReloadSession *session, size_t limit, 
 		.subtitle_template_string = message
 	},
 	
-	.expiration_time = (settings_get_appGlanceType() == 0) ? APP_GLANCE_SLICE_NO_EXPIRATION : (time_start_of_today() + SECONDS_PER_DAY)
+	.expiration_time = (settings_get_appGlanceType() == 0 || settings_get_appGlanceType() == 2) ? APP_GLANCE_SLICE_NO_EXPIRATION : (time_start_of_today() + SECONDS_PER_DAY)
 		
 	};
 

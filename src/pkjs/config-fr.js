@@ -5,7 +5,7 @@ module.exports = [
 	},
 	{
 		"type": "text",
-		"defaultValue": "Ceci est la page de configuration pour l'app Breathe. Vous utilisez version 2.1 de l'app.",
+		"defaultValue": "Ceci est la page de configuration pour l'app Breathe. Vous utilisez version 2.2 de l'app.",
 	},
 	{
 		"type": "section",
@@ -25,7 +25,7 @@ module.exports = [
 			{
 				"type": "color",
 				"messageKey": "circleColor",
-				"defaultValue": "00AA55",
+				"defaultValue": "00AAFF",
 				"label": "Couleur du cercle",
 				"sunlight": true,
 				"capabilities": ["COLOR"]
@@ -207,6 +207,43 @@ module.exports = [
 					},
 					{
 						"label": "Total aujourd'hui",
+						"value": "1"
+					},
+					{
+						"label": "Série",
+						"capabilities": ["NOT_PLATFORM_APLITE"],
+						"value": "2"
+					}
+				]
+			},
+		]
+	},
+	{
+		"type": "section",
+		"capabilities": ["NOT_PLATFORM_APLITE"],
+		"items": [
+			{
+				"type": "heading",
+				"defaultValue": "Succès",
+			},
+			{
+				"type": "toggle",
+				"messageKey": "achievementsEnabled",
+				"defaultValue": true,
+			"label": "Activer les succès?"
+			},
+			{
+				"type": "select",
+				"messageKey": "bottomTextType",
+				"defaultValue": "0",
+				"label": "Texte en bas du menu principal",
+				"options": [
+					{
+						"label": "Total aujourd'hui",
+						"value": "0"
+					},
+					{
+						"label": "Durée de jours consécutives respirés",
 						"value": "1"
 					}
 				]

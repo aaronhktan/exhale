@@ -10,7 +10,7 @@
 
 void graphics_draw_upper_text(GContext *ctx, GRect bounds, bool is_animating, int displayText, GColor textColor, char *);
 
-void graphics_draw_lower_text(GContext *ctx, GRect bounds, bool is_animating, GColor textColor, char *);
+void graphics_draw_lower_text(GContext *ctx, GRect bounds, bool is_animating, int bottomText, GColor textColor, char *);
 
 void graphics_draw_inner_text(GContext *ctx, GRect bounds, bool is_animating, int min_to_breathe, GColor textColor, char *, char *, char *);
 

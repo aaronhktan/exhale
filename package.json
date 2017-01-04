@@ -4,13 +4,13 @@
         "pebble-clay": "^1.0.4"
     },
     "keywords": [],
-    "name": "breathe",
+    "name": "breathe-beta",
     "pebble": {
         "capabilities": [
             "configurable",
             "health"
         ],
-        "displayName": "Breathe",
+        "displayName": "Breathe (Beta)",
         "enableMultiJS": true,
         "messageKeys": [
             "backgroundColor",
@@ -24,39 +24,17 @@
             "displayText",
             "heartRateVariation",
             "appGlanceEnabled",
-            "appGlanceType"
+            "appGlanceType",
+            "achievementsEnabled",
+            "bottomTextType"
         ],
         "projectType": "native",
         "resources": {
             "media": [
                 {
-                    "file": "data/achievement_sequence.pdc",
-                    "name": "ACHIEVEMENT_SEQUENCE",
+                    "file": "images/update.png",
+                    "name": "UPDATE_ICON",
                     "targetPlatforms": null,
-                    "type": "raw"
-                },
-                {
-                    "file": "data/alarm_sequence.pdc",
-                    "name": "ALARM_SEQUENCE",
-                    "targetPlatforms": null,
-                    "type": "raw"
-                },
-                {
-                    "file": "images/achivement-incomplete.png",
-                    "name": "ACHIEVEMENT_INCOMPLETE_PNG",
-                    "targetPlatforms": null,
-                    "type": "bitmap"
-                },
-                {
-                    "file": "images/achievement-complete.png",
-                    "name": "ACHIEVEMENT_COMPLETE_ICON",
-                    "targetPlatforms": [
-                        "aplite",
-                        "basalt",
-                        "chalk",
-                        "diorite",
-                        "emery"
-                    ],
                     "type": "bitmap"
                 },
                 {
@@ -66,6 +44,30 @@
                     "storageFormat": "png",
                     "targetPlatforms": null,
                     "type": "bitmap"
+                },
+                {
+                    "file": "images/achivement-incomplete.png",
+                    "name": "ACHIEVEMENT_INCOMPLETE_ICON",
+                    "targetPlatforms": null,
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/achievement-complete.png",
+                    "name": "ACHIEVEMENT_COMPLETE_ICON",
+                    "targetPlatforms": null,
+                    "type": "bitmap"
+                },
+                {
+                    "file": "data/alarm_sequence.pdc",
+                    "name": "ALARM_SEQUENCE",
+                    "targetPlatforms": null,
+                    "type": "raw"
+                },
+                {
+                    "file": "data/achievement_sequence.pdc",
+                    "name": "ACHIEVEMENT_SEQUENCE",
+                    "targetPlatforms": null,
+                    "type": "raw"
                 }
             ]
         },
@@ -77,10 +79,10 @@
             "diorite",
             "emery"
         ],
-        "uuid": "5d19cf9c-f432-4ed4-b666-6ee3777dcdf6",
+        "uuid": "5253bcd3-4536-4bb3-9ecf-794c0dff1a47",
         "watchapp": {
             "watchface": false
         }
     },
-    "version": "2.1.0"
+    "version": "2.2.0"
 }

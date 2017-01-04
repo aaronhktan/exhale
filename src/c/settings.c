@@ -2,13 +2,27 @@
 #include "settings.h"
 #include "wakeup.h"
 #include "src/c/data.h"
+#if !PBL_PLATFORM_APLITE
+	#include "src/c/achievement.h"
+	#include "src/c/achievement_window.h"
+	#include "src/c/localize.h"
+#endif
 
 ClaySettings settings;
 
-int settings_version = 1, current_settings_version = 2;
+int settings_version = 1, current_settings_version = 3;
 
 static void migrate_settings_data() {
 	switch (settings_version) { // Not useful now, but might become useful when there are more storage versions.
+		case 2: // Storage Version 2
+			#if !PBL_PLATFORM_APLITE
+				settings.achievementsEnabled = true;
+			#else
+				settings.achievementsEnabled = false;
+			#endif
+			APP_LOG(APP_LOG_LEVEL_DEBUG, "Settings have been migrated from version 2 to version %d.", current_settings_version);
+			settings_save_settings();
+			break;
 		default: // Storage Version 1
 			switch(settings.displayText) { // DisplayText keys changed between Storage Version 1 and 2
 				case 0: // In Storage Version 1, this used to mean that a greeting was to be displayed
@@ -30,6 +44,13 @@ static void migrate_settings_data() {
 			// App Glance was not a setting in the previous version of storage, so set these before saving.
 			settings.appGlanceEnabled = true;
 			settings.appGlanceType = 0;
+			// Achievements were not available in the previous version of storage, so set these as well.
+			#if !PBL_PLATFORM_APLITE
+				settings.achievementsEnabled = true;
+			#else
+				settings.achievementsEnabled = false;
+			#endif
+			settings.bottomTextType = 0;
 			APP_LOG(APP_LOG_LEVEL_DEBUG, "Settings have been migrated from version 1 to version %d.", current_settings_version);
 			settings_save_settings(); // Save these new settings.
 	}
@@ -38,7 +59,7 @@ static void migrate_settings_data() {
 // Sets default settings and then loads custom ones if set
 void settings_init() {
 	settings.backgroundColor = GColorBlack;
-	settings.circleColor = PBL_IF_COLOR_ELSE(GColorJaegerGreen, GColorWhite);
+	settings.circleColor = PBL_IF_COLOR_ELSE(GColorVividCerulean, GColorWhite);
 	settings.textColor = GColorWhite;
 	settings.vibrationEnabled = true;
 	settings.vibrationType = 0;
@@ -54,13 +75,25 @@ void settings_init() {
 	settings.heartRateVariation = false;
 	settings.appGlanceEnabled = true;
 	settings.appGlanceType = 0;
-	persist_read_data(SETTINGS_KEY, &settings, sizeof(settings));
+	#if !PBL_PLATFORM_APLITE
+		settings.achievementsEnabled = true;
+	#else
+		settings.achievementsEnabled = false;
+	#endif
+	settings.bottomTextType = 0;
+	
+	// Check if settings exists, and then load them
+	if (persist_exists(SETTINGS_KEY)) {
+		persist_read_data(SETTINGS_KEY, &settings, sizeof(settings));
+	} else {
+		settings_save_settings();
+	}
 	
 	// Check for storage version and migrate as necessary
 	if (persist_exists(SETTINGS_VERSION_KEY)) { // This means that the storage version exists.
 		settings_version = persist_read_int(SETTINGS_VERSION_KEY); // Get storage version and compare with current; if is different, then migrate.
 		APP_LOG(APP_LOG_LEVEL_DEBUG, "The saved settings version is %d.", (int)persist_read_int(SETTINGS_VERSION_KEY));
-		if (!settings_version == current_settings_version) {
+		if (settings_version != current_settings_version) {
 			APP_LOG(APP_LOG_LEVEL_DEBUG, "The saved settings version and current version do not match; performing migration.");
 			migrate_settings_data();
 		}
@@ -73,7 +106,7 @@ void settings_init() {
 // Saves settings
 void settings_save_settings() {
 		persist_write_data(SETTINGS_KEY, &settings, sizeof(settings));
-		persist_write_int(SETTINGS_VERSION_KEY, 2);
+		persist_write_int(SETTINGS_VERSION_KEY, 3);
 }
 
 // Receives and applies settings from phone
@@ -153,6 +186,25 @@ void settings_handle_settings(DictionaryIterator *iter, void *context) {
 	if (app_glance_type_t) {
 		settings.appGlanceType = app_glance_type_t->value->int8;
 	}
+	
+	Tuple *achievements_enabled_t = dict_find(iter, MESSAGE_KEY_achievementsEnabled);
+	if (achievements_enabled_t) {
+		settings.achievementsEnabled = achievements_enabled_t->value->int32 == 1;
+	}
+	
+	Tuple *bottom_text_type_t = dict_find(iter, MESSAGE_KEY_bottomTextType);
+	if (bottom_text_type_t) {
+		settings.bottomTextType = bottom_text_type_t->value->int8;
+	}
+	
+	#if !PBL_PLATFORM_APLITE
+		if (achievement_get_changed_settings().complete == 0) {
+			achievement_set_changed_settings(data_get_date_today(), 1);
+			if (settings.achievementsEnabled) {
+				achievement_window_push(localize_get_changed_settings_name(), localize_get_changed_settings_description());
+			}
+		}
+	#endif
 }
 
 GColor settings_get_backgroundColor() {
@@ -261,4 +313,12 @@ bool settings_get_appGlanceEnabled() {
 
 int settings_get_appGlanceType() {
 	return settings.appGlanceType;
+}
+
+bool settings_get_achievementsEnabled() {
+	return settings.achievementsEnabled;
+}
+
+int settings_get_bottomTextType() {
+	return settings.bottomTextType;
 }

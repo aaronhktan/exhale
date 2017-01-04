@@ -12,7 +12,6 @@ void wakeup_force_next_schedule(int hours, int wakeup_id, int startHours) {
 	// Deletes any previously scheduled wakeup
 	persist_delete(PERSIST_WAKEUP);
 	id = -1;
-	APP_LOG(APP_LOG_LEVEL_DEBUG, "The wakeup module was opened");
 	
 	// Gets current time, formats to struct tm, and extracts hours from struct tm
 	time_t current_t = time(NULL);
@@ -26,12 +25,8 @@ void wakeup_force_next_schedule(int hours, int wakeup_id, int startHours) {
 		const struct tm *time_check = localtime(&t_to_check);
 		int check_hour = time_check->tm_hour; // Like before, formatted to struct tm, and hours are extracted
 		
-		APP_LOG(APP_LOG_LEVEL_DEBUG, "The current hour is %d", current_hour);
-		APP_LOG(APP_LOG_LEVEL_DEBUG, "The hour to check is %d", check_hour);
-		
 		if (current_hour >= check_hour) { // We have found how many times the app should have launched if it launched starting from 12 o'clock AM.
 			launch_number = i + 1;
-			APP_LOG(APP_LOG_LEVEL_DEBUG, "The app's launch number after looping is %d", launch_number);
 		} else {
 			break;
 		}
@@ -39,7 +34,6 @@ void wakeup_force_next_schedule(int hours, int wakeup_id, int startHours) {
 	
 	if (launch_number > 12 / hours) { // This means that it's past 8 o'clock PM, therefore the next time it should launch is 8 o'clock AM tomorrow
 		launch_number = 0;
-		APP_LOG(APP_LOG_LEVEL_DEBUG, "The app's launch number was reset to: %d", launch_number);
 	}
 
 	if (launch_number != 0) { // Sets timestamp to the next time it should launch (day, hours, minutes)
