@@ -67,6 +67,14 @@ static void canvas_update_proc(Layer *layer, GContext *ctx) {
 
 static void back_click_handler(ClickRecognizerRef recognizer, void *context) {
 	if (s_draw_complete) {
+// 		window_destroy(s_achievement_window);
+// 		gdraw_command_sequence_destroy(s_command_seq);
+// 		layer_destroy(s_canvas_layer);
+// 		layer_destroy(text_layer_get_layer(s_announce_text_layer));
+// 		layer_destroy(text_layer_get_layer(s_title_layer));
+// 		layer_destroy(text_layer_get_layer(s_description_layer));
+		s_index = 0;
+		s_draw_complete = false;
 		window_stack_remove(s_achievement_window, true);
 	}
 }

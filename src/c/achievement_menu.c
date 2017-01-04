@@ -277,6 +277,7 @@ void achievement_window_load(Window *window) {
 }
 
 void achievement_window_unload() {
+	window_destroy(s_achievement_window);
 	menu_layer_destroy(s_achievement_layer);
 	gbitmap_destroy(s_achievement_complete);
 	gbitmap_destroy(s_achievement_incomplete);
