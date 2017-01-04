@@ -7,6 +7,7 @@
 #include "src/c/wakeup.h"
 #include "src/c/localize.h"
 #include "src/c/appglance.h"
+#include "src/c/achievement_window.h"
 
 static void init() {
 	APP_LOG(APP_LOG_LEVEL_INFO, "You are running version 2.1 of the Breathe app.");
@@ -45,6 +46,7 @@ static void init() {
 			wakeup_schedule_next_wakeup(settings_get_reminderHours(), 0, settings_get_reminderHoursStart());
 		}
 // 		reminder_window_push(); // For testing
+		achievement_window_push(); // For testing
 	}
 }
 

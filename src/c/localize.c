@@ -317,3 +317,15 @@ char * localize_get_snooze_text() {
 		return "Snooze for %d min";
 	}
 }
+
+char * localize_get_achievement_text() {
+	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+		return "Succès débloqué!";
+	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+		return "¡Se desbloqueó un logro!";
+	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+		return "Errungenschaft freigeschaltet!";
+	} else {
+		return "Achievement earned!";
+	}
+}

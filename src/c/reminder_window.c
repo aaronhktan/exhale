@@ -4,6 +4,13 @@
 #include "localize.h"
 
 #define DELTA 33
+#ifdef PBL_PLATFORM_EMERY
+	#define FONT_KEY FONT_KEY_GOTHIC_28_BOLD
+#elif PBL_PLATFORM_CHALK
+	#define FONT_KEY FONT_KEY_GOTHIC_18_BOLD
+#else
+	#define FONT_KEY FONT_KEY_GOTHIC_24_BOLD
+#endif
 
 static Window *s_reminder_window;
 static ActionMenu *s_action_menu;
@@ -16,7 +23,7 @@ static GDrawCommandSequence *s_command_seq;
 GColor random_color, text_color;
 WakeupId id;
 
-int s_index = 0;
+static int s_index = 0;
 
 // Closes app
 static void close_app() {
