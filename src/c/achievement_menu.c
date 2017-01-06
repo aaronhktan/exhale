@@ -11,6 +11,7 @@ static Window *s_achievement_window;
 static MenuLayer *s_achievement_layer;
 static GBitmap *s_achievement_complete, *s_achievement_incomplete;
 
+// 2 sections - one for achievements, one for stats; 12 achievemenets and 2 stats
 #define NUM_MENU_SECTIONS 2
 #define NUM_ACHIEVEMENT_MENU_ITEMS 12
 #define NUM_STATS_MENU_ITEMS 2
@@ -51,31 +52,31 @@ static void menu_draw_header_callback(GContext* ctx, const Layer *cell_layer, ui
 static void menu_draw_row_callback(GContext* ctx, const Layer *cell_layer, MenuIndex *cell_index, void *data) {
 	// Determine which section we're going to draw in
   switch (cell_index->section) {
-    case 0:
+    case 0: // These are the achievements
 			// Use the row to specify which item we'll draw
 			switch (cell_index->row) {
-				case 0:
+				case 0: // One week streak
 					if (achievement_get_one_week_streak().complete == 1) { // User has completed the achievement, draw completed icon
 						menu_cell_basic_draw(ctx, cell_layer, localize_get_one_week_streak_name(), localize_get_one_week_streak_description(), s_achievement_complete);
 					} else { // User hasn't compelted the achievement, draw incomplete icon
 						menu_cell_basic_draw(ctx, cell_layer, localize_get_locked_title(), localize_get_locked_description(), s_achievement_incomplete);
 					}
 				break;
-				case 1:
+				case 1: // One month streak
 					if (achievement_get_one_month_streak().complete == 1) {
 						menu_cell_basic_draw(ctx, cell_layer, localize_get_one_month_streak_name(), localize_get_one_month_streak_description(), s_achievement_complete);
 					} else {
 						menu_cell_basic_draw(ctx, cell_layer, localize_get_locked_title(), localize_get_locked_description(), s_achievement_incomplete);
 					}
 				break;
-				case 2:
+				case 2: // One year streak
 					if (achievement_get_one_year_streak().complete == 1) {
 						menu_cell_basic_draw(ctx, cell_layer, localize_get_one_year_streak_name(), localize_get_one_year_streak_description(), s_achievement_complete);
 					} else {
 						menu_cell_basic_draw(ctx, cell_layer, localize_get_locked_title(), localize_get_locked_description(), s_achievement_incomplete);
 					}
 				break;
-				case 3:
+				case 3: // Five minutes total in one day
 					if (achievement_get_five_minutes_day().complete == 1) {
 						char five_minutes_day_description[100];
 						snprintf(five_minutes_day_description, sizeof(five_minutes_day_description), localize_get_minutes_day_description(), 5);
@@ -84,7 +85,7 @@ static void menu_draw_row_callback(GContext* ctx, const Layer *cell_layer, MenuI
 						menu_cell_basic_draw(ctx, cell_layer, localize_get_locked_title(), localize_get_locked_description(), s_achievement_incomplete);
 					}
 				break;
-				case 4:
+				case 4: // Ten minutes total in one day
 					if (achievement_get_ten_minutes_day().complete == 1) {
 						char ten_minutes_day_description[100];
 						snprintf(ten_minutes_day_description, sizeof(ten_minutes_day_description), localize_get_minutes_day_description(), 10);
@@ -93,7 +94,7 @@ static void menu_draw_row_callback(GContext* ctx, const Layer *cell_layer, MenuI
 						menu_cell_basic_draw(ctx, cell_layer, localize_get_locked_title(), localize_get_locked_description(), s_achievement_incomplete);
 					}
 				break;
-				case 5:
+				case 5: // Thirty minutes total in one day
 					if (achievement_get_thirty_minutes_day().complete == 1) {
 						char thirty_minutes_day_description[100];
 						snprintf(thirty_minutes_day_description, sizeof(thirty_minutes_day_description), localize_get_minutes_day_description(), 30);
@@ -102,14 +103,14 @@ static void menu_draw_row_callback(GContext* ctx, const Layer *cell_layer, MenuI
 						menu_cell_basic_draw(ctx, cell_layer, localize_get_locked_title(), localize_get_locked_description(), s_achievement_incomplete);
 					}
 				break;
-				case 6:
+				case 6: // One hour total in one day
 					if (achievement_get_one_hour_day().complete == 1) {
 						menu_cell_basic_draw(ctx, cell_layer, localize_get_one_hour_day_name(), localize_get_one_hour_day_description(), s_achievement_complete);
 					} else {
 						menu_cell_basic_draw(ctx, cell_layer, localize_get_locked_title(), localize_get_locked_description(), s_achievement_incomplete);
 					}
 				break;
-				case 7:
+				case 7: // Five minutes breathed during one session
 					if (achievement_get_five_minutes_session().complete == 1) {
 						char five_minutes_session_description[100];
 						snprintf(five_minutes_session_description, sizeof(five_minutes_session_description), localize_get_minutes_session_description(), 5);
@@ -118,7 +119,7 @@ static void menu_draw_row_callback(GContext* ctx, const Layer *cell_layer, MenuI
 						menu_cell_basic_draw(ctx, cell_layer, localize_get_locked_title(), localize_get_locked_description(), s_achievement_incomplete);
 					}
 				break;
-				case 8:
+				case 8: // Eight minutes breathed during one session
 					if (achievement_get_eight_minutes_session().complete == 1) {
 						char eight_minutes_session_description[100];
 						snprintf(eight_minutes_session_description, sizeof(eight_minutes_session_description), localize_get_minutes_session_description(), 8);
@@ -127,7 +128,7 @@ static void menu_draw_row_callback(GContext* ctx, const Layer *cell_layer, MenuI
 						menu_cell_basic_draw(ctx, cell_layer, localize_get_locked_title(), localize_get_locked_description(), s_achievement_incomplete);
 					}
 				break;
-				case 9:
+				case 9: // Ten minutes breathed during one session
 					if (achievement_get_ten_minutes_session().complete == 1) {
 						char ten_minutes_session_description[100];
 						snprintf(ten_minutes_session_description, sizeof(ten_minutes_session_description), localize_get_minutes_session_description(), 10);
@@ -136,14 +137,14 @@ static void menu_draw_row_callback(GContext* ctx, const Layer *cell_layer, MenuI
 						menu_cell_basic_draw(ctx, cell_layer, localize_get_locked_title(), localize_get_locked_description(), s_achievement_incomplete);
 					}
 				break;
-				case 10:
+				case 10: // User has changed settings for the first time
 					if (achievement_get_changed_settings().complete == 1) {
 						menu_cell_basic_draw(ctx, cell_layer, localize_get_changed_settings_name(), localize_get_changed_settings_description(), s_achievement_complete);
 					} else {
 						menu_cell_basic_draw(ctx, cell_layer, localize_get_locked_title(), localize_get_locked_description(), s_achievement_incomplete);
 					}
 				break;
-				case 11:
+				case 11: // User has completed all the achievements
 					if (achievement_get_completionist().complete == 1) {
 						menu_cell_basic_draw(ctx, cell_layer, localize_get_completionist_name(), localize_get_completionist_description(), s_achievement_complete);
 					} else {
@@ -152,14 +153,14 @@ static void menu_draw_row_callback(GContext* ctx, const Layer *cell_layer, MenuI
 				break;
 			}
 			break;
-		case 1:
+		case 1: // These are the stats
 			switch (cell_index->row) {
-				case 0: ;
+				case 0: ; // First, the total number of minutes breathed
 					char total_breathed_description[100];
 					snprintf(total_breathed_description, sizeof(total_breathed_description), localize_get_total_breathed_description(), data_get_total_minutes_breathed());
 					menu_cell_basic_draw(ctx, cell_layer, localize_get_total_breathed_name(), total_breathed_description, NULL);
 					break;
-				case 1: ;
+				case 1: ; // Then, the longest streak
 					char longest_streak_description[100];
 					snprintf(longest_streak_description, sizeof(longest_streak_description), localize_get_longest_streak_description(data_get_longest_streak()), data_get_longest_streak());
 					menu_cell_basic_draw(ctx, cell_layer, localize_get_longest_streak_name(), longest_streak_description, NULL);
@@ -167,7 +168,8 @@ static void menu_draw_row_callback(GContext* ctx, const Layer *cell_layer, MenuI
 			}
 	}
 }
-		
+
+// Set what happens when an item is selected
 static void menu_select_callback(MenuLayer *menu_layer, MenuIndex *cell_index, void *data) {
 	if (cell_index->section == 0) {
 		switch (cell_index->row) {
