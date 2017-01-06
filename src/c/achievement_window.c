@@ -54,17 +54,10 @@ static void canvas_update_proc(Layer *layer, GContext *ctx) {
 		app_timer_cancel(s_timer);
 		s_draw_complete = true;
 	}
-	
-// 	graphics_context_set_fill_color(ctx, GColorBlack);
-// 	#ifdef PBL_PLATFORM_EMERY
-// 		graphics_fill_circle(ctx, GPoint(bounds.size.w + 7, bounds.size.h / 2), 12);
-// 	#elif PBL_PLATFORM_CHALK
-// 		graphics_fill_circle(ctx, GPoint(bounds.size.w + 1, bounds.size.h / 2), 12);
-// 	#else
-// 		graphics_fill_circle(ctx, GPoint(bounds.size.w + 5, bounds.size.h / 2), 10);
-// 	#endif
+
 }
 
+// Allow exiting the window only after the PDC is done animating; this prevents a crash.
 static void back_click_handler(ClickRecognizerRef recognizer, void *context) {
 	if (s_draw_complete) {
 // 		window_destroy(s_achievement_window);

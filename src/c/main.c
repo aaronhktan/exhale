@@ -6,8 +6,8 @@
 #include "src/c/settings.h"
 #include "src/c/wakeup.h"
 #include "src/c/localize.h"
-#include "src/c/appglance.h"
 #if !PBL_PLATFORM_APLITE
+	#include "src/c/appglance.h"
 	#include "src/c/achievement.h"
 	#include "src/c/achievement_menu.h"
 	#include "src/c/achievement_window.h"
@@ -77,6 +77,8 @@ static void deinit() {
 	health_service_set_heart_rate_sample_period(0); // Reset heart rate sample period to default as to not waste too much battery
 	#endif
 
+	// Only load appglance if platform is not Aplite because Aplite does not support AppGlances
+	#if !PBL_PLATFORM_APLITE
 	if (settings_get_appGlanceEnabled()) { // Check if app glance is enabled
 		char app_glance_text[79];
 		switch(settings_get_appGlanceType()) { 
@@ -95,6 +97,7 @@ static void deinit() {
 	} else {
 		app_glance_reload(appglance_update_app_glance, NULL); // Clear app glance completely
 	}
+	#endif
 }
 
 int main(void) {
