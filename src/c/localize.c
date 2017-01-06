@@ -359,89 +359,89 @@ char * localize_get_snooze_text() {
 		if (streak_length >= data_get_longest_streak() && data_get_today_epoch_time() == data_get_streak_date_persist_data()) { // This means that it's the longest streak and user has breathed today
 			if (streak_length == 1) {
 				if (strncmp(localize_get_locale(), "fr", 2) == 0) {
-					return "\U0001F44D %d JOUR DE SUITE \U0001F389";
+					return "\U0001F44D %d JOUR \U0001F389";
 				} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
-					return "\U0001F44D RACHA: %d DÍA \U0001F389";
+					return "\U0001F44D %d DÍA \U0001F389";
 				} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
-					return "\U0001F44D SIEGESSERIE: %d TAG \U0001F389";
+					return "\U0001F44D %d TAG \U0001F389";
 				} else {
-					return "\U0001F44D STREAK: %d DAY \U0001F389";
+					return "\U0001F44D %d DAY \U0001F389";
 				}
 			} else {
 				if (strncmp(localize_get_locale(), "fr", 2) == 0) {
-					return "\U0001F44D %d JOURS DE SUITE \U0001F389";
+					return "\U0001F44D %d JOURS \U0001F389";
 				} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
-					return "\U0001F44D RACHA: %d DÍAS \U0001F389";
+					return "\U0001F44D %d DÍAS \U0001F389";
 				} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
-					return "\U0001F44D SIEGESSERIE: %d TAGE \U0001F389";
+					return "\U0001F44D %d TAGE \U0001F389";
 				} else {
-					return "\U0001F44D STREAK: %d DAYS \U0001F389";
+					return "\U0001F44D %d DAYS \U0001F389";
 				}
 			}
 		} else if (streak_length >= data_get_longest_streak() && data_get_today_epoch_time() != data_get_streak_date_persist_data()) { // This means that it's the longest streak but user has not breathed today
 			if (streak_length == 1) {
 				if (strncmp(localize_get_locale(), "fr", 2) == 0) {
-					return "%d JOUR DE SUITE \U0001F389";
+					return "%d JOUR \U0001F389";
 				} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
-					return "RACHA: %d DÍA \U0001F389";
+					return "%d DÍA \U0001F389";
 				} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
-					return "SIEGESSERIE: %d TAG \U0001F389";
+					return "%d TAG \U0001F389";
 				} else {
-					return "STREAK: %d DAY \U0001F389";
+					return "%d DAY \U0001F389";
 				}
 			} else {
 				if (strncmp(localize_get_locale(), "fr", 2) == 0) {
-					return "%d JOURS DE SUITE \U0001F389";
+					return "%d JOURS \U0001F389";
 				} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
-					return "RACHA: %d DÍAS \U0001F389";
+					return "%d DÍAS \U0001F389";
 				} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
-					return "SIEGESSERIE: %d TAGE \U0001F389";
+					return "%d TAGE \U0001F389";
 				} else {
-					return "STREAK: %d DAYS \U0001F389";
+					return "%d DAYS \U0001F389";
 				}
 			}
 		} else if (data_get_today_epoch_time() == data_get_streak_date_persist_data()) { // This means that it's not the longest streak but the user has breathed today
 			if (streak_length == 1) {
 				if (strncmp(localize_get_locale(), "fr", 2) == 0) {
-					return "\U0001F44D %d JOUR DE SUITE";
+					return "\U0001F44D %d JOUR";
 				} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
-					return "\U0001F44D RACHA: %d DÍA";
+					return "\U0001F44D %d DÍA";
 				} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
-					return "\U0001F44D SIEGESSERIE: %d TAG";
+					return "\U0001F44D %d TAG";
 				} else {
-					return "\U0001F44D STREAK: %d DAY";
+					return "\U0001F44D %d DAY";
 				}
 			} else {
 				if (strncmp(localize_get_locale(), "fr", 2) == 0) {
-					return "\U0001F44D %d JOURS DE SUITE";
+					return "\U0001F44D %d JOURS";
 				} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
-					return "\U0001F44D RACHA: %d DÍAS";
+					return "\U0001F44D %d DÍAS";
 				} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
-					return "\U0001F44D SIEGESSERIE: %d TAGE";
+					return "\U0001F44D %d TAGE";
 				} else {
-					return "\U0001F44D STREAK: %d DAYS";
+					return "\U0001F44D %d DAYS";
 				}
 			}
 		} else { // This means that it's not the longest streak and the user has not breathed today.
 			if (streak_length == 1) {
 				if (strncmp(localize_get_locale(), "fr", 2) == 0) {
-					return "%d JOUR DE SUITE";
+					return "%d JOUR";
 				} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
-					return "RACHA: %d DÍA";
+					return "%d DÍA";
 				} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
-					return "SIEGESSERIE: %d TAG";
+					return "%d TAG";
 				} else {
-					return "STREAK: %d DAY";
+					return "%d DAY";
 				}
 			} else {
 				if (strncmp(localize_get_locale(), "fr", 2) == 0) {
-					return "%d JOURS DE SUITE";
+					return "%d JOURS";
 				} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
-					return "RACHA: %d DÍAS";
+					return "%d DÍAS";
 				} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
-					return "SIEGESSERIE: %d TAGE";
+					return "%d TAGE";
 				} else {
-					return "STREAK: %d DAYS";
+					return "%d DAYS";
 				}
 			}			
 		}
