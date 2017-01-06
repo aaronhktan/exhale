@@ -9,7 +9,7 @@ const char * localize_get_locale() {
 
 char * localize_get_app_glance_text(int type, int minutes) {
 	switch (type) {
-		case 2: // La
+		case 0: // Last session
 			switch (minutes) {
 				case 1:
 				if (strncmp(localize_get_locale(), "fr", 2) == 0) {
@@ -32,7 +32,7 @@ char * localize_get_app_glance_text(int type, int minutes) {
 					return "Last session: %d minutes. Breathe now!";
 				}
 			}
-		case 0:
+		case 2: // Streak
 			switch (minutes) {
 				case 1:
 					if (strncmp(localize_get_locale(), "fr", 2) == 0) {
@@ -50,12 +50,12 @@ char * localize_get_app_glance_text(int type, int minutes) {
 					} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
 						return "%d días seguidos. ¡Respira ahora!";
 					} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
-						return "%d Tag ganz oder. Atme jetzt!";
+						return "%d Tage ganz oder. Atme jetzt!";
 					} else {
-						return "%d day in a row. Breathe now!";
+						return "%d days in a row. Breathe now!";
 					}
 			}
-		default:
+		default: // Total Today
 			switch (minutes) {
 				case 1:
 				if (strncmp(localize_get_locale(), "fr", 2) == 0) {
