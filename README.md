@@ -28,6 +28,10 @@
 - A reminder can be set (every 1, 2, 3, 4, or 6 hours) as a prompt to breathe. You can change when these reminders start (if you don't like waking up early, you can set them to start at 10 AM!). This reminder can also be snoozed for any increment of 10 minutes up to 50 minutes, for when you're just a bit busy at the moment.
 - The App Glance shows how many minutes you've breathed in the last session. This can be set to show the current daily total, or be disabled completely. Thanks to [PiwwowPants](https://github.com/PiwwowPants)!
 
+### Get motivation with achievements and stats.
+- Breathe and get achievements: some for how long you've breathed, others for how consistent you've been, and others for just customizing your settings. Get badges and see your achievements with a long press of the down button!
+- See stats about how long you've spent with this app, as well as your longest streak.
+
 ### Supports multiple languages.
 - Don't speak English? This app supports English, French, Spanish, and German (text in app, settings page all correspond to the watch's chosen language). Thanks to [noiob](https://github.com/noiob) for the German translation!
 

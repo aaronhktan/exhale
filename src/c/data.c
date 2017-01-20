@@ -251,7 +251,7 @@ void data_calculate_streak_length() {
 // Returns a string with correctly formatted streak text
 char * data_get_streak_buffer() {
 	int streak_length = data_get_streak_length();
-	static char s_streak_buffer[22];
+	static char s_streak_buffer[30];
 	snprintf(s_streak_buffer, sizeof(s_streak_buffer), localize_get_streak_text(streak_length), streak_length);
 	return s_streak_buffer;
 }
