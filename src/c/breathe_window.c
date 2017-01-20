@@ -845,7 +845,9 @@ static void click_config_provider(void *context) {
 	window_single_click_subscribe(id_back, back_click_handler);
 	window_single_click_subscribe(id_select, select_click_handler);
 	#if !PBL_PLATFORM_APLITE
+	if (settings_get_achievementsEnabled()) {
 		window_long_click_subscribe(id_down, 500, long_down_click_handler, NULL); // Click for 500ms before firing
+	}
 	#endif
 }
 

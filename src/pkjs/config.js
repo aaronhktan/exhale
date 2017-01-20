@@ -124,6 +124,7 @@ module.exports = [
 					},
 					{ 
 						"label": "Heart Rate",
+						"capabilities": ["PLATFORM_DIORITE"],
 						"value": "3" 
 					}
 				]

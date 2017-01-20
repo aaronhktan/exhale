@@ -124,6 +124,7 @@ module.exports = [
 					},
 					{ 
 						"label": "Ritmo cardiaco",
+						"capabilities": ["PLATFORM_DIORITE"],
 						"value": "3" 
 					}
 				]

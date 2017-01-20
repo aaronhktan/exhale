@@ -4,13 +4,13 @@
         "pebble-clay": "^1.0.4"
     },
     "keywords": [],
-    "name": "breathe",
+    "name": "breathe-beta",
     "pebble": {
         "capabilities": [
             "configurable",
             "health"
         ],
-        "displayName": "Breathe",
+        "displayName": "Breathe (Beta)",
         "enableMultiJS": true,
         "messageKeys": [
             "backgroundColor",
@@ -79,10 +79,10 @@
             "diorite",
             "emery"
         ],
-        "uuid": "5d19cf9c-f432-4ed4-b666-6ee3777dcdf6",
+        "uuid": "5253bcd3-4536-4bb3-9ecf-794c0dff1a47",
         "watchapp": {
             "watchface": false
         }
     },
-    "version": "2.2.0"
+    "version": "2.3.0"
 }

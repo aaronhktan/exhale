@@ -124,6 +124,7 @@ module.exports = [
 					},
 					{ 
 						"label": "Herzfrequenz",
+						"capabilities": ["PLATFORM_DIORITE"],
 						"value": "3" 
 					}
 				]

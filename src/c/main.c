@@ -16,11 +16,13 @@
 
 static void init() {
 	APP_LOG(APP_LOG_LEVEL_INFO, "You are running version 2.2 of the Breathe app.");
-	#if PBL_HEALTH
-		health_init(); // Subscribe to health service if health API is available
-		data_init(); // Subscribe to data service
-	#endif
 	settings_init(); // Subscribe to settings service
+	#if PBL_HEALTH
+		if (settings_get_displayText() == 2 || settings_get_displayText() == 3) {
+			health_init(); // Subscribe to health service if health API is available
+			data_init(); // Subscribe to data service
+		}
+	#endif
 	#if !PBL_PLATFORM_APLITE
 		achievement_init(); // Subscribe to the achievement service
 	#endif
