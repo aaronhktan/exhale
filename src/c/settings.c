@@ -322,3 +322,67 @@ bool settings_get_achievementsEnabled() {
 int settings_get_bottomTextType() {
 	return settings.bottomTextType;
 }
+
+void settings_set_rememberDuration(bool value) {
+	settings.rememberDuration = value;
+	settings_save_settings();
+}
+
+void settings_set_vibrationEnabled(bool value) {
+	settings.vibrationEnabled = value;
+	settings_save_settings();
+}
+
+void settings_set_vibrationType(int value) {
+	settings.vibrationType = value;
+	settings_save_settings();
+}
+
+void settings_set_breathsPerMinute(int value) {
+	settings.breathsPerMinute = value;
+	settings_save_settings();
+}
+
+#if PBL_PLATFORM_DIORITE
+void settings_set_heartRateVariation(bool value) {
+	settings.heartRateVariation = value;
+	settings_save_settings();
+}
+#endif
+
+void settings_set_displayText(int value) {
+	settings.displayText = value;
+	settings_save_settings();
+}
+
+void settings_set_reminderHours(int value) {
+	settings.reminderHours = value;
+	settings_save_settings();
+}
+
+void settings_set_reminderHoursStart(int value) {
+	settings.reminderHoursStart = value;
+	settings_save_settings();
+}
+
+void settings_set_appGlanceEnabled(bool value) {
+	settings.appGlanceEnabled = value;
+	settings_save_settings();
+}
+
+void settings_set_appGlanceType(int value) {
+	settings.appGlanceType = value;
+	settings_save_settings();
+}
+
+#if !PBL_PLATFORM_APLITE
+void settings_set_achievementsEnabled(bool value) {
+	settings.achievementsEnabled = value;
+	settings_save_settings();
+}
+
+void settings_set_bottomTextType(int value) {
+	settings.bottomTextType = value;
+	settings_save_settings();
+}
+#endif

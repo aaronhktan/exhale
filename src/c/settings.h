@@ -44,3 +44,20 @@ bool settings_get_appGlanceEnabled();
 int settings_get_appGlanceType();
 bool settings_get_achievementsEnabled();
 int settings_get_bottomTextType();
+
+void settings_set_rememberDuration(bool value);
+void settings_set_vibrationEnabled(bool value);
+void settings_set_vibrationType(int value);
+void settings_set_breathsPerMinute(int value);
+#if PBL_PLATFORM_DIORITE
+void settings_set_heartRateVariation(bool value);
+#endif
+void settings_set_displayText(int value);
+void settings_set_reminderHours(int value);
+void settings_set_reminderHoursStart(int value);
+void settings_set_appGlanceEnabled(bool value);
+void settings_set_appGlanceType(int value);
+#if !PBL_PLATFORM_APLITE
+void settings_set_achievementsEnabled(bool value);
+void settings_set_bottomTextType(int value);
+#endif

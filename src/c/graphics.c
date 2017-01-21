@@ -108,7 +108,6 @@ void graphics_draw_lower_text(GContext *ctx, GRect bounds, bool is_animating, in
 		switch(bottom_text) {
 			#if !PBL_PLATFORM_APLITE
 			case 1: // This means that it's the streak
-				APP_LOG(APP_LOG_LEVEL_DEBUG, data_get_streak_buffer());
 				graphics_draw_text(ctx, data_get_streak_buffer(), fonts_get_system_font(FONT_KEY), 
 													 GRect((bounds.size.w - today_text_bounds.w) / 2, bounds.size.h - today_text_bounds.h - PBL_IF_RECT_ELSE(8, 20), today_text_bounds.w, today_text_bounds.h),
 													 GTextOverflowModeWordWrap, GTextAlignmentCenter, NULL);

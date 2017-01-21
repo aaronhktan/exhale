@@ -5,7 +5,7 @@ module.exports = [
 	},
 	{
 		"type": "text",
-		"defaultValue": "Esta es la página de ajustes para la app Breathe. Estás usando la versión 2.21 de la app.",
+		"defaultValue": "Esta es la página de ajustes para la app Breathe. Estás usando la versión 2.2 de la app.",
 	},
 	{
 		"type": "section",
@@ -209,6 +209,11 @@ module.exports = [
 					{
 						"label": "Total hoy",
 						"value": "1"
+					},
+					{
+						"label": "Racha",
+						"capabilities": ["NOT_PLATFORM_APLITE"],
+						"value": "2"
 					}
 				]
 			},
@@ -241,11 +246,6 @@ module.exports = [
 					{
 						"label": "Racha",
 						"value": "1"
-					},
-					{
-						"label": "Racha",
-						"capabilities": ["NOT_PLATFORM_APLITE"],
-						"value": "2"
 					}
 				]
 			},

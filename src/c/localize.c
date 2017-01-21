@@ -7,6 +7,7 @@ const char * localize_get_locale() {
 	return i18n_get_system_locale();
 }
 
+// App Glance Text
 char * localize_get_app_glance_text(int type, int minutes) {
 	switch (type) {
 		case 0: // Last session
@@ -81,6 +82,7 @@ char * localize_get_app_glance_text(int type, int minutes) {
 	}
 }
 
+// Main app text
 char * localize_get_breathe_text() {
 	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 		return "RESPIRER";
@@ -277,30 +279,6 @@ char * localize_get_heart_rate_text() {
 	#endif
 }
 
-char * localize_get_reminder_action_menu_text() {
-	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
-		return "Respirer %d min";
-	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
-		return "Respirar %d min";
-	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
-		return "Atme %d min";
-	} else {
-		return "Breathe %d min";
-	}
-}
-
-char * localize_get_reminder_text() {
-	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
-		return "Respirez!";
-	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
-		return "¡Respira ahora!";
-	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
-		return "Zeit zum Atmen!";
-	} else {
-		return "Time to breathe!";
-	}
-}
-
 char * localize_get_greet_text() {
 	#if defined(PBL_HEALTH)
 	if (settings_get_heartRateVariation() && data_get_current_heart_rate() != 0) {
@@ -329,6 +307,31 @@ char * localize_get_greet_text() {
 	#endif
 }
 
+// Reminder window text
+char * localize_get_reminder_action_menu_text() {
+	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+		return "Respirer %d min";
+	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+		return "Respirar %d min";
+	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+		return "Atme %d min";
+	} else {
+		return "Breathe %d min";
+	}
+}
+
+char * localize_get_reminder_text() {
+	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+		return "Respirez!";
+	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+		return "¡Respira ahora!";
+	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+		return "Zeit zum Atmen!";
+	} else {
+		return "Time to breathe!";
+	}
+}
+
 char * localize_get_snooze_text() {
 	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 		return "Snooze pendant %d min";
@@ -341,7 +344,376 @@ char * localize_get_snooze_text() {
 	}
 }
 
+// Settings section titles
+char * localize_get_in_app_section_title() {
+	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+		return "DANS L'APP";
+	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+		return "APPLIACIÓN";
+	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+		return "APP";
+	} else {
+		return "IN-APP";
+	}
+}
+
+char * localize_get_health_section_title() {
+	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+		return "SANTÉ";
+	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+		return "SALUD";
+	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+		return "GESUNDHEIT";
+	} else {
+		return "HEALTH";
+	}
+}
+
+char * localize_get_reminders_section_title() {
+	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+		return "RAPPELS";
+	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+		return "RECORDATORIOS";
+	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+		return "ERINNERUNGEN";
+	} else {
+		return "REMINDERS";
+	}
+}
+
+char * localize_get_app_glance_section_title() {
+	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+		return "APP GLANCE";
+	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+		return "APP GLANCE";
+	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+		return "APP-BLICK";
+	} else {
+		return "APP GLANCE";
+	}
+}
+
+
+// Settings menu row text
+char * localize_get_enabled_text() {
+	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+		return "Activé";
+	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+		return "Activado";
+	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+		return "Aktiviert";
+	} else {
+		return "Enabled";
+	}	
+}
+
+char * localize_get_disabled_text() {
+	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+		return "Désactivé";
+	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+		return "Desactivado";
+	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+		return "Nicht aktiviert";
+	} else {
+		return "Disabled";
+	}	
+}
+
+char * localize_get_vibration_shakes_inhale_type_text() {
+	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+		return "Secousses - inhalation";
+	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+		return "Sacudidas - inhalación";
+	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+		return "Graduell - Einatmen nur";
+	} else {
+		return "Shakes - inhale only";
+	}	
+}
+
+char * localize_get_vibration_shakes_type_text() {
+	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+		return "Secousses";
+	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+		return "Sacudidas";
+	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+		return "Graduell";
+	} else {
+		return "Shakes";
+	}	
+}
+
+char * localize_get_vibration_taps_type_text() {
+	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+		return "Tapes";
+	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+		return "Toques";
+	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+		return "Doppeltippen";
+	} else {
+		return "Taps";
+	}	
+}
+
+char * localize_get_top_text_greeting_type_text() {
+	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+		return "Salut";
+	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+		return "Saludo";
+	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+		return "Begrüßung";
+	} else {
+		return "Greeting";
+	}	
+}
+
+char * localize_get_top_text_steps_type_text() {
+	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+		return "# de pas";
+	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+		return "# de pasos";
+	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+		return "Schritte";
+	} else {
+		return "Steps";
+	}		
+}
+
+char * localize_get_top_text_heart_rate_type_text() {
+	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+		return "Rhythme cardiaqueRitmo cardiaco";
+	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+		return "Ritmo cardiaco";
+	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+		return "Herzfrequenz";
+	} else {
+		return "Heart rate";
+	}		
+}
+
+char * localize_get_reminder_frequency_text(int value) {
+	switch (value) {
+		case 0:
+			if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+				return "Jamais";
+			} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+				return "Nunca";
+			} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+				return "Nie";
+			} else {
+				return "Never";
+			}
+		case 1:
+			if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+				return "Chaque heures";
+			} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+				return "Cada hora";
+			} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+				return "Jede Stunde";
+			} else {
+				return "Every hour";
+			}
+		default:
+			if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+				return "Chaque %d heures";
+			} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+				return "Cada %d horas";
+			} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+				return "Alle %d Stunden";
+			} else {
+				return "Every %d hours";
+			}
+	}
+}
+
+char * localize_get_reminder_frequency_start_text() {
+	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+		return "%d heures";
+	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+		return "A las %d";
+	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+		return "%d Uhr";
+	} else {
+		return "%d o'clock";
+	}	
+}
+
+char * localize_get_app_glance_last_session_text() {
+	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+		return "Dernière session";
+	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+		return "Última sesión";
+	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+		return "Letzte Sitzung";
+	} else {
+		return "Last session";
+	}
+}
+
+char * localize_get_app_glance_daily_total_text() {
+	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+		return "Total auj.";
+	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+		return "Total hoy";
+	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+		return "Gesamt heute";
+	} else {
+		return "Total today";
+	}	
+}
+
+// Settings row titles
+char * localize_get_remember_duration_row_title() {
+	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+		return "Utiliser dur. préc.";
+	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+		return "Usar dur. ant.";
+	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+		return "Letze Dauer merken";
+	} else {
+		return "Use last duration";
+	}	
+}
+
+char * localize_get_vibrations_row_title() {
+	if (strncmp(localize_get_locale(), "es", 2) == 0) {
+		return "Vibraciones";
+	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+		return "Vibrationen";
+	} else { // French and English have the same spelling; not a mistake
+		return "Vibrations";
+	}		
+}
+
+char * localize_get_breaths_per_minute_row_title() {
+	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+		return "Respirations/min.";
+	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+		return "Respiraciones/min.";
+	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+		return "Atemzüge/Minute";
+	} else {
+		return "Breaths/minute";
+	}
+}
+	
+char * localize_get_heart_rate_variation_row_title() {
+	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+		return "Vitesse selon RC";
+	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+		return "Rapidez según RC";
+	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+		return "Rate nach HF";
+	} else {
+		return "HR Variation";
+	}
+}
+
+char * localize_get_top_text_row_title() {
+	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+		return "Texte en haut";
+	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+		return "Texto superior";
+	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+		return "Oben im Hauptmenü";
+	} else {
+		return "Top Text";
+	}	
+}
+
+char * localize_get_reminder_frequency_row_title() {
+	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+		return "Fréq. des rappels";
+	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+		return "Frec. de rdo.";
+	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+		return "Erinnerungshäufigkeit";
+	} else {
+		return "Reminder Freq.";
+	}			
+}
+
+char * localize_get_reminder_start_row_title() {
+	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+		return "Début des rappels";
+	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+		return "Empiezo de rdo.";
+	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+		return "Erinnerungshäufigkeit";
+	} else {
+		return "Reminder Start";
+	}	
+}
+char * localize_get_app_glance_row_title() {
+	if (strncmp(localize_get_locale(), "de", 2) == 0) {
+		return "App-Blick";
+	} else {
+		return "App Glance";
+	}		
+}
+
+// Achievements stuff; not available on Aplite
 #if !PBL_PLATFORM_APLITE
+	char * localize_get_bottom_text_row_title() {
+		if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+			return "Texte en bas";
+		} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+			return "Texto abajo";
+		} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+			return "Fußzeile";
+		} else {
+			return "Bottom Text";
+		}		
+	}
+
+	char * localize_get_bottom_text_total_type_text() {
+		if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+			return "Total aujourd'hui";
+		} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+			return "Total hoy";
+		} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+			return "Gesamt heute";
+		} else {
+			return "Total today";
+		}	
+	}
+
+	char * localize_get_bottom_text_streak_type_text() {
+		if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+			return "Série";
+		} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+			return "Racha";
+		} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+			return "Siegesserie";
+		} else {
+			return "Streak";
+		}	
+	}
+
+	char * localize_get_achievements_title() {
+		if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+			return "SUCCÈS";
+		} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+			return "LOGROS";
+		} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+			return "ERRUNGENSCHAFTEN";
+		} else {
+			return "ACHIEVEMENTS";
+		}
+	}
+
+	char * localize_get_achievement_row_title() {
+		if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+			return "Succès";
+		} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+			return "Logros";
+		} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+			return "Errungenschaften";
+		} else {
+			return "Achievements";
+		}	
+	}
+
 	char * localize_get_achievement_text() {
 		if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 			return "Succès!";
@@ -359,89 +731,89 @@ char * localize_get_snooze_text() {
 		if (streak_length >= data_get_longest_streak() && data_get_today_epoch_time() == data_get_streak_date_persist_data()) { // This means that it's the longest streak and user has breathed today
 			if (streak_length == 1) {
 				if (strncmp(localize_get_locale(), "fr", 2) == 0) {
-					return "\U0001F44D %d JOUR \U0001F389";
+					return "\U0001F44D %d JOUR DE SUITE \U0001F389";
 				} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
-					return "\U0001F44D %d DÍA \U0001F389";
+					return "\U0001F44D RACHA: %d DÍA \U0001F389";
 				} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
-					return "\U0001F44D %d TAG \U0001F389";
+					return "\U0001F44D SIEGESSERIE: %d TAG \U0001F389";
 				} else {
-					return "\U0001F44D %d DAY \U0001F389";
+					return "\U0001F44D STREAK: %d DAY \U0001F389";
 				}
 			} else {
 				if (strncmp(localize_get_locale(), "fr", 2) == 0) {
-					return "\U0001F44D %d JOURS \U0001F389";
+					return "\U0001F44D %d JOURS DE SUITE \U0001F389";
 				} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
-					return "\U0001F44D %d DÍAS \U0001F389";
+					return "\U0001F44D RACHA: %d DÍAS \U0001F389";
 				} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
-					return "\U0001F44D %d TAGE \U0001F389";
+					return "\U0001F44D SIEGESSERIE: %d TAGE \U0001F389";
 				} else {
-					return "\U0001F44D %d DAYS \U0001F389";
+					return "\U0001F44D STREAK: %d DAYS \U0001F389";
 				}
 			}
 		} else if (streak_length >= data_get_longest_streak() && data_get_today_epoch_time() != data_get_streak_date_persist_data()) { // This means that it's the longest streak but user has not breathed today
 			if (streak_length == 1) {
 				if (strncmp(localize_get_locale(), "fr", 2) == 0) {
-					return "%d JOUR \U0001F389";
+					return "%d JOUR DE SUITE \U0001F389";
 				} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
-					return "%d DÍA \U0001F389";
+					return "RACHA: %d DÍA \U0001F389";
 				} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
-					return "%d TAG \U0001F389";
+					return "SIEGESSERIE: %d TAG \U0001F389";
 				} else {
-					return "%d DAY \U0001F389";
+					return "STREAK: %d DAY \U0001F389";
 				}
 			} else {
 				if (strncmp(localize_get_locale(), "fr", 2) == 0) {
-					return "%d JOURS \U0001F389";
+					return "%d JOURS DE SUITE \U0001F389";
 				} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
-					return "%d DÍAS \U0001F389";
+					return "RACHA: %d DÍAS \U0001F389";
 				} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
-					return "%d TAGE \U0001F389";
+					return "SIEGESSERIE: %d TAGE \U0001F389";
 				} else {
-					return "%d DAYS \U0001F389";
+					return "STREAK: %d DAYS \U0001F389";
 				}
 			}
 		} else if (data_get_today_epoch_time() == data_get_streak_date_persist_data()) { // This means that it's not the longest streak but the user has breathed today
 			if (streak_length == 1) {
 				if (strncmp(localize_get_locale(), "fr", 2) == 0) {
-					return "\U0001F44D %d JOUR";
+					return "\U0001F44D %d JOUR DE SUITE";
 				} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
-					return "\U0001F44D %d DÍA";
+					return "\U0001F44D RACHA: %d DÍA";
 				} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
-					return "\U0001F44D %d TAG";
+					return "\U0001F44D SIEGESSERIE: %d TAG";
 				} else {
-					return "\U0001F44D %d DAY";
+					return "\U0001F44D STREAK: %d DAY";
 				}
 			} else {
 				if (strncmp(localize_get_locale(), "fr", 2) == 0) {
-					return "\U0001F44D %d JOURS";
+					return "\U0001F44D %d JOURS DE SUITE";
 				} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
-					return "\U0001F44D %d DÍAS";
+					return "\U0001F44D RACHA: %d DÍAS";
 				} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
-					return "\U0001F44D %d TAGE";
+					return "\U0001F44D SIEGESSERIE: %d TAGE";
 				} else {
-					return "\U0001F44D %d DAYS";
+					return "\U0001F44D STREAK: %d DAYS";
 				}
 			}
 		} else { // This means that it's not the longest streak and the user has not breathed today.
 			if (streak_length == 1) {
 				if (strncmp(localize_get_locale(), "fr", 2) == 0) {
-					return "%d JOUR";
+					return "%d JOUR DE SUITE";
 				} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
-					return "%d DÍA";
+					return "RACHA: %d DÍA";
 				} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
-					return "%d TAG";
+					return "SIEGESSERIE: %d TAG";
 				} else {
-					return "%d DAY";
+					return "STREAK: %d DAY";
 				}
 			} else {
 				if (strncmp(localize_get_locale(), "fr", 2) == 0) {
-					return "%d JOURS";
+					return "%d JOURS DE SUITE";
 				} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
-					return "%d DÍAS";
+					return "RACHA: %d DÍAS";
 				} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
-					return "%d TAGE";
+					return "SIEGESSERIE: %d TAGE";
 				} else {
-					return "%d DAYS";
+					return "STREAK: %d DAYS";
 				}
 			}			
 		}

@@ -5,6 +5,7 @@
 #include "src/c/graphics.h"
 #include "src/c/settings.h"
 #include "src/c/localize.h"
+#include "src/c/settings_menu.h"
 #if !PBL_PLATFORM_APLITE
 	#include "src/c/achievement.h"
 	#include "src/c/achievement_window.h"
@@ -749,12 +750,18 @@ static void down_click_handler(ClickRecognizerRef recognizer, void *context) {
 }
 
 #if !PBL_PLATFORM_APLITE
-static void long_down_click_handler(ClickRecognizerRef regocnizer, void *context) {
+static void long_down_click_handler(ClickRecognizerRef recognizer, void *context) {
 	if ((s_animation_completed) && (!s_animating) && settings_get_achievementsEnabled() == true) {
 		achievement_menu_window_push();
 	}
 }
 #endif
+
+static void long_up_click_handler(ClickRecognizerRef recognizer, void *context) {
+	if ((s_animation_completed) && (!s_animating) && settings_get_achievementsEnabled() == true) {
+		settings_menu_window_push();
+	}
+}
 
 static void back_click_handler(ClickRecognizerRef recognizer, void *context) {
 	if (s_animating) {
@@ -844,6 +851,7 @@ static void click_config_provider(void *context) {
 	window_single_click_subscribe(id_down, down_click_handler);
 	window_single_click_subscribe(id_back, back_click_handler);
 	window_single_click_subscribe(id_select, select_click_handler);
+	window_long_click_subscribe(id_up, 500, long_up_click_handler, NULL);
 	#if !PBL_PLATFORM_APLITE
 	if (settings_get_achievementsEnabled()) {
 		window_long_click_subscribe(id_down, 500, long_down_click_handler, NULL); // Click for 500ms before firing
