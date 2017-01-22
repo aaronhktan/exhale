@@ -40,7 +40,7 @@ char * localize_get_app_glance_text(int type, int minutes) {
 					} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
 						return "%d día seguido. ¡Respira ahora!";
 					} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
-						return "%d Tag ganz oder. Atme jetzt!";
+						return "%d Tag in Folge. Atme jetzt!";
 					} else {
 						return "%d day in a row. Breathe now!";
 					}
@@ -50,7 +50,7 @@ char * localize_get_app_glance_text(int type, int minutes) {
 					} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
 						return "%d días seguidos. ¡Respira ahora!";
 					} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
-						return "%d Tage ganz oder. Atme jetzt!";
+						return "%d Tage in Folge. Atme jetzt!";
 					} else {
 						return "%d days in a row. Breathe now!";
 					}
@@ -335,7 +335,7 @@ char * localize_get_snooze_text() {
 	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
 		return "Recuérdame en %d min";
 	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
-		return "Snooze %d min";
+		return "Schlummern %d min";
 	} else {
 		return "Snooze for %d min";
 	}
@@ -621,7 +621,7 @@ char * localize_get_snooze_text() {
 		} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
 			return "EXPERTO";
 		} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
-			return "GESCHICKLICHKEIT";
+			return "GESCHULT";
 		} else {
 			return "TRAINED";
 		}		
@@ -729,7 +729,7 @@ char * localize_get_snooze_text() {
 		} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
 			return "¡Respira más!";
 		} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
-			return "Atmen mehr!";
+			return "Atme mehr!";
 		} else {
 			return "Keep breathing!";
 		}
@@ -741,7 +741,7 @@ char * localize_get_snooze_text() {
 		} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
 			return "Total respirado";
 		} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
-			return "Ganz geatmet";
+			return "Insgesamt geatmet";
 		} else {
 			return "Total breathed";
 		}
@@ -761,7 +761,7 @@ char * localize_get_snooze_text() {
 		} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
 			return "Racha más larga";
 		} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
-			return "Längste Streifen";
+			return "Längste Serie";
 		} else {
 			return "Longest streak";
 		}
@@ -774,7 +774,7 @@ char * localize_get_snooze_text() {
 			} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
 				return "%d días seguidos";
 			} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
-				return "%d Tage ganz oder";
+				return "%d Tage in Folge";
 			} else {
 				return "%d days in a row";
 			}
@@ -807,7 +807,7 @@ char * localize_get_snooze_text() {
 			return PBL_IF_RECT_ELSE("\nNUEVO:\nCon una pulsación larga del botón abajo se puede ver logros y estadísticas.\n¡Da un \u2764 en el App Store si te gusta esta app!",
 															"\n\nCon una pulsación larga del botón abajo se puede ver\nlogros y estadísticas.\n¡Da un \u2764 en el App Store\nsi te gusta esta\napp!");
 		} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
-			return PBL_IF_RECT_ELSE("\nLange drücken Sie die Abwärtstaste, um Errungenschaften und Statistiken zu sehen.\nLassen Sie ein \u2764 auf dem App Store, wenn Sie diese App gefällt!",
+			return PBL_IF_RECT_ELSE("\nDrücken Sie die Abwärtstaste lange, um Errungenschaften und Statistiken zu sehen.\nHinterlassen Sie ein \u2764 im App Store, wenn Ihnen diese App gefällt!",
 															"\n\nLange drücken Sie die Abwärtstaste, um Errungenschaften und Statistiken zu sehen.");
 		} else {
 			return PBL_IF_RECT_ELSE("\nNEW FEATURES:\n\nLong press the down button to see achievements and stats.\nLeave a \u2764 on the Store if you like this app!",

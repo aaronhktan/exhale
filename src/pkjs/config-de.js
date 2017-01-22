@@ -63,7 +63,7 @@ module.exports = [
 						"value": "0"
 					},
 					{
-						"label": "Graduell - Einatmen und Ausatmung",
+						"label": "Graduell - Einatmen und Ausatmen",
 						"value": "1"
 					},
 					{ 
@@ -81,7 +81,7 @@ module.exports = [
 					],
 				"messageKey": "heartRateVariation",
 				"defaultValue": false,
-				"label": "Wählen Sie Atemgeschwindigkeit nach Herzfrequenz?",
+				"label": "Atemgeschwindigkeit nach Herzfrequenz wählen",
 				"description" : "Herzfrequenz setzt eine Uhr mit HR-Sensor voraus."
 			},
 			{
@@ -187,30 +187,30 @@ module.exports = [
 		"items": [
 			{
 				"type": "heading",
-				"defaultValue": "App-Blick",
+				"defaultValue": "App-Glance",
 			},
 			{
 				"type": "toggle",
 				"messageKey": "appGlanceEnabled",
 				"defaultValue": true,
-				"label": "App-Blick-Text im app Menü anzeigen",
+				"label": "App-Glance-Text im Startmenü anzeigen",
 			},
 			{
 				"type": "select",
 				"messageKey": "appGlanceType",
 				"defaultValue": "0",
-				"label": "App-Blick-Typ",
+				"label": "App-Glance-Typ",
 				"options": [
 					{
 						"label": "Letzte Sitzung",
 						"value": "0"
 					},
 					{
-						"label": "Gesamt heute",
+						"label": "Insgesamt heute",
 						"value": "1"
 					},
 					{
-						"label": "Siegesserie",
+						"label": "Serie",
 						"capabilities": ["NOT_PLATFORM_APLITE"],
 						"value": "2"
 					}
@@ -230,20 +230,20 @@ module.exports = [
 				"type": "toggle",
 				"messageKey": "achievementsEnabled",
 				"defaultValue": true,
-			"label": "Ermöglichen Errungenschaften"
+			"label": "Errungenschaften erhalten"
 			},
 			{
 				"type": "select",
 				"messageKey": "bottomTextType",
 				"defaultValue": "0",
-				"label": "Legt fest, war im Hauptmenü untere angezeigt wird",
+				"label": "Unterer Text im Hauptmenü",
 				"options": [
 					{
-						"label": "Gesamt heute",
+						"label": "Insgesamt heute",
 						"value": "0"
 					},
 					{
-						"label": "Siegesserie",
+						"label": "Serie",
 						"value": "1"
 					}
 				]
