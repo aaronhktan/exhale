@@ -2,6 +2,7 @@
 #include "appglance.h"
 #include "src/c/settings.h"
 
+#if !PBL_PLATFORM_APLITE
 void appglance_update_app_glance(AppGlanceReloadSession *session, size_t limit, void *context) {
 	// This should never happen, but developers should always ensure
 	// they’re not adding more app glance slices than the limit
@@ -27,3 +28,4 @@ void appglance_update_app_glance(AppGlanceReloadSession *session, size_t limit, 
 	if (result != APP_GLANCE_RESULT_SUCCESS)
 		APP_LOG(APP_LOG_LEVEL_ERROR, "AppGlance Error: %d", result);
 }
+#endif

@@ -592,12 +592,16 @@ static void main_animation_callback () {
 	if (s_animating && !s_main_done) {
 		animationTimer = app_timer_register(2 * s_breath_duration + 2 * D_BREATH_HOLD_TIME, main_animation_callback, NULL); // Run this method again to schedule the next breath
 		if (!layer_get_hidden(s_upper_text_layer) || !layer_get_hidden(s_lower_text_layer)) { // The text layers aren't hidden; this keep if HRV is enabled
+			#if !PBL_PLATFORM_APLITE
 			if (settings_get_heartRateVariation() && s_times_played > 1) {
 				layer_set_hidden(s_upper_text_layer, false); // For the HR text
 			} else { 
+			#endif
 				layer_set_hidden(s_upper_text_layer, true); // HRV isn't enabled, so hide the text layers
 				layer_set_hidden(s_lower_text_layer, true);
+			#if !PBL_PLATFORM_APLITE
 			}
+			#endif
 		}
 		main_animation();
 	} else { // This means that the main animation is complete
@@ -755,13 +759,14 @@ static void long_down_click_handler(ClickRecognizerRef recognizer, void *context
 		achievement_menu_window_push();
 	}
 }
-#endif
+// #endif
 
 static void long_up_click_handler(ClickRecognizerRef recognizer, void *context) {
-	if ((s_animation_completed) && (!s_animating) && settings_get_achievementsEnabled() == true) {
+	if ((s_animation_completed) && (!s_animating)) {
 		settings_menu_window_push();
 	}
 }
+#endif
 
 static void back_click_handler(ClickRecognizerRef recognizer, void *context) {
 	if (s_animating) {
@@ -851,8 +856,9 @@ static void click_config_provider(void *context) {
 	window_single_click_subscribe(id_down, down_click_handler);
 	window_single_click_subscribe(id_back, back_click_handler);
 	window_single_click_subscribe(id_select, select_click_handler);
-	window_long_click_subscribe(id_up, 500, long_up_click_handler, NULL);
 	#if !PBL_PLATFORM_APLITE
+	window_long_click_subscribe(id_up, 500, long_up_click_handler, NULL);
+	// #if !PBL_PLATFORM_APLITE
 	if (settings_get_achievementsEnabled()) {
 		window_long_click_subscribe(id_down, 500, long_down_click_handler, NULL); // Click for 500ms before firing
 	}

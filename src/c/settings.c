@@ -6,6 +6,8 @@
 	#include "src/c/achievement.h"
 	#include "src/c/achievement_window.h"
 	#include "src/c/localize.h"
+	#include "src/c/data.h"
+	#include "src/c/health.h"
 #endif
 
 ClaySettings settings;
@@ -105,8 +107,14 @@ void settings_init() {
 
 // Saves settings
 void settings_save_settings() {
-		persist_write_data(SETTINGS_KEY, &settings, sizeof(settings));
-		persist_write_int(SETTINGS_VERSION_KEY, 3);
+	persist_write_data(SETTINGS_KEY, &settings, sizeof(settings));
+	persist_write_int(SETTINGS_VERSION_KEY, 3);
+	#if !PBL_PLATFORM_APLITE
+	if (settings.heartRateVariation || settings.displayText == 2 || settings.displayText == 3) {
+		data_init();
+		health_init();
+	}
+	#endif
 }
 
 // Receives and applies settings from phone
@@ -172,11 +180,14 @@ void settings_handle_settings(DictionaryIterator *iter, void *context) {
 		settings.breathsPerMinute = breaths_per_minute_t->value->int32;
 	}
 	
+	#if PBL_PLATFORM_DIORITE
 	Tuple *heart_rate_variation_t = dict_find(iter, MESSAGE_KEY_heartRateVariation);
 	if (heart_rate_variation_t) {
 		settings.heartRateVariation = heart_rate_variation_t->value->int32 == 1;
 	}
+	#endif
 
+	#if !PBL_PLATFORM_APLITE
 	Tuple *app_glance_enabled_t = dict_find(iter, MESSAGE_KEY_appGlanceEnabled);
 	if (app_glance_enabled_t) {
 		settings.appGlanceEnabled = app_glance_enabled_t->value->int32 == 1;
@@ -197,13 +208,12 @@ void settings_handle_settings(DictionaryIterator *iter, void *context) {
 		settings.bottomTextType = bottom_text_type_t->value->int8;
 	}
 	
-	#if !PBL_PLATFORM_APLITE
-		if (achievement_get_changed_settings().complete == 0) {
-			achievement_set_changed_settings(data_get_date_today(), 1);
-			if (settings.achievementsEnabled) {
-				achievement_window_push(localize_get_changed_settings_name(), localize_get_changed_settings_description());
-			}
+	if (achievement_get_changed_settings().complete == 0) {
+		achievement_set_changed_settings(data_get_date_today(), 1);
+		if (settings.achievementsEnabled) {
+			achievement_window_push(localize_get_changed_settings_name(), localize_get_changed_settings_description());
 		}
+	}
 	#endif
 }
 
@@ -299,14 +309,17 @@ int settings_get_breathDuration() {
 	#endif
 }
 
+#if !PBL_PLATFORM_APLITE
 bool settings_get_heartRateVariation() {
 	return settings.heartRateVariation;
 }
+#endif
 
 int settings_get_version() {
 	return settings_version;
 }
-	
+
+#if !PBL_PLATFORM_APLITE
 bool settings_get_appGlanceEnabled() {
 	return settings.appGlanceEnabled;
 }
@@ -318,6 +331,7 @@ int settings_get_appGlanceType() {
 bool settings_get_achievementsEnabled() {
 	return settings.achievementsEnabled;
 }
+#endif
 
 int settings_get_bottomTextType() {
 	return settings.bottomTextType;
@@ -343,7 +357,7 @@ void settings_set_breathsPerMinute(int value) {
 	settings_save_settings();
 }
 
-#if PBL_PLATFORM_DIORITE
+#if !PBL_PLATFORM_APLITE
 void settings_set_heartRateVariation(bool value) {
 	settings.heartRateVariation = value;
 	settings_save_settings();
@@ -365,6 +379,7 @@ void settings_set_reminderHoursStart(int value) {
 	settings_save_settings();
 }
 
+#if !PBL_PLATFORM_APLITE
 void settings_set_appGlanceEnabled(bool value) {
 	settings.appGlanceEnabled = value;
 	settings_save_settings();
@@ -375,7 +390,6 @@ void settings_set_appGlanceType(int value) {
 	settings_save_settings();
 }
 
-#if !PBL_PLATFORM_APLITE
 void settings_set_achievementsEnabled(bool value) {
 	settings.achievementsEnabled = value;
 	settings_save_settings();

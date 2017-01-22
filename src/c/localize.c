@@ -7,6 +7,7 @@ const char * localize_get_locale() {
 	return i18n_get_system_locale();
 }
 
+#if !PBL_PLATFORM_APLITE
 // App Glance Text
 char * localize_get_app_glance_text(int type, int minutes) {
 	switch (type) {
@@ -81,6 +82,7 @@ char * localize_get_app_glance_text(int type, int minutes) {
 			}
 	}
 }
+#endif
 
 // Main app text
 char * localize_get_breathe_text() {
@@ -147,8 +149,8 @@ char * localize_get_min_breathed_today_text() {
 	}
 }
 
+#if !PBL_PLATFORM_APLITE
 char * localize_get_steps_today_text(int thousands) {
-	#if defined(PBL_HEALTH)
 	if (settings_get_heartRateVariation() && data_get_current_heart_rate() != 0) {
 		if(thousands >= 10) { // There's a ten thousands digit!
 			if (strncmp(localize_get_locale(), "fr", 2) == 0) {
@@ -194,7 +196,6 @@ char * localize_get_steps_today_text(int thousands) {
 			}
 		}
 	} else {
-	#endif
 		if(thousands >= 10) { // There's a ten thousands digit!
 			if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 				return "%d.%03d PAS AUJ.";
@@ -246,9 +247,7 @@ char * localize_get_steps_today_text(int thousands) {
 				return "%d STEPS TODAY";
 			}
 		}
-	#if defined(PBL_HEALTH)
 	}
-	#endif
 }
 
 char * localize_get_heart_rate_text() {
@@ -278,6 +277,7 @@ char * localize_get_heart_rate_text() {
 	}
 	#endif
 }
+#endif
 
 char * localize_get_greet_text() {
 	#if defined(PBL_HEALTH)
@@ -357,6 +357,7 @@ char * localize_get_in_app_section_title() {
 	}
 }
 
+#if !PBL_PLATFORM_APLITE
 char * localize_get_health_section_title() {
 	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 		return "SANTÉ";
@@ -368,6 +369,7 @@ char * localize_get_health_section_title() {
 		return "HEALTH";
 	}
 }
+#endif
 
 char * localize_get_reminders_section_title() {
 	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
@@ -381,6 +383,7 @@ char * localize_get_reminders_section_title() {
 	}
 }
 
+#if !PBL_PLATFORM_APLITE
 char * localize_get_app_glance_section_title() {
 	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 		return "APP GLANCE";
@@ -392,7 +395,7 @@ char * localize_get_app_glance_section_title() {
 		return "APP GLANCE";
 	}
 }
-
+#endif
 
 // Settings menu row text
 char * localize_get_enabled_text() {
@@ -467,6 +470,7 @@ char * localize_get_top_text_greeting_type_text() {
 	}	
 }
 
+#if !PBL_PLATFORM_APLITE
 char * localize_get_top_text_steps_type_text() {
 	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 		return "# de pas";
@@ -490,6 +494,7 @@ char * localize_get_top_text_heart_rate_type_text() {
 		return "Heart rate";
 	}		
 }
+#endif
 
 char * localize_get_reminder_frequency_text(int value) {
 	switch (value) {
@@ -596,7 +601,8 @@ char * localize_get_breaths_per_minute_row_title() {
 		return "Breaths/minute";
 	}
 }
-	
+
+#if PBL_PLATFORM_DIORITE || PBL_PLATFORM_EMERY
 char * localize_get_heart_rate_variation_row_title() {
 	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 		return "Vitesse selon RC";
@@ -608,6 +614,7 @@ char * localize_get_heart_rate_variation_row_title() {
 		return "HR Variation";
 	}
 }
+#endif
 
 char * localize_get_top_text_row_title() {
 	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
@@ -644,6 +651,8 @@ char * localize_get_reminder_start_row_title() {
 		return "Reminder Start";
 	}	
 }
+
+#if !PBL_PLATFORM_APLITE
 char * localize_get_app_glance_row_title() {
 	if (strncmp(localize_get_locale(), "de", 2) == 0) {
 		return "App-Blick";
@@ -651,6 +660,7 @@ char * localize_get_app_glance_row_title() {
 		return "App Glance";
 	}		
 }
+#endif
 
 // Achievements stuff; not available on Aplite
 #if !PBL_PLATFORM_APLITE
@@ -731,89 +741,89 @@ char * localize_get_app_glance_row_title() {
 		if (streak_length >= data_get_longest_streak() && data_get_today_epoch_time() == data_get_streak_date_persist_data()) { // This means that it's the longest streak and user has breathed today
 			if (streak_length == 1) {
 				if (strncmp(localize_get_locale(), "fr", 2) == 0) {
-					return "\U0001F44D %d JOUR DE SUITE \U0001F389";
+					return "\U0001F44D %d JOUR \U0001F389";
 				} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
-					return "\U0001F44D RACHA: %d DÍA \U0001F389";
+					return "\U0001F44D %d DÍA \U0001F389";
 				} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
-					return "\U0001F44D SIEGESSERIE: %d TAG \U0001F389";
+					return "\U0001F44D %d TAG \U0001F389";
 				} else {
-					return "\U0001F44D STREAK: %d DAY \U0001F389";
+					return "\U0001F44D %d DAY \U0001F389";
 				}
 			} else {
 				if (strncmp(localize_get_locale(), "fr", 2) == 0) {
-					return "\U0001F44D %d JOURS DE SUITE \U0001F389";
+					return "\U0001F44D %d JOURS \U0001F389";
 				} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
-					return "\U0001F44D RACHA: %d DÍAS \U0001F389";
+					return "\U0001F44D %d DÍAS \U0001F389";
 				} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
-					return "\U0001F44D SIEGESSERIE: %d TAGE \U0001F389";
+					return "\U0001F44D %d TAGE \U0001F389";
 				} else {
-					return "\U0001F44D STREAK: %d DAYS \U0001F389";
+					return "\U0001F44D %d DAYS \U0001F389";
 				}
 			}
 		} else if (streak_length >= data_get_longest_streak() && data_get_today_epoch_time() != data_get_streak_date_persist_data()) { // This means that it's the longest streak but user has not breathed today
 			if (streak_length == 1) {
 				if (strncmp(localize_get_locale(), "fr", 2) == 0) {
-					return "%d JOUR DE SUITE \U0001F389";
+					return "%d JOUR \U0001F389";
 				} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
-					return "RACHA: %d DÍA \U0001F389";
+					return "%d DÍA \U0001F389";
 				} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
-					return "SIEGESSERIE: %d TAG \U0001F389";
+					return "%d TAG \U0001F389";
 				} else {
-					return "STREAK: %d DAY \U0001F389";
+					return "%d DAY \U0001F389";
 				}
 			} else {
 				if (strncmp(localize_get_locale(), "fr", 2) == 0) {
-					return "%d JOURS DE SUITE \U0001F389";
+					return "%d JOURS \U0001F389";
 				} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
-					return "RACHA: %d DÍAS \U0001F389";
+					return "%d DÍAS \U0001F389";
 				} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
-					return "SIEGESSERIE: %d TAGE \U0001F389";
+					return "%d TAGE \U0001F389";
 				} else {
-					return "STREAK: %d DAYS \U0001F389";
+					return "%d DAYS \U0001F389";
 				}
 			}
 		} else if (data_get_today_epoch_time() == data_get_streak_date_persist_data()) { // This means that it's not the longest streak but the user has breathed today
 			if (streak_length == 1) {
 				if (strncmp(localize_get_locale(), "fr", 2) == 0) {
-					return "\U0001F44D %d JOUR DE SUITE";
+					return "\U0001F44D %d JOUR";
 				} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
-					return "\U0001F44D RACHA: %d DÍA";
+					return "\U0001F44D %d DÍA";
 				} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
-					return "\U0001F44D SIEGESSERIE: %d TAG";
+					return "\U0001F44D %d TAG";
 				} else {
-					return "\U0001F44D STREAK: %d DAY";
+					return "\U0001F44D %d DAY";
 				}
 			} else {
 				if (strncmp(localize_get_locale(), "fr", 2) == 0) {
-					return "\U0001F44D %d JOURS DE SUITE";
+					return "\U0001F44D %d JOURS";
 				} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
-					return "\U0001F44D RACHA: %d DÍAS";
+					return "\U0001F44D %d DÍAS";
 				} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
-					return "\U0001F44D SIEGESSERIE: %d TAGE";
+					return "\U0001F44D %d TAGE";
 				} else {
-					return "\U0001F44D STREAK: %d DAYS";
+					return "\U0001F44D %d DAYS";
 				}
 			}
 		} else { // This means that it's not the longest streak and the user has not breathed today.
 			if (streak_length == 1) {
 				if (strncmp(localize_get_locale(), "fr", 2) == 0) {
-					return "%d JOUR DE SUITE";
+					return "%d JOUR";
 				} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
-					return "RACHA: %d DÍA";
+					return "%d DÍA";
 				} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
-					return "SIEGESSERIE: %d TAG";
+					return "%d TAG";
 				} else {
-					return "STREAK: %d DAY";
+					return "%d DAY";
 				}
 			} else {
 				if (strncmp(localize_get_locale(), "fr", 2) == 0) {
-					return "%d JOURS DE SUITE";
+					return "%d JOURS";
 				} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
-					return "RACHA: %d DÍAS";
+					return "%d DÍAS";
 				} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
-					return "SIEGESSERIE: %d TAGE";
+					return "%d TAGE";
 				} else {
-					return "STREAK: %d DAYS";
+					return "%d DAYS";
 				}
 			}			
 		}
@@ -1165,25 +1175,25 @@ char * localize_get_app_glance_row_title() {
 
 	char * localize_get_new_version_title() {
 		if (strncmp(localize_get_locale(), "es", 2) == 0) {
-			return "¡Versión 2.2!";
+			return "¡Versión 2.3!";
 		} else {
-			return "Version 2.2!";
+			return "Version 2.3!";
 		}
 	}
 
 	char * localize_get_new_version_description() {
 		if (strncmp(localize_get_locale(), "fr", 2) == 0) {
-			return PBL_IF_RECT_ELSE("\nAppuyez longuement sur le bouton \"bas\" pour voir des succès et des statistiques.\nLaissez un \u2764 sur l'App Store si vous aimez cette app!",
-															"\n\nAppuyez longuement sur le bouton \"bas\" pour voir des succès et des statistiques.\nLaissez un \u2764 sur l'App Store\nsi vous aimez cette\napp!");
+			return PBL_IF_RECT_ELSE("\nAppuyez longuement sur le bouton \"haut\" pour changer vos paramètres.\nLaissez un \u2764 sur l'App Store si vous aimez cette app!",
+															"\n\nAppuyez longuement sur le bouton \"haut\" pour changer vos paramètres.\nLaissez un \u2764 sur l'App Store\nsi vous aimez cette\napp!");
 		} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
-			return PBL_IF_RECT_ELSE("\nNUEVO:\nCon una pulsación larga del botón abajo se puede ver logros y estadísticas.\n¡Da un \u2764 en el App Store si te gusta esta app!",
-															"\n\nCon una pulsación larga del botón abajo se puede ver\nlogros y estadísticas.\n¡Da un \u2764 en el App Store\nsi te gusta esta\napp!");
+			return PBL_IF_RECT_ELSE("\nNUEVO:\nCon una pulsación larga del botón arriba se puede cambiar ajustes.\n¡Da un \u2764 en el App Store si te gusta esta app!",
+															"\n\nCon una pulsación larga del botón arriba se puede \ncambiar ajustes.\n¡Da un \u2764 en el App Store\nsi te gusta esta\napp!");
 		} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
-			return PBL_IF_RECT_ELSE("\nLange drücken Sie die Abwärtstaste, um Errungenschaften und Statistiken zu sehen.\nLassen Sie ein \u2764 auf dem App Store, wenn Sie diese App gefällt!",
-															"\n\nLange drücken Sie die Abwärtstaste, um Errungenschaften und Statistiken zu sehen.");
+			return PBL_IF_RECT_ELSE("\nLange drücken Sie die Auf-Taste, Sie können die Einstellungen ändern.\nLassen Sie ein \u2764 auf dem App Store, wenn Sie diese App gefällt!",
+															"\n\nLange drücken Sie die Auf-Taste, Sie können die Einstellungen ändern.");
 		} else {
-			return PBL_IF_RECT_ELSE("\nNEW FEATURES:\n\nLong press the down button to see achievements and stats.\nLeave a \u2764 on the Store if you like this app!",
-															"\n\nNEW FEATURES:\nLong press the down button to see achievements and stats.\nLeave a \u2764 on the Store if\nyou like this app!");
+			return PBL_IF_RECT_ELSE("\nNEW FEATURES:\n\nLong press the up button to change settings.\nLeave a \u2764 on the Store if you like this app!",
+															"\n\nNEW FEATURES:\nLong press the up button to change settings.\nLeave a \u2764 on the Store if\nyou like this app!");
 		}
 	}
 #endif

@@ -151,7 +151,7 @@ void new_version_window_push() {
     });
   }
   window_stack_push(s_main_window, true);
-	persist_write_int(SEEN_NEW_VERSION_NUMBER_KEY, 22);
+	persist_write_int(SEEN_NEW_VERSION_NUMBER_KEY, 23);
 	persist_write_bool(SEEN_NEW_VERSION_KEY, true);
 }
 #endif

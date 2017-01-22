@@ -1,21 +1,21 @@
 #include <pebble.h>
 #include "src/c/breathe_window.h"
 #include "src/c/reminder_window.h"
-#include "src/c/data.h"
-#include "src/c/health.h"
 #include "src/c/settings.h"
 #include "src/c/wakeup.h"
 #include "src/c/localize.h"
+#include "src/c/data.h"
 #if !PBL_PLATFORM_APLITE
+	#include "src/c/health.h"
 	#include "src/c/appglance.h"
 	#include "src/c/achievement.h"
-	#include "src/c/achievement_menu.h"
-	#include "src/c/achievement_window.h"
+// 	#include "src/c/achievement_menu.h"
+// 	#include "src/c/achievement_window.h"
 	#include "src/c/new_version_window.h"
 #endif
 
 static void init() {
-	APP_LOG(APP_LOG_LEVEL_INFO, "You are running version 2.2 of the Breathe app.");
+	APP_LOG(APP_LOG_LEVEL_INFO, "You are running version 2.3 of the Breathe app.");
 	settings_init(); // Subscribe to settings service
 	#if PBL_HEALTH
 		if (settings_get_displayText() == 2 || settings_get_displayText() == 3) {
@@ -84,14 +84,14 @@ static void deinit() {
 	if (settings_get_appGlanceEnabled()) { // Check if app glance is enabled
 		char app_glance_text[79];
 		switch(settings_get_appGlanceType()) { 
-			case 2: // Show last session time on app glance
+			case 0: // Show last session time on app glance
 				snprintf(app_glance_text, sizeof(app_glance_text), localize_get_app_glance_text(settings_get_appGlanceType(), data_read_last_duration_data()), data_read_last_duration_data());
 				break;
 			case 1: // Show total daily time on app glance
 				snprintf(app_glance_text, sizeof(app_glance_text), localize_get_app_glance_text(settings_get_appGlanceType(), data_read_breathe_persist_data()), data_read_breathe_persist_data());
 				break;
 			#if !PBL_PLATFORM_APLITE
-			case 0: // Show streak on app glance
+			case 2: // Show streak on app glance
 				snprintf(app_glance_text, sizeof(app_glance_text), localize_get_app_glance_text(settings_get_appGlanceType(), data_get_streak_length()), data_get_streak_length());
 			#endif
 		}

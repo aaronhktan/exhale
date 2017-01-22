@@ -5,7 +5,7 @@ module.exports = [
 	},
 	{
 		"type": "text",
-		"defaultValue": "Esta es la página de ajustes para la app Breathe. Estás usando la versión 2.2 de la app.",
+		"defaultValue": "Esta es la página de ajustes para la app Breathe. Estás usando la versión 2.3 de la app.",
 	},
 	{
 		"type": "section",
@@ -124,7 +124,7 @@ module.exports = [
 					},
 					{ 
 						"label": "Ritmo cardiaco",
-						"capabilities": ["PLATFORM_DIORITE"],
+						"capabilities": ["PLATFORM_DIORITE", "PLATFORM_EMERY"],
 						"value": "3" 
 					}
 				]
@@ -185,6 +185,7 @@ module.exports = [
 	},
 	{
 		"type": "section",
+		"capabilities": ["NOT_PLATFORM_APLITE"],
 		"items": [
 			{
 				"type": "heading",
