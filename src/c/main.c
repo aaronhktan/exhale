@@ -28,6 +28,11 @@ static void init() {
 	#endif
 	wakeup_service_subscribe(wakeup_handler); // Subscribe to Wakeup Service
 	
+	#if !PBL_PLATFORM_APLITE
+	// Send settings on watch to phone to ensure most updated
+	settings_send_settings();
+	#endif
+	
 	if(launch_reason() == APP_LAUNCH_WAKEUP) { // The app was started by a wakeup event.
 		// Pushes the reminder window stack
 		reminder_window_push();
@@ -36,7 +41,7 @@ static void init() {
 			wakeup_schedule_next_wakeup(settings_get_reminderHours(), 0, settings_get_reminderHoursStart());
 		}
 	} else {
-		// 		reminder_window_push(); // For testing
+// 				reminder_window_push(); // For testing
 		// The app was started by the user; push the standard breathe window
 		if (settings_get_rememberDuration() && data_read_last_duration_data() != 0) { // Set the minutes to breathe to the same as last one, unless the number is zero (meaning they haven't breathed yet)
 			breathe_window_push(data_read_last_duration_data());
@@ -62,7 +67,7 @@ static void init() {
 // 			char description[100];
 // 			snprintf(description, sizeof(description), localize_get_minutes_session_description(), 10);
 // 			achievement_window_push(localize_get_thirty_minutes_day_name(), description); // For testing
-				if ((!persist_exists(SEEN_NEW_VERSION_KEY)) || (persist_read_bool(SEEN_NEW_VERSION_KEY) == false) || (!persist_exists(SEEN_NEW_VERSION_NUMBER_KEY) || persist_read_int(SEEN_NEW_VERSION_NUMBER_KEY) != 22)) {
+				if ((!persist_exists(SEEN_NEW_VERSION_KEY)) || (persist_read_bool(SEEN_NEW_VERSION_KEY) == false) || (!persist_exists(SEEN_NEW_VERSION_NUMBER_KEY) || persist_read_int(SEEN_NEW_VERSION_NUMBER_KEY) != 23)) {
 // 						data_set_streak_date_persist_data();		
 						new_version_window_push(); // For testing
 				} else {

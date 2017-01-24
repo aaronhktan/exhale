@@ -117,8 +117,16 @@ void settings_save_settings() {
 	#endif
 }
 
+#if !PBL_PLATFORM_APLITE
+// Saves and sends settings
+static void settings_save_and_send_settings() {
+	settings_save_settings();
+	settings_send_settings();
+}
+#endif
+
 // Receives and applies settings from phone
-void settings_handle_settings(DictionaryIterator *iter, void *context) {
+void settings_handle_settings(DictionaryIterator *iter, void *context) {	
 	Tuple *bg_color_t = dict_find(iter, MESSAGE_KEY_backgroundColor);
 	if (bg_color_t) {
 		settings.backgroundColor = GColorFromHEX(bg_color_t->value->int32);
@@ -131,33 +139,33 @@ void settings_handle_settings(DictionaryIterator *iter, void *context) {
 		}
 		settings.circleColor = settings.textColor; // Sets the circle color to the same as text color for BW platforms
 	}
-	
+
 	Tuple *circle_color_t = dict_find(iter, MESSAGE_KEY_circleColor);
 	if (circle_color_t) {
 		settings.circleColor = GColorFromHEX(circle_color_t->value->int32);
 	}
-	
+
 	Tuple *vibration_enabled_t = dict_find(iter, MESSAGE_KEY_vibrationEnabled);
 	if (vibration_enabled_t) {
 		settings.vibrationEnabled = vibration_enabled_t->value->int32 == 1;
 	}
-	
+
 	Tuple *vibration_type_t = dict_find(iter, MESSAGE_KEY_vibrationType);
 	if (vibration_type_t) {
 		settings.vibrationType = vibration_type_t->value->int8;
 	}
-	
+
 	Tuple *displayText_t = dict_find(iter, MESSAGE_KEY_displayText);
 	if (displayText_t) {
 		settings.displayText = displayText_t->value->int8;
 		APP_LOG(APP_LOG_LEVEL_DEBUG, "The displayText value is %d.", settings.displayText);
 	}
-	
+
 	Tuple *reminder_hours_start_t = dict_find(iter, MESSAGE_KEY_reminderHoursStart);
 	if (reminder_hours_start_t) {
 		settings.reminderHoursStart = reminder_hours_start_t->value->int32;
 	}
-	
+
 	Tuple *reminder_hours_t = dict_find(iter, MESSAGE_KEY_reminderHours);
 	if (reminder_hours_t) {
 		settings.reminderHours = reminder_hours_t->value->int8;
@@ -169,17 +177,17 @@ void settings_handle_settings(DictionaryIterator *iter, void *context) {
 			wakeup_force_next_schedule(settings.reminderHours, 0, settings.reminderHoursStart);
 		}
 	}
-	
+
 	Tuple *remember_duration_t = dict_find(iter, MESSAGE_KEY_rememberDuration);
 	if (remember_duration_t) {
 		settings.rememberDuration = remember_duration_t->value->int32 == 1;
 	}
-	
+
 	Tuple *breaths_per_minute_t = dict_find(iter, MESSAGE_KEY_breathsPerMinute);
 	if (breaths_per_minute_t) {
 		settings.breathsPerMinute = breaths_per_minute_t->value->int32;
 	}
-	
+
 	#if PBL_PLATFORM_DIORITE
 	Tuple *heart_rate_variation_t = dict_find(iter, MESSAGE_KEY_heartRateVariation);
 	if (heart_rate_variation_t) {
@@ -197,17 +205,17 @@ void settings_handle_settings(DictionaryIterator *iter, void *context) {
 	if (app_glance_type_t) {
 		settings.appGlanceType = app_glance_type_t->value->int8;
 	}
-	
+
 	Tuple *achievements_enabled_t = dict_find(iter, MESSAGE_KEY_achievementsEnabled);
 	if (achievements_enabled_t) {
 		settings.achievementsEnabled = achievements_enabled_t->value->int32 == 1;
 	}
-	
+
 	Tuple *bottom_text_type_t = dict_find(iter, MESSAGE_KEY_bottomTextType);
 	if (bottom_text_type_t) {
 		settings.bottomTextType = bottom_text_type_t->value->int8;
 	}
-	
+
 	if (achievement_get_changed_settings().complete == 0) {
 		achievement_set_changed_settings(data_get_date_today(), 1);
 		if (settings.achievementsEnabled) {
@@ -215,6 +223,7 @@ void settings_handle_settings(DictionaryIterator *iter, void *context) {
 		}
 	}
 	#endif
+	settings_save_settings();
 }
 
 GColor settings_get_backgroundColor() {
@@ -337,66 +346,131 @@ int settings_get_bottomTextType() {
 	return settings.bottomTextType;
 }
 
+// Changing settings on watch only available on Basalt and above
+#if !PBL_PLATFORM_APLITE
 void settings_set_rememberDuration(bool value) {
 	settings.rememberDuration = value;
-	settings_save_settings();
+	settings_save_and_send_settings();
 }
 
 void settings_set_vibrationEnabled(bool value) {
 	settings.vibrationEnabled = value;
-	settings_save_settings();
+	settings_save_and_send_settings();
 }
 
 void settings_set_vibrationType(int value) {
 	settings.vibrationType = value;
-	settings_save_settings();
+	settings_save_and_send_settings();
 }
 
 void settings_set_breathsPerMinute(int value) {
 	settings.breathsPerMinute = value;
-	settings_save_settings();
+	settings_save_and_send_settings();
 }
 
-#if !PBL_PLATFORM_APLITE
 void settings_set_heartRateVariation(bool value) {
 	settings.heartRateVariation = value;
-	settings_save_settings();
+	settings_save_and_send_settings();
 }
-#endif
 
 void settings_set_displayText(int value) {
 	settings.displayText = value;
-	settings_save_settings();
+	settings_save_and_send_settings();
 }
 
 void settings_set_reminderHours(int value) {
 	settings.reminderHours = value;
-	settings_save_settings();
+	settings_save_and_send_settings();
+	if (settings.reminderHours == 0) {
+		wakeup_cancel_all();
+	} else if (settings.reminderHours != 0) {
+		wakeup_cancel_all();
+		wakeup_force_next_schedule(settings.reminderHours, 0, settings.reminderHoursStart);
+	}
 }
 
 void settings_set_reminderHoursStart(int value) {
 	settings.reminderHoursStart = value;
-	settings_save_settings();
+	settings_save_and_send_settings();
+	if (settings.reminderHours == 0) {
+		wakeup_cancel_all();
+	} else if (settings.reminderHours != 0) {
+		wakeup_cancel_all();
+		wakeup_force_next_schedule(settings.reminderHours, 0, settings.reminderHoursStart);
+	}
 }
 
-#if !PBL_PLATFORM_APLITE
 void settings_set_appGlanceEnabled(bool value) {
 	settings.appGlanceEnabled = value;
-	settings_save_settings();
+	settings_save_and_send_settings();
 }
 
 void settings_set_appGlanceType(int value) {
 	settings.appGlanceType = value;
-	settings_save_settings();
+	settings_save_and_send_settings();
 }
 
 void settings_set_achievementsEnabled(bool value) {
 	settings.achievementsEnabled = value;
-	settings_save_settings();
+	settings_save_and_send_settings();
 }
 
 void settings_set_bottomTextType(int value) {
 	settings.bottomTextType = value;
-	settings_save_settings();
+	settings_save_and_send_settings();
+}
+
+void settings_send_settings() {
+	// First, create dictionary with all the settings
+	
+	// Int to represent boolean value of these settings because C has no boolean type! D:
+	int rememberDuration = (settings.rememberDuration) ? 1 : 0;
+	int vibrationEnabled = (settings.vibrationEnabled) ? 1 : 0;
+	int appGlanceEnabled = (settings.appGlanceEnabled) ? 1 : 0;
+	int achievementsEnabled = (settings.achievementsEnabled) ? 1 : 0;
+	#if PBL_PLATFORM_DIORITE || PBL_PLATFORM_EMERY
+	int heartRateVariation = (settings.heartRateVariation) ? 1 : 0;
+	#endif
+
+	// Iterator variable, keeps the state of the creation serialization process:
+	DictionaryIterator *iter;
+	
+	// Start AppMessage
+	app_message_outbox_begin(&iter);
+
+	// Write the rememberDuration:
+	dict_write_int(iter, MESSAGE_KEY_rememberDuration, &rememberDuration, 1, true);
+	// Write the vibrationEnabled:
+	dict_write_int(iter, MESSAGE_KEY_vibrationEnabled, &vibrationEnabled, 1, true);
+	// Write the vibrationType:
+	dict_write_int(iter, MESSAGE_KEY_vibrationType, &settings.vibrationType, 1, true);
+	// Write the breathsPerMinute:
+	dict_write_int(iter, MESSAGE_KEY_breathsPerMinute, &settings.breathsPerMinute, 1, true);
+	// Write the displayText
+	dict_write_int(iter, MESSAGE_KEY_displayText, &settings.displayText, 1, true);
+	// Write the reminderHours
+	dict_write_int(iter, MESSAGE_KEY_reminderHours, &settings.reminderHours, 1, true);
+	// Write the reminderHoursStart
+	dict_write_int(iter, MESSAGE_KEY_reminderHoursStart, &settings.reminderHoursStart, 1, true);
+	// Write the appGlanceEnabled
+	dict_write_int(iter, MESSAGE_KEY_appGlanceEnabled, &appGlanceEnabled, 1, true);
+	// Write the appGlanceType
+	dict_write_int(iter, MESSAGE_KEY_appGlanceType, &settings.appGlanceType, 1, true);
+	// Write the achievementsEnabled
+	dict_write_int(iter, MESSAGE_KEY_achievementsEnabled, &achievementsEnabled, 1, true);
+	// Write the bottomTextType
+	dict_write_int(iter, MESSAGE_KEY_bottomTextType, &settings.bottomTextType, 1, true);
+	#if PBL_PLATFORM_DIORITE || PBL_PLATFORM_EMERY
+	// Write the heartRateVariation
+	dict_write_int(iter, MESSAGE_KEY_heartRateVariation, &heartRateVariation, 1, true);
+	#endif
+	
+	// End:
+	dict_write_end(iter);
+	
+	// Send to phone
+	app_message_outbox_send();
+	
+	APP_LOG(APP_LOG_LEVEL_DEBUG, "The AppMessage containing the settings dict has been sent.");
 }
 #endif

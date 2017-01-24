@@ -15,6 +15,7 @@
 	#define LARGE_FONT_KEY FONT_KEY_GOTHIC_18_BOLD
 #endif
 
+#if !PBL_PLATFORM_APLITE
 static Window *s_achievement_window;
 static Layer *s_canvas_layer;
 static TextLayer *s_announce_text_layer, *s_title_layer, *s_description_layer;
@@ -193,3 +194,4 @@ void achievement_window_push(char *achievement_name, char *achievement_descripti
 	
 	window_set_click_config_provider(s_achievement_window, click_config_provider);
 }
+#endif

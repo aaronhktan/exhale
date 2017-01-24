@@ -867,13 +867,22 @@ static void click_config_provider(void *context) {
 
 // ******************************************************************************************* Main App Functions
 static void inbox_received_handler(DictionaryIterator *iter, void *context) {
-	// When settings happen, save settings, and refresh screen
-	settings_handle_settings();
-	settings_save_settings();
-	window_set_background_color(s_main_window, settings_get_backgroundColor());
-	layer_mark_dirty(s_circle_layer);
-	layer_mark_dirty(s_inside_text_layer);
-	layer_mark_dirty(s_upper_text_layer);
+	#if !PBL_PLATFORM_APLITE
+	// Check if this is a request to send the settings on watch to the phone
+	Tuple *request_settings_t = dict_find(iter, MESSAGE_KEY_requestSettings);
+	if (request_settings_t) {
+		settings_send_settings(); // If yes, then send the settings
+	} else {
+	#endif
+		// Otherwise, save settings received from phone, and refresh screen
+		settings_handle_settings(iter, context);
+		window_set_background_color(s_main_window, settings_get_backgroundColor());
+		layer_mark_dirty(s_circle_layer);
+		layer_mark_dirty(s_inside_text_layer);
+		layer_mark_dirty(s_upper_text_layer);
+	#if !PBL_PLATFORM_APLITE
+	}
+	#endif
 }
 
 

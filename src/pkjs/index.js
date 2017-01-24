@@ -12,8 +12,51 @@ var customClay = require('./custom-clay.js');
 // Initialize Clay
 var clay = new Clay(clayConfig, customClay, { autoHandleEvents: false });
 
+// Get AppMessage events
+Pebble.addEventListener('appmessage', function(e) {
+	console.log('Received the appMessage from watch!');
+	
+	// Get the clay settings object from localStorage
+	var settings = JSON.parse(localStorage.getItem('clay-settings'));
+	
+  // Get the dictionary from the message
+  var dict = e.payload;
+	
+	// Set JSON values to match those in the dictionary
+	for (var key in dict) {
+		if (key == 'rememberDuration' || key == 'vibrationEnabled' || key == 'appGlanceEnabled' || key == 'achievementsEnabled') {
+			var booleanValue = dict[key] == 1; // Convert integer to boolean
+			settings[key] = booleanValue;
+		} else {
+			settings[key] = dict[key];
+		}
+	}
+	
+	// Convert JSON back to object, then save the settings object back into localStorage
+	localStorage.setItem('clay-settings', JSON.stringify(settings));
+});
+
+// As soon as PebbleKit JS has been initialized, send request to get settings from watch
+Pebble.addEventListener('ready', function() {
+	var info = Pebble.getActiveWatchInfo();
+	
+	if (info.platform != 'aplite') { // Do not get settings from watch if is on Aplite watch
+		var dict = {};
+		dict[messageKeys.requestSettings] = 'true';
+
+		Pebble.sendAppMessage(dict, function() {
+			console.log('Settings Request sent successfully: ' + JSON.stringify(dict));
+		}, function(e) {
+			console.log('Settings Request failed: ' + JSON.stringify(e));
+		});
+	}
+});
+
+// Open different config page for each language
 Pebble.addEventListener('showConfiguration', function(e) {
 	var info = Pebble.getActiveWatchInfo();
+	
+	// Show the configuration page
 	console.log('The language of the phone is ' + info.language.substr(0, 2));
 	switch (info.language.substr(0, 2)) {
 		case 'fr': // The watch language is French; show the French config page
@@ -29,6 +72,7 @@ Pebble.addEventListener('showConfiguration', function(e) {
 	Pebble.openURL(clay.generateUrl());
 });
 
+// When config page is closed, send settings to watch
 Pebble.addEventListener('webviewclosed', function(e) {
 	if (e && !e.response) {
 		return;
@@ -43,20 +87,20 @@ Pebble.addEventListener('webviewclosed', function(e) {
 	dict[messageKeys.bottomTextType] = parseInt(dict[messageKeys.bottomTextType]);
 	
 	// Log all the settings for fun
-	console.log('The reminderHours sent to Pebble is ' + dict[messageKeys.reminderHours] + '.');
-	console.log('The backgroundColor sent to Pebble is ' + dict[messageKeys.backgroundColor] + '.');
-	console.log('The circleColor sent to Pebble is ' + dict[messageKeys.circleColor] + '.');
-	console.log('The vibrationEnabled sent to Pebble is ' + dict[messageKeys.vibrationEnabled] + '.');
-	console.log('The vibrationType sent to Pebble is ' + dict[messageKeys.vibrationType] + '.');
-	console.log('The displayText sent to Pebble is ' + dict[messageKeys.displayText] + '.');
-	console.log('The rememberDuration sent to Pebble is ' + dict[messageKeys.rememberDuration] + '.');
-	console.log('The reminderHoursStart sent to Pebble is ' + dict[messageKeys.reminderHoursStart] + '.');
-	console.log('The breathsPerMinute sent to Pebble is ' + dict[messageKeys.breathsPerMinute] + '.');
-	console.log('The heartRateVariation sent to Pebble is ' + dict[messageKeys.heartRateVariation] + '.');
-	console.log('The appGlanceEnabled sent to Pebble is ' + dict[messageKeys.appGlanceEnabled] + '.');
-	console.log('The appGlanceType sent to Pebble is ' + dict[messageKeys.appGlanceType] + '.');
-	console.log('The achievementsEnabled sent to Pebble is ' + dict[messageKeys.achievementsEnabled] + '.');
-	console.log('The bottomTextType sent to Pebble is ' + dict[messageKeys.bottomTextType] + '.');
+// 	console.log('The reminderHours sent to Pebble is ' + dict[messageKeys.reminderHours] + '.');
+// 	console.log('The backgroundColor sent to Pebble is ' + dict[messageKeys.backgroundColor] + '.');
+// 	console.log('The circleColor sent to Pebble is ' + dict[messageKeys.circleColor] + '.');
+// 	console.log('The vibrationEnabled sent to Pebble is ' + dict[messageKeys.vibrationEnabled] + '.');
+// 	console.log('The vibrationType sent to Pebble is ' + dict[messageKeys.vibrationType] + '.');
+// 	console.log('The displayText sent to Pebble is ' + dict[messageKeys.displayText] + '.');
+// 	console.log('The rememberDuration sent to Pebble is ' + dict[messageKeys.rememberDuration] + '.');
+// 	console.log('The reminderHoursStart sent to Pebble is ' + dict[messageKeys.reminderHoursStart] + '.');
+// 	console.log('The breathsPerMinute sent to Pebble is ' + dict[messageKeys.breathsPerMinute] + '.');
+// 	console.log('The heartRateVariation sent to Pebble is ' + dict[messageKeys.heartRateVariation] + '.');
+// 	console.log('The appGlanceEnabled sent to Pebble is ' + dict[messageKeys.appGlanceEnabled] + '.');
+// 	console.log('The appGlanceType sent to Pebble is ' + dict[messageKeys.appGlanceType] + '.');
+// 	console.log('The achievementsEnabled sent to Pebble is ' + dict[messageKeys.achievementsEnabled] + '.');
+// 	console.log('The bottomTextType sent to Pebble is ' + dict[messageKeys.bottomTextType] + '.');
 	
 	// Send settings values to watch side
 	Pebble.sendAppMessage(dict, function(e) {

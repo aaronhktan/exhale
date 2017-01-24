@@ -26,7 +26,7 @@ typedef struct ClaySettings {
 
 void settings_init();
 void settings_save_settings();
-void settings_handle_settings();
+void settings_handle_settings(DictionaryIterator *iter, void *context);
 
 GColor settings_get_backgroundColor();
 GColor settings_get_circleColor();
@@ -62,4 +62,5 @@ void settings_set_appGlanceEnabled(bool value);
 void settings_set_appGlanceType(int value);
 void settings_set_achievementsEnabled(bool value);
 void settings_set_bottomTextType(int value);
+void settings_send_settings();
 #endif

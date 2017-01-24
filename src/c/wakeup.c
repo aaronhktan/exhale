@@ -25,8 +25,8 @@ void wakeup_force_next_schedule(int hours, int wakeup_id, int startHours) {
 		const struct tm *time_check = localtime(&t_to_check);
 		int check_hour = time_check->tm_hour; // Like before, formatted to struct tm, and hours are extracted
 		
-		if (current_hour >= check_hour) { // We have found how many times the app should have launched if it launched starting from 12 o'clock AM.
-			launch_number = i + 1;
+		if (current_hour >= check_hour) { // Compares the current time to the time if the app were launched i times since 12 o'clock AM
+			launch_number = i + 1; // This means that the current time is past that time, so increment number of times "launched"
 		} else {
 			break;
 		}

@@ -26,7 +26,8 @@
             "appGlanceEnabled",
             "appGlanceType",
             "achievementsEnabled",
-            "bottomTextType"
+            "bottomTextType",
+            "requestSettings"
         ],
         "projectType": "native",
         "resources": {
@@ -34,7 +35,12 @@
                 {
                     "file": "images/update.png",
                     "name": "UPDATE_ICON",
-                    "targetPlatforms": null,
+                    "targetPlatforms": [
+                        "basalt",
+                        "chalk",
+                        "diorite",
+                        "emery"
+                    ],
                     "type": "bitmap"
                 },
                 {
@@ -48,13 +54,23 @@
                 {
                     "file": "images/achivement-incomplete.png",
                     "name": "ACHIEVEMENT_INCOMPLETE_ICON",
-                    "targetPlatforms": null,
+                    "targetPlatforms": [
+                        "basalt",
+                        "chalk",
+                        "diorite",
+                        "emery"
+                    ],
                     "type": "bitmap"
                 },
                 {
                     "file": "images/achievement-complete.png",
                     "name": "ACHIEVEMENT_COMPLETE_ICON",
-                    "targetPlatforms": null,
+                    "targetPlatforms": [
+                        "basalt",
+                        "chalk",
+                        "diorite",
+                        "emery"
+                    ],
                     "type": "bitmap"
                 },
                 {
@@ -66,7 +82,12 @@
                 {
                     "file": "data/achievement_sequence.pdc",
                     "name": "ACHIEVEMENT_SEQUENCE",
-                    "targetPlatforms": null,
+                    "targetPlatforms": [
+                        "basalt",
+                        "chalk",
+                        "diorite",
+                        "emery"
+                    ],
                     "type": "raw"
                 }
             ]
@@ -79,7 +100,7 @@
             "diorite",
             "emery"
         ],
-        "uuid": "5253bcd3-4536-4bb3-9ecf-794c0dff1a47",
+        "uuid": "55b7c89c-40de-4b13-adf3-4d735b679cc4",
         "watchapp": {
             "watchface": false
         }
