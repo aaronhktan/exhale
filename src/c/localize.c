@@ -42,7 +42,7 @@ char * localize_get_app_glance_text(int type, int minutes) {
 					} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
 						return "%d día seguido. ¡Respira ahora!";
 					} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
-						return "%d Tag ganz oder. Atme jetzt!";
+						return "%d Tag in Folge. Atme jetzt!";
 					} else {
 						return "%d day in a row. Breathe now!";
 					}
@@ -52,7 +52,7 @@ char * localize_get_app_glance_text(int type, int minutes) {
 					} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
 						return "%d días seguidos. ¡Respira ahora!";
 					} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
-						return "%d Tage ganz oder. Atme jetzt!";
+						return "%d Tage in Folge. Atme jetzt!";
 					} else {
 						return "%d days in a row. Breathe now!";
 					}
@@ -338,7 +338,7 @@ char * localize_get_snooze_text() {
 	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
 		return "Recuérdame en %d min";
 	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
-		return "Snooze %d min";
+		return "Schlummern %d min";
 	} else {
 		return "Snooze for %d min";
 	}
@@ -1003,7 +1003,7 @@ char * localize_get_app_glance_row_title() {
 		} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
 			return "EXPERTO";
 		} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
-			return "GESCHICKLICHKEIT";
+			return "GESCHULT";
 		} else {
 			return "TRAINED";
 		}		
@@ -1111,7 +1111,7 @@ char * localize_get_app_glance_row_title() {
 		} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
 			return "¡Respira más!";
 		} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
-			return "Atmen mehr!";
+			return "Atme mehr!";
 		} else {
 			return "Keep breathing!";
 		}
@@ -1123,7 +1123,7 @@ char * localize_get_app_glance_row_title() {
 		} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
 			return "Total respirado";
 		} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
-			return "Ganz geatmet";
+			return "Insgesamt geatmet";
 		} else {
 			return "Total breathed";
 		}
@@ -1143,7 +1143,7 @@ char * localize_get_app_glance_row_title() {
 		} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
 			return "Racha más larga";
 		} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
-			return "Längste Streifen";
+			return "Längste Serie";
 		} else {
 			return "Longest streak";
 		}
@@ -1156,7 +1156,7 @@ char * localize_get_app_glance_row_title() {
 			} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
 				return "%d días seguidos";
 			} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
-				return "%d Tage ganz oder";
+				return "%d Tage in Folge";
 			} else {
 				return "%d days in a row";
 			}

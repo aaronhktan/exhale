@@ -1,5 +1,18 @@
 # English
 
+### Version 2.3 (2017-01-29)
+What's new for Pebble Time/Time Steel/Time Round/2:
+- Settings directly on your watch: Want to change some settings, without pulling out your phone? You can do it now with a long press of the up button! Available settings to change include remembering previous duration, the type of vibration, breathing speed, heart rate variation, text to display, reminder settings, and achievements.
+- About section for more information about the current version of the app.
+
+Fixes and Improvements:
+- Fixed streak display text not showing up at the bottom of the screen.
+- Fixed settings page for Spanish showing extra options that shouldn't exist.
+- If you've chosen to display a greeting or nothing at the top of the screen, you will no longer be bothered by the "Pebble Health is required" popup if you do not have Pebble Health enabled. Thanks Nick for pointing this out!
+- Reduced size and memory usage for all watches.
+
+--
+
 ### Version 2.21 (2017-01-05)
 Small fixes because some 🐛 got through last release. :(
 
