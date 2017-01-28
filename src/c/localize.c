@@ -390,7 +390,7 @@ char * localize_get_app_glance_section_title() {
 	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
 		return "APP GLANCE";
 	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
-		return "APP-BLICK";
+		return "APP GLANCE";
 	} else {
 		return "APP GLANCE";
 	}
@@ -416,7 +416,7 @@ char * localize_get_disabled_text() {
 	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
 		return "Desactivado";
 	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
-		return "Nicht aktiviert";
+		return "Deaktiviert";
 	} else {
 		return "Disabled";
 	}	
@@ -428,7 +428,7 @@ char * localize_get_vibration_shakes_inhale_type_text() {
 	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
 		return "Sacudidas - inhalación";
 	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
-		return "Graduell - Einatmen nur";
+		return "Graduell - nur Einatmen";
 	} else {
 		return "Shakes - inhale only";
 	}	
@@ -561,7 +561,7 @@ char * localize_get_app_glance_daily_total_text() {
 	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
 		return "Total hoy";
 	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
-		return "Gesamt heute";
+		return "Insgesamt heute";
 	} else {
 		return "Total today";
 	}	
@@ -609,7 +609,7 @@ char * localize_get_heart_rate_variation_row_title() {
 	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
 		return "Rapidez según RC";
 	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
-		return "Rate nach HF";
+		return "nach Herzfrequenz";
 	} else {
 		return "HR Variation";
 	}
@@ -646,7 +646,7 @@ char * localize_get_reminder_start_row_title() {
 	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
 		return "Empiezo de rdo.";
 	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
-		return "Erinnerungshäufigkeit";
+		return "Beginn der Erinnerung";
 	} else {
 		return "Reminder Start";
 	}	
@@ -654,11 +654,7 @@ char * localize_get_reminder_start_row_title() {
 
 #if !PBL_PLATFORM_APLITE
 char * localize_get_app_glance_row_title() {
-	if (strncmp(localize_get_locale(), "de", 2) == 0) {
-		return "App-Blick";
-	} else {
-		return "App Glance";
-	}		
+	return "App Glance";
 }
 #endif
 
@@ -670,7 +666,7 @@ char * localize_get_app_glance_row_title() {
 		} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
 			return "Texto abajo";
 		} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
-			return "Fußzeile";
+			return "Unten im Hauptmenü";
 		} else {
 			return "Bottom Text";
 		}		
@@ -682,7 +678,7 @@ char * localize_get_app_glance_row_title() {
 		} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
 			return "Total hoy";
 		} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
-			return "Gesamt heute";
+			return "Ingesamt heute";
 		} else {
 			return "Total today";
 		}	
@@ -694,7 +690,7 @@ char * localize_get_app_glance_row_title() {
 		} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
 			return "Racha";
 		} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
-			return "Siegesserie";
+			return "Serie";
 		} else {
 			return "Streak";
 		}	
