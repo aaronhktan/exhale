@@ -1,9 +1,8 @@
 # English
 
-### Version 2.3 (2017-01-29)
+### Version 2.3 (2017-02-03)
 What's new for Pebble Time/Time Steel/Time Round/2:
 - Settings directly on your watch: Want to change some settings, without pulling out your phone? You can do it now with a long press of the up button! Available settings to change include remembering previous duration, the type of vibration, breathing speed, heart rate variation, text to display, reminder settings, and achievements.
-- About section for more information about the current version of the app.
 
 Fixes and Improvements:
 - Fixed streak display text not showing up at the bottom of the screen.
@@ -94,6 +93,18 @@ Download now and enjoy breathing.
 
 # Français
 
+### Version 2.3 (2017-02-03)
+Nouveau pour Pebble Time/Time Steel/Time Round/2:
+- Changez vos paramètres directement sur votre montre! Appuez longuement sur le bouton en haut pour voir toutes les choses que vous pouvez changer.
+
+Corrections et Améliorations:
+- Corrigé: Le texte pour voir la durée de la série ne se montrait pas en bas de l'écran.
+- Corrigé: Le page de paramètres pour l'Espagnol avait des options extras.
+- Si vous avez désactivé Bien-Être sur votre Pebble et vous avez décidé de voir une salutation ou ne rien avoir en haut du menu principal, il n'y aura plus de pop-up. Merci à Nick pour m'avoir notifié!
+- Réduit la taille de l'app ainsi que son utilisation de mémoire pour toutes les montres.
+
+--
+
 ### Version 2.2 (2017-01-05)
 Bonne année! 🎊🎉🎉
 
@@ -164,6 +175,18 @@ Fonctions:
 Téléchargez maintenant et respirez maintenant!
 
 # Español
+
+### Versión 2.3 (2017-02-03)
+Nuevo para Pebble Time/Time Steel/Time Round/2:
+- ¡Ajustes directamente sobre tu reloj! Con una pulsación larga del botón superior se puede ver una lista de todos los ajusted que puedes cambiar.
+
+Correción de errores y amelioraciones:
+- Corregido: El texto en la parte inferior del menú principal debería mostrar tu racha actual si has escogido esta opción.
+- Corregido: La página de ajustes mostró opciones que no existen para algunos relojes.
+- Si has elegido de mostrar solamente el saludo o no mostrar nada en la parte superior del menú principal, ahora no hay una ventana que te pide de activar Pebble Health. ¡Muchas gracias, Nick para haberme informado!
+- Tamaño y uso de memoria reducido para todos relojes.
+
+--
 
 ### Versión 2.2 (2017-01-05)
 ¡Feliz y próspero Año Nuevo! 🎊🎉🎉
