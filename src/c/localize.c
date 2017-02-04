@@ -7,6 +7,7 @@ const char * localize_get_locale() {
 	return i18n_get_system_locale();
 }
 
+/************************************************************************** App Glance */
 #if !PBL_PLATFORM_APLITE
 // App Glance Text
 char * localize_get_app_glance_text(int type, int minutes) {
@@ -84,7 +85,7 @@ char * localize_get_app_glance_text(int type, int minutes) {
 }
 #endif
 
-// Main app text
+/************************************************************************** Main app text */
 char * localize_get_breathe_text() {
 	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 		return "RESPIRER";
@@ -307,7 +308,7 @@ char * localize_get_greet_text() {
 	#endif
 }
 
-// Reminder window text
+/************************************************************************** Reminder window text */
 char * localize_get_reminder_action_menu_text() {
 	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 		return "Respirer %d min";
@@ -344,7 +345,9 @@ char * localize_get_snooze_text() {
 	}
 }
 
-// Settings section titles
+/************************************************************************** Settings */
+#if !PBL_PLATFORM_APLITE
+/************************************************************* Section Titles */
 char * localize_get_in_app_section_title() {
 	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 		return "DANS L'APP";
@@ -357,7 +360,6 @@ char * localize_get_in_app_section_title() {
 	}
 }
 
-#if !PBL_PLATFORM_APLITE
 char * localize_get_health_section_title() {
 	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 		return "SANTÉ";
@@ -369,7 +371,6 @@ char * localize_get_health_section_title() {
 		return "HEALTH";
 	}
 }
-#endif
 
 char * localize_get_reminders_section_title() {
 	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
@@ -383,7 +384,6 @@ char * localize_get_reminders_section_title() {
 	}
 }
 
-#if !PBL_PLATFORM_APLITE
 char * localize_get_app_glance_section_title() {
 	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 		return "APP GLANCE";
@@ -395,9 +395,28 @@ char * localize_get_app_glance_section_title() {
 		return "APP GLANCE";
 	}
 }
-#endif
 
-// Settings menu row text
+char * localize_get_achievements_title() {
+	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+		return "SUCCÈS";
+	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+		return "LOGROS";
+	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+		return "ERRUNGENSCHAFTEN";
+	} else {
+		return "ACHIEVEMENTS";
+	}
+}
+
+char * localize_get_about_section_title() {
+	if (strncmp(localize_get_locale(), "en", 2) == 0) {
+		return "ABOUT";
+	} else {
+		return "INFO";
+	}
+}
+
+/************************************************************* Row Text */
 char * localize_get_enabled_text() {
 	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 		return "Activé";
@@ -470,7 +489,6 @@ char * localize_get_top_text_greeting_type_text() {
 	}	
 }
 
-#if !PBL_PLATFORM_APLITE
 char * localize_get_top_text_steps_type_text() {
 	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 		return "# de pas";
@@ -494,7 +512,6 @@ char * localize_get_top_text_heart_rate_type_text() {
 		return "Heart rate";
 	}		
 }
-#endif
 
 char * localize_get_reminder_frequency_text(int value) {
 	switch (value) {
@@ -567,7 +584,31 @@ char * localize_get_app_glance_daily_total_text() {
 	}	
 }
 
-// Settings row titles
+char * localize_get_bottom_text_total_type_text() {
+	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+		return "Total aujourd'hui";
+	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+		return "Total hoy";
+	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+		return "Ingesamt heute";
+	} else {
+		return "Total today";
+	}	
+}
+
+char * localize_get_bottom_text_streak_type_text() {
+	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+		return "Série";
+	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+		return "Racha";
+	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+		return "Serie";
+	} else {
+		return "Streak";
+	}	
+}
+
+/************************************************************* Settings row titles */
 char * localize_get_remember_duration_row_title() {
 	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 		return "Utiliser dur. préc.";
@@ -652,74 +693,57 @@ char * localize_get_reminder_start_row_title() {
 	}	
 }
 
-#if !PBL_PLATFORM_APLITE
 char * localize_get_app_glance_row_title() {
 	return "App Glance";
 }
+
+char * localize_get_bottom_text_row_title() {
+	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+		return "Texte en bas";
+	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+		return "Texto abajo";
+	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+		return "Unten im Hauptmenü";
+	} else {
+		return "Bottom Text";
+	}		
+}
+
+char * localize_get_achievement_row_title() {
+	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+		return "Succès";
+	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+		return "Logros";
+	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+		return "Errungenschaften";
+	} else {
+		return "Achievements";
+	}	
+}
+
+char * localize_get_version_row_title() {
+	if (strncmp(localize_get_locale(), "es", 2) == 0) {
+		return "Versión";
+	} else {
+		return "Version";
+	}
+}
+
+char * localize_get_credits_row_title() {
+	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+		return "Fait avec \u2764 par";
+	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+		return "Hecho con \u2764 por";
+	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+		return "Gemacht mit \u2764 von";
+	} else {
+		return "Made with \u2764 by";
+	}	
+}
 #endif
 
-// Achievements stuff; not available on Aplite
+/************************************************************************** Achievements */
 #if !PBL_PLATFORM_APLITE
-	char * localize_get_bottom_text_row_title() {
-		if (strncmp(localize_get_locale(), "fr", 2) == 0) {
-			return "Texte en bas";
-		} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
-			return "Texto abajo";
-		} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
-			return "Unten im Hauptmenü";
-		} else {
-			return "Bottom Text";
-		}		
-	}
-
-	char * localize_get_bottom_text_total_type_text() {
-		if (strncmp(localize_get_locale(), "fr", 2) == 0) {
-			return "Total aujourd'hui";
-		} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
-			return "Total hoy";
-		} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
-			return "Ingesamt heute";
-		} else {
-			return "Total today";
-		}	
-	}
-
-	char * localize_get_bottom_text_streak_type_text() {
-		if (strncmp(localize_get_locale(), "fr", 2) == 0) {
-			return "Série";
-		} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
-			return "Racha";
-		} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
-			return "Serie";
-		} else {
-			return "Streak";
-		}	
-	}
-
-	char * localize_get_achievements_title() {
-		if (strncmp(localize_get_locale(), "fr", 2) == 0) {
-			return "SUCCÈS";
-		} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
-			return "LOGROS";
-		} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
-			return "ERRUNGENSCHAFTEN";
-		} else {
-			return "ACHIEVEMENTS";
-		}
-	}
-
-	char * localize_get_achievement_row_title() {
-		if (strncmp(localize_get_locale(), "fr", 2) == 0) {
-			return "Succès";
-		} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
-			return "Logros";
-		} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
-			return "Errungenschaften";
-		} else {
-			return "Achievements";
-		}	
-	}
-
 	char * localize_get_achievement_text() {
 		if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 			return "Succès!";
@@ -733,7 +757,6 @@ char * localize_get_app_glance_row_title() {
 	}
 
 	char * localize_get_streak_text(int streak_length) {
-		
 		if (streak_length >= data_get_longest_streak() && data_get_today_epoch_time() == data_get_streak_date_persist_data()) { // This means that it's the longest streak and user has breathed today
 			if (streak_length == 1) {
 				if (strncmp(localize_get_locale(), "fr", 2) == 0) {

@@ -9,23 +9,16 @@ static MenuLayer *s_settings_layer;
 #if !PBL_PLATFORM_APLITE
 // 1 section with 9 settings to change
 #if PBL_PLATFORM_DIORITE || PBL_PLATFORM_EMERY
-	#define NUM_MENU_SECTIONS 5
 	#define NUM_IN_APP_MENU_ITEMS 4
-	#define NUM_ACHIEVEMENTS_MENU_ITEMS 2
-	#define NUM_HEALTH_MENU_ITEMS 1
-	#define NUM_APP_GLANCE_MENU_ITEMS 1
 #elif !PBL_PLATFORM_APLITE
-	#define NUM_MENU_SECTIONS 5
 	#define NUM_IN_APP_MENU_ITEMS 3
-	#define NUM_ACHIEVEMENTS_MENU_ITEMS 2
-	#define NUM_HEALTH_MENU_ITEMS 1
-	#define NUM_APP_GLANCE_MENU_ITEMS 1
-// #else
-// 	#define NUM_MENU_SECTIONS 2
-// 	#define NUM_IN_APP_MENU_ITEMS 4
 #endif
+#define NUM_MENU_SECTIONS 6
 #define NUM_REMINDERS_MENU_ITEMS 2
-
+#define NUM_ACHIEVEMENTS_MENU_ITEMS 2
+#define NUM_HEALTH_MENU_ITEMS 1
+#define NUM_APP_GLANCE_MENU_ITEMS 1
+#define NUM_ABOUT_MENU_ITEMS 2
 
 static uint16_t menu_get_num_sections_callback(MenuLayer *menu_layer, void *data) {
 	return NUM_MENU_SECTIONS;
@@ -35,7 +28,6 @@ static uint16_t menu_get_num_rows_callback(MenuLayer *menu_layer, uint16_t secti
 	switch (section_index) {
     case 0:
       return NUM_IN_APP_MENU_ITEMS;
-// 		#if !PBL_PLATFORM_APLITE
 		case 1:
 			return NUM_HEALTH_MENU_ITEMS;
 		case 2:
@@ -44,10 +36,8 @@ static uint16_t menu_get_num_rows_callback(MenuLayer *menu_layer, uint16_t secti
 			return NUM_APP_GLANCE_MENU_ITEMS;
 		case 4:
 			return NUM_ACHIEVEMENTS_MENU_ITEMS;
-// 		#else
-// 		case 1:
-// 			return NUM_REMINDERS_MENU_ITEMS;
-// 		#endif
+		case 5:
+			return NUM_ABOUT_MENU_ITEMS;
     default:
       return 0;
   }
@@ -64,8 +54,6 @@ static void menu_draw_header_callback(GContext* ctx, const Layer *cell_layer, ui
       // Draw title text in the section header
       menu_cell_basic_header_draw(ctx, cell_layer, localize_get_in_app_section_title());
       break;
-		// In the non-Aplite watches, there are more sections. Omit ones that don't exist on Aplite.
-// 		#if !PBL_PLATFORM_APLITE
     case 1:
       menu_cell_basic_header_draw(ctx, cell_layer, localize_get_health_section_title());
       break;
@@ -77,12 +65,10 @@ static void menu_draw_header_callback(GContext* ctx, const Layer *cell_layer, ui
       break;
 		case 4:
       menu_cell_basic_header_draw(ctx, cell_layer, localize_get_achievements_section_title());
-      break;		
-// 		#else
-// 		case 1:
-//       menu_cell_basic_header_draw(ctx, cell_layer, localize_get_reminders_section_title());
-//       break;
-// 		#endif
+      break;
+		case 5:
+			menu_cell_basic_header_draw(ctx, cell_layer, localize_get_about_section_title());
+			break;
   }
 }
 
@@ -128,61 +114,34 @@ static void menu_draw_row_callback(GContext* ctx, const Layer *cell_layer, MenuI
 						} else {
 							menu_cell_basic_draw(ctx, cell_layer, localize_get_heart_rate_variation_row_title(), localize_get_disabled_text(), NULL);
 						}
-// 					#elif PBL_PLATFORM_APLITE
-// 						switch (settings_get_displayText()) {
-// 							case 0:
-// 								menu_cell_basic_draw(ctx, cell_layer, localize_get_top_text_row_title(), localize_get_disabled_text(), NULL);
-// 								break;
-// 							default:
-// 								menu_cell_basic_draw(ctx, cell_layer, localize_get_top_text_row_title(), localize_get_top_text_greeting_type_text(), NULL);
-// 								break;
-// 						}
 					#endif
 				break;
 			}
 			break;
 		case 1: // This is the health section (for non-Aplite watches) or reminders section (for Aplite Watches)
 			switch (cell_index->row) {
-// 				#if !PBL_PLATFORM_APLITE
-					case 0: // Top Text Display
-						switch (settings_get_displayText()) {
-							case 0:
-								menu_cell_basic_draw(ctx, cell_layer, localize_get_top_text_row_title(), localize_get_disabled_text(), NULL);
-								break;
-							case 1:
-								menu_cell_basic_draw(ctx, cell_layer, localize_get_top_text_row_title(), localize_get_top_text_greeting_type_text(), NULL);
-								break;
-							case 2:
-								menu_cell_basic_draw(ctx, cell_layer, localize_get_top_text_row_title(), localize_get_top_text_steps_type_text(), NULL);
-								break;
-							case 3: // Only display heart rate text if is Diorite
-								#if PBL_PLATFORM_DIORITE || PBL_PLATFORM_EMERY
-									menu_cell_basic_draw(ctx, cell_layer, localize_get_top_text_row_title(), localize_get_top_text_heart_rate_type_text(), NULL);
-								#else
-									menu_cell_basic_draw(ctx, cell_layer, localize_get_top_text_row_title(), localize_get_top_text_steps_type_text(), NULL);
-								#endif
-								break;
-						}
-// 				#else
-// 					case 0: ;// Reminder Frequency
-// 						if (settings_get_reminderHours() != 0) {
-// 							char frequency_text[30];
-// 							snprintf(frequency_text, sizeof(frequency_text), localize_get_reminder_frequency_text(settings_get_reminderHours()), settings_get_reminderHours());
-// 							menu_cell_basic_draw(ctx, cell_layer, localize_get_reminder_frequency_row_title(), frequency_text, NULL);
-// 						} else {
-// 							menu_cell_basic_draw(ctx, cell_layer, localize_get_reminder_frequency_row_title(), localize_get_reminder_frequency_text(settings_get_reminderHours()), NULL);
-// 						}
-// 						break;
-// 					case 1: ; // Reminder Start Time
-// 						char start_text[30];
-// 						snprintf(start_text, sizeof(start_text), localize_get_reminder_frequency_start_text(), settings_get_reminderHoursStart());
-// 						menu_cell_basic_draw(ctx, cell_layer, localize_get_reminder_start_row_title(), start_text, NULL);
-// 						break;
-// 				#endif
+				case 0: // Top Text Display
+				switch (settings_get_displayText()) {
+					case 0:
+					menu_cell_basic_draw(ctx, cell_layer, localize_get_top_text_row_title(), localize_get_disabled_text(), NULL);
+					break;
+					case 1:
+					menu_cell_basic_draw(ctx, cell_layer, localize_get_top_text_row_title(), localize_get_top_text_greeting_type_text(), NULL);
+					break;
+					case 2:
+					menu_cell_basic_draw(ctx, cell_layer, localize_get_top_text_row_title(), localize_get_top_text_steps_type_text(), NULL);
+					break;
+					case 3: // Only display heart rate text if is Diorite
+					#if PBL_PLATFORM_DIORITE || PBL_PLATFORM_EMERY
+					menu_cell_basic_draw(ctx, cell_layer, localize_get_top_text_row_title(), localize_get_top_text_heart_rate_type_text(), NULL);
+					#else
+					menu_cell_basic_draw(ctx, cell_layer, localize_get_top_text_row_title(), localize_get_top_text_steps_type_text(), NULL);
+					#endif
+					break;
+				}
 				break;
 			}
 			break;
-// 		#if !PBL_PLATFORM_APLITE
 		case 2: // This is the reminders section (non-Aplite)
 			switch (cell_index->row) {
 					case 0: ;// Reminder Frequency
@@ -222,7 +181,7 @@ static void menu_draw_row_callback(GContext* ctx, const Layer *cell_layer, MenuI
 				break;
 			}
 			break;
-		case 4: // This is the Achievement Section for non-Aplite watches
+		case 4: // This is the Achievement Section
 			switch (cell_index->row) {	
 				case 0: // Enable or disable achievements
 						if (settings_get_achievementsEnabled()) {
@@ -242,11 +201,19 @@ static void menu_draw_row_callback(GContext* ctx, const Layer *cell_layer, MenuI
 					}
 				break;
 			}
-// 		#endif
+			break;
+		case 5: // This is the about section
+			switch (cell_index->row) {
+				case 0: // This is the version number
+					menu_cell_basic_draw(ctx, cell_layer, localize_get_version_row_title(), "v2.3, 2016-02-03", NULL);
+					break;
+				case 1: // This is the credits
+					menu_cell_basic_draw(ctx, cell_layer, localize_get_credits_row_title(), "cheeseisdisgusting", NULL);
+			}
+			break;
 	}
 }
 
-// #if !PBL_PLATFORM_APLITE
 // Set what happens when an item is selected
 static void menu_select_callback(MenuLayer *menu_layer, MenuIndex *cell_index, void *data) {
 	switch (cell_index->section) {
@@ -292,62 +259,27 @@ static void menu_select_callback(MenuLayer *menu_layer, MenuIndex *cell_index, v
 					} else {
 						settings_set_heartRateVariation(true);
 					}
-// 				#elif PBL_PLATFORM_APLITE
-// 					switch (settings_get_displayText()) {
-// 						case 0:
-// 							settings_set_displayText(1);
-// 						break;
-// 						default:
-// 							settings_set_displayText(0);
-// 						break;
-// 					}
 				#endif
 				break;
 			}
-		break;
+			break;
 		case 1: // Health for non-aplite, reminders for aplite
 			switch (cell_index->row) {
-// 				#if !PBL_PLATFORM_APLITE
-					case 0: // Top Text Display
-						switch (settings_get_displayText()) {
-							case 3:
-								settings_set_displayText(0);
-								break;
-							#if !PBL_PLATFORM_DIORITE && !PBL_PLATFORM_EMERY
-							case 2:
-								settings_set_displayText(0);
-								break;
-							#endif
-							default:
-								settings_set_displayText(settings_get_displayText() + 1);
-						}
-// 				#else
-// 					case 0: // Reminder Frequency
-// 						switch (settings_get_reminderHours()) {
-// 							case 4:
-// 								settings_set_reminderHours(settings_get_reminderHours() + 2);
-// 								break;
-// 							case 6:
-// 								settings_set_reminderHours(0);
-// 								break;
-// 							default:
-// 								settings_set_reminderHours(settings_get_reminderHours() + 1);
-// 						}
-// 						break;
-// 					case 1: ; // Reminder Start Time
-// 						switch (settings_get_reminderHoursStart()) {
-// 							case 10:
-// 								settings_set_reminderHoursStart(6);
-// 								break;
-// 							default:
-// 								settings_set_reminderHoursStart(settings_get_reminderHoursStart() + 1);
-// 								break;
-// 						}
-// 						break;
-// 				#endif
+				case 0: // Top Text Display
+				switch (settings_get_displayText()) {
+					case 3:
+					settings_set_displayText(0);
+					break;
+					#if !PBL_PLATFORM_DIORITE && !PBL_PLATFORM_EMERY
+					case 2:
+					settings_set_displayText(0);
+					break;
+					#endif
+					default:
+					settings_set_displayText(settings_get_displayText() + 1);
+				}
 			}
-		break;
-// 		#if !PBL_PLATFORM_APLITE
+			break;
 		case 2: // This is the reminders section (non-Aplite)
 			switch (cell_index->row) {
 					case 0: // Reminder Frequency
@@ -373,7 +305,7 @@ static void menu_select_callback(MenuLayer *menu_layer, MenuIndex *cell_index, v
 						}
 						break;
 			}
-		break;
+			break;
 		case 3: // This is the App Glance Section for non-Aplite watches
 			switch (cell_index->row) {	
 					case 0: // App Glance Type
@@ -393,7 +325,7 @@ static void menu_select_callback(MenuLayer *menu_layer, MenuIndex *cell_index, v
 				break;
 			}
 			break;
-		break;
+			break;
 		case 4: // This is the Achievement Section for non-Aplite watches
 			switch (cell_index->row) {	
 				case 0: // Enable or disable achievements
@@ -415,11 +347,9 @@ static void menu_select_callback(MenuLayer *menu_layer, MenuIndex *cell_index, v
 				break;
 			}
 		break;
-// 		#endif
 	} 
 	layer_mark_dirty(menu_layer_get_layer(s_settings_layer));
 }
-// #endif
 
 void settings_window_load(Window *window) {
 	// Load the MenuLayer
