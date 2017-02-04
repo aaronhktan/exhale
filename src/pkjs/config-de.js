@@ -5,7 +5,7 @@ module.exports = [
 	},
 	{
 		"type": "text",
-		"defaultValue": "Dies sind die Einstellungen für die Breathe-App. Sie benutzen Version 2.21 von Breathe.",
+		"defaultValue": "Dies sind die Einstellungen für die Breathe-App. Sie benutzen Version 2.3 von Breathe.",
 	},
 	{
 		"type": "section",
@@ -124,6 +124,7 @@ module.exports = [
 					},
 					{ 
 						"label": "Herzfrequenz",
+						"capabilities": ["PLATFORM_DIORITE", "PLATFORM_EMERY"],
 						"value": "3" 
 					}
 				]
@@ -184,6 +185,7 @@ module.exports = [
 	},
 	{
 		"type": "section",
+		"capabilities": ["NOT_PLATFORM_APLITE"],
 		"items": [
 			{
 				"type": "heading",

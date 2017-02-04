@@ -262,7 +262,7 @@ void achievement_window_load(Window *window) {
 	// Create the menu layer
   s_achievement_layer = menu_layer_create(bounds);
 	menu_layer_set_normal_colors(s_achievement_layer, settings_get_backgroundColor(), gcolor_legible_over(settings_get_backgroundColor()));
-	menu_layer_set_highlight_colors(s_achievement_layer, gcolor_legible_over(settings_get_backgroundColor()), settings_get_backgroundColor());
+	menu_layer_set_highlight_colors(s_achievement_layer, settings_get_circleColor(), gcolor_legible_over(settings_get_circleColor()));
   menu_layer_set_callbacks(s_achievement_layer, NULL, (MenuLayerCallbacks){
     .get_num_sections = menu_get_num_sections_callback,
     .get_num_rows = menu_get_num_rows_callback,

@@ -7,6 +7,9 @@ const char * localize_get_locale() {
 	return i18n_get_system_locale();
 }
 
+/************************************************************************** App Glance */
+#if !PBL_PLATFORM_APLITE
+// App Glance Text
 char * localize_get_app_glance_text(int type, int minutes) {
 	switch (type) {
 		case 0: // Last session
@@ -80,7 +83,9 @@ char * localize_get_app_glance_text(int type, int minutes) {
 			}
 	}
 }
+#endif
 
+/************************************************************************** Main app text */
 char * localize_get_breathe_text() {
 	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 		return "RESPIRER";
@@ -145,8 +150,8 @@ char * localize_get_min_breathed_today_text() {
 	}
 }
 
+#if !PBL_PLATFORM_APLITE
 char * localize_get_steps_today_text(int thousands) {
-	#if defined(PBL_HEALTH)
 	if (settings_get_heartRateVariation() && data_get_current_heart_rate() != 0) {
 		if(thousands >= 10) { // There's a ten thousands digit!
 			if (strncmp(localize_get_locale(), "fr", 2) == 0) {
@@ -192,7 +197,6 @@ char * localize_get_steps_today_text(int thousands) {
 			}
 		}
 	} else {
-	#endif
 		if(thousands >= 10) { // There's a ten thousands digit!
 			if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 				return "%d.%03d PAS AUJ.";
@@ -244,9 +248,7 @@ char * localize_get_steps_today_text(int thousands) {
 				return "%d STEPS TODAY";
 			}
 		}
-	#if defined(PBL_HEALTH)
 	}
-	#endif
 }
 
 char * localize_get_heart_rate_text() {
@@ -276,30 +278,7 @@ char * localize_get_heart_rate_text() {
 	}
 	#endif
 }
-
-char * localize_get_reminder_action_menu_text() {
-	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
-		return "Respirer %d min";
-	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
-		return "Respirar %d min";
-	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
-		return "Atme %d min";
-	} else {
-		return "Breathe %d min";
-	}
-}
-
-char * localize_get_reminder_text() {
-	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
-		return "Respirez!";
-	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
-		return "¡Respira ahora!";
-	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
-		return "Zeit zum Atmen!";
-	} else {
-		return "Time to breathe!";
-	}
-}
+#endif
 
 char * localize_get_greet_text() {
 	#if defined(PBL_HEALTH)
@@ -329,6 +308,31 @@ char * localize_get_greet_text() {
 	#endif
 }
 
+/************************************************************************** Reminder window text */
+char * localize_get_reminder_action_menu_text() {
+	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+		return "Respirer %d min";
+	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+		return "Respirar %d min";
+	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+		return "Atme %d min";
+	} else {
+		return "Breathe %d min";
+	}
+}
+
+char * localize_get_reminder_text() {
+	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+		return "Respirez!";
+	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+		return "¡Respira ahora!";
+	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+		return "Zeit zum Atmen!";
+	} else {
+		return "Time to breathe!";
+	}
+}
+
 char * localize_get_snooze_text() {
 	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 		return "Snooze pendant %d min";
@@ -341,6 +345,404 @@ char * localize_get_snooze_text() {
 	}
 }
 
+/************************************************************************** Settings */
+#if !PBL_PLATFORM_APLITE
+/************************************************************* Section Titles */
+char * localize_get_in_app_section_title() {
+	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+		return "DANS L'APP";
+	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+		return "APPLIACIÓN";
+	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+		return "APP";
+	} else {
+		return "IN-APP";
+	}
+}
+
+char * localize_get_health_section_title() {
+	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+		return "SANTÉ";
+	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+		return "SALUD";
+	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+		return "GESUNDHEIT";
+	} else {
+		return "HEALTH";
+	}
+}
+
+char * localize_get_reminders_section_title() {
+	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+		return "RAPPELS";
+	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+		return "RECORDATORIOS";
+	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+		return "ERINNERUNGEN";
+	} else {
+		return "REMINDERS";
+	}
+}
+
+char * localize_get_app_glance_section_title() {
+	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+		return "APP GLANCE";
+	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+		return "APP GLANCE";
+	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+		return "APP GLANCE";
+	} else {
+		return "APP GLANCE";
+	}
+}
+
+char * localize_get_achievements_title() {
+	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+		return "SUCCÈS";
+	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+		return "LOGROS";
+	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+		return "ERRUNGENSCHAFTEN";
+	} else {
+		return "ACHIEVEMENTS";
+	}
+}
+
+char * localize_get_about_section_title() {
+	if (strncmp(localize_get_locale(), "en", 2) == 0) {
+		return "ABOUT";
+	} else {
+		return "INFO";
+	}
+}
+
+/************************************************************* Row Text */
+char * localize_get_enabled_text() {
+	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+		return "Activé";
+	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+		return "Activado";
+	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+		return "Aktiviert";
+	} else {
+		return "Enabled";
+	}	
+}
+
+char * localize_get_disabled_text() {
+	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+		return "Désactivé";
+	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+		return "Desactivado";
+	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+		return "Deaktiviert";
+	} else {
+		return "Disabled";
+	}	
+}
+
+char * localize_get_vibration_shakes_inhale_type_text() {
+	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+		return "Secousses - inhalation";
+	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+		return "Sacudidas - inhalación";
+	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+		return "Graduell - nur Einatmen";
+	} else {
+		return "Shakes - inhale only";
+	}	
+}
+
+char * localize_get_vibration_shakes_type_text() {
+	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+		return "Secousses";
+	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+		return "Sacudidas";
+	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+		return "Graduell";
+	} else {
+		return "Shakes";
+	}	
+}
+
+char * localize_get_vibration_taps_type_text() {
+	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+		return "Tapes";
+	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+		return "Toques";
+	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+		return "Doppeltippen";
+	} else {
+		return "Taps";
+	}	
+}
+
+char * localize_get_top_text_greeting_type_text() {
+	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+		return "Salut";
+	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+		return "Saludo";
+	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+		return "Begrüßung";
+	} else {
+		return "Greeting";
+	}	
+}
+
+char * localize_get_top_text_steps_type_text() {
+	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+		return "# de pas";
+	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+		return "# de pasos";
+	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+		return "Schritte";
+	} else {
+		return "Steps";
+	}		
+}
+
+char * localize_get_top_text_heart_rate_type_text() {
+	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+		return "Rhythme cardiaqueRitmo cardiaco";
+	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+		return "Ritmo cardiaco";
+	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+		return "Herzfrequenz";
+	} else {
+		return "Heart rate";
+	}		
+}
+
+char * localize_get_reminder_frequency_text(int value) {
+	switch (value) {
+		case 0:
+			if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+				return "Jamais";
+			} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+				return "Nunca";
+			} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+				return "Nie";
+			} else {
+				return "Never";
+			}
+		case 1:
+			if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+				return "Chaque heures";
+			} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+				return "Cada hora";
+			} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+				return "Jede Stunde";
+			} else {
+				return "Every hour";
+			}
+		default:
+			if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+				return "Chaque %d heures";
+			} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+				return "Cada %d horas";
+			} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+				return "Alle %d Stunden";
+			} else {
+				return "Every %d hours";
+			}
+	}
+}
+
+char * localize_get_reminder_frequency_start_text() {
+	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+		return "%d heures";
+	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+		return "A las %d";
+	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+		return "%d Uhr";
+	} else {
+		return "%d o'clock";
+	}	
+}
+
+char * localize_get_app_glance_last_session_text() {
+	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+		return "Dernière session";
+	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+		return "Última sesión";
+	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+		return "Letzte Sitzung";
+	} else {
+		return "Last session";
+	}
+}
+
+char * localize_get_app_glance_daily_total_text() {
+	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+		return "Total auj.";
+	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+		return "Total hoy";
+	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+		return "Insgesamt heute";
+	} else {
+		return "Total today";
+	}	
+}
+
+char * localize_get_bottom_text_total_type_text() {
+	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+		return "Total aujourd'hui";
+	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+		return "Total hoy";
+	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+		return "Ingesamt heute";
+	} else {
+		return "Total today";
+	}	
+}
+
+char * localize_get_bottom_text_streak_type_text() {
+	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+		return "Série";
+	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+		return "Racha";
+	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+		return "Serie";
+	} else {
+		return "Streak";
+	}	
+}
+
+/************************************************************* Settings row titles */
+char * localize_get_remember_duration_row_title() {
+	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+		return "Utiliser dur. préc.";
+	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+		return "Usar dur. ant.";
+	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+		return "Letze Dauer merken";
+	} else {
+		return "Use last duration";
+	}	
+}
+
+char * localize_get_vibrations_row_title() {
+	if (strncmp(localize_get_locale(), "es", 2) == 0) {
+		return "Vibraciones";
+	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+		return "Vibrationen";
+	} else { // French and English have the same spelling; not a mistake
+		return "Vibrations";
+	}		
+}
+
+char * localize_get_breaths_per_minute_row_title() {
+	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+		return "Respirations/min.";
+	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+		return "Respiraciones/min.";
+	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+		return "Atemzüge/Minute";
+	} else {
+		return "Breaths/minute";
+	}
+}
+
+#if PBL_PLATFORM_DIORITE || PBL_PLATFORM_EMERY
+char * localize_get_heart_rate_variation_row_title() {
+	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+		return "Vitesse selon RC";
+	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+		return "Rapidez según RC";
+	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+		return "nach Herzfrequenz";
+	} else {
+		return "HR Variation";
+	}
+}
+#endif
+
+char * localize_get_top_text_row_title() {
+	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+		return "Texte en haut";
+	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+		return "Texto superior";
+	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+		return "Oben im Hauptmenü";
+	} else {
+		return "Top Text";
+	}	
+}
+
+char * localize_get_reminder_frequency_row_title() {
+	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+		return "Fréq. des rappels";
+	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+		return "Frec. de rdo.";
+	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+		return "Erinnerungshäufigkeit";
+	} else {
+		return "Reminder Freq.";
+	}			
+}
+
+char * localize_get_reminder_start_row_title() {
+	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+		return "Début des rappels";
+	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+		return "Empiezo de rdo.";
+	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+		return "Beginn der Erinnerung";
+	} else {
+		return "Reminder Start";
+	}	
+}
+
+char * localize_get_app_glance_row_title() {
+	return "App Glance";
+}
+
+char * localize_get_bottom_text_row_title() {
+	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+		return "Texte en bas";
+	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+		return "Texto abajo";
+	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+		return "Unten im Hauptmenü";
+	} else {
+		return "Bottom Text";
+	}		
+}
+
+char * localize_get_achievement_row_title() {
+	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+		return "Succès";
+	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+		return "Logros";
+	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+		return "Errungenschaften";
+	} else {
+		return "Achievements";
+	}	
+}
+
+char * localize_get_version_row_title() {
+	if (strncmp(localize_get_locale(), "es", 2) == 0) {
+		return "Versión";
+	} else {
+		return "Version";
+	}
+}
+
+char * localize_get_credits_row_title() {
+	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+		return "Fait avec \u2764 par";
+	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+		return "Hecho con \u2764 por";
+	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+		return "Gemacht mit \u2764 von";
+	} else {
+		return "Made with \u2764 by";
+	}	
+}
+#endif
+
+/************************************************************************** Achievements */
 #if !PBL_PLATFORM_APLITE
 	char * localize_get_achievement_text() {
 		if (strncmp(localize_get_locale(), "fr", 2) == 0) {
@@ -355,7 +757,6 @@ char * localize_get_snooze_text() {
 	}
 
 	char * localize_get_streak_text(int streak_length) {
-		
 		if (streak_length >= data_get_longest_streak() && data_get_today_epoch_time() == data_get_streak_date_persist_data()) { // This means that it's the longest streak and user has breathed today
 			if (streak_length == 1) {
 				if (strncmp(localize_get_locale(), "fr", 2) == 0) {
@@ -793,25 +1194,25 @@ char * localize_get_snooze_text() {
 
 	char * localize_get_new_version_title() {
 		if (strncmp(localize_get_locale(), "es", 2) == 0) {
-			return "¡Versión 2.2!";
+			return "¡Versión 2.3!";
 		} else {
-			return "Version 2.2!";
+			return "Version 2.3!";
 		}
 	}
 
 	char * localize_get_new_version_description() {
 		if (strncmp(localize_get_locale(), "fr", 2) == 0) {
-			return PBL_IF_RECT_ELSE("\nAppuyez longuement sur le bouton \"bas\" pour voir des succès et des statistiques.\nLaissez un \u2764 sur l'App Store si vous aimez cette app!",
-															"\n\nAppuyez longuement sur le bouton \"bas\" pour voir des succès et des statistiques.\nLaissez un \u2764 sur l'App Store\nsi vous aimez cette\napp!");
+			return PBL_IF_RECT_ELSE("\nAppuyez longuement sur le bouton \"haut\" pour changer vos paramètres.\nLaissez un \u2764 sur l'App Store si vous aimez cette app!",
+															"\n\nAppuyez longuement sur le bouton \"haut\" pour changer vos paramètres.\nLaissez un \u2764 sur l'App Store\nsi vous aimez cette\napp!");
 		} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
-			return PBL_IF_RECT_ELSE("\nNUEVO:\nCon una pulsación larga del botón abajo se puede ver logros y estadísticas.\n¡Da un \u2764 en el App Store si te gusta esta app!",
-															"\n\nCon una pulsación larga del botón abajo se puede ver\nlogros y estadísticas.\n¡Da un \u2764 en el App Store\nsi te gusta esta\napp!");
+			return PBL_IF_RECT_ELSE("\nNUEVO:\nCon una pulsación larga del botón arriba se puede cambiar ajustes.\n¡Da un \u2764 en el App Store si te gusta esta app!",
+															"\n\nCon una pulsación larga del botón arriba se puede \ncambiar ajustes.\n¡Da un \u2764 en el App Store\nsi te gusta esta\napp!");
 		} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
-			return PBL_IF_RECT_ELSE("\nDrücken Sie die Abwärtstaste lange, um Errungenschaften und Statistiken zu sehen.\nHinterlassen Sie ein \u2764 im App Store, wenn Ihnen diese App gefällt!",
-															"\n\nLange drücken Sie die Abwärtstaste, um Errungenschaften und Statistiken zu sehen.");
+			return PBL_IF_RECT_ELSE("\nLange drücken Sie die Auf-Taste, Sie können die Einstellungen ändern.\nLassen Sie ein \u2764 auf dem App Store, wenn Sie diese App gefällt!",
+															"\n\nLange drücken Sie die Auf-Taste, Sie können die Einstellungen ändern.");
 		} else {
-			return PBL_IF_RECT_ELSE("\nNEW FEATURES:\n\nLong press the down button to see achievements and stats.\nLeave a \u2764 on the Store if you like this app!",
-															"\n\nNEW FEATURES:\nLong press the down button to see achievements and stats.\nLeave a \u2764 on the Store if\nyou like this app!");
+			return PBL_IF_RECT_ELSE("\nNEW FEATURES:\n\nLong press the up button to change settings.\nLeave a \u2764 on the Store if you like this app!",
+															"\n\nNEW FEATURES:\nLong press the up button to change settings.\nLeave a \u2764 on the Store if\nyou like this app!");
 		}
 	}
 #endif

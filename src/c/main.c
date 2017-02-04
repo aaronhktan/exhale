@@ -1,30 +1,37 @@
 #include <pebble.h>
 #include "src/c/breathe_window.h"
 #include "src/c/reminder_window.h"
-#include "src/c/data.h"
-#include "src/c/health.h"
 #include "src/c/settings.h"
 #include "src/c/wakeup.h"
 #include "src/c/localize.h"
+#include "src/c/data.h"
 #if !PBL_PLATFORM_APLITE
+	#include "src/c/health.h"
 	#include "src/c/appglance.h"
 	#include "src/c/achievement.h"
-	#include "src/c/achievement_menu.h"
-	#include "src/c/achievement_window.h"
+// 	#include "src/c/achievement_menu.h"
+// 	#include "src/c/achievement_window.h"
 	#include "src/c/new_version_window.h"
 #endif
 
 static void init() {
-	APP_LOG(APP_LOG_LEVEL_INFO, "You are running version 2.21 of the Breathe app.");
-	#if PBL_HEALTH
-		health_init(); // Subscribe to health service if health API is available
-		data_init(); // Subscribe to data service
-	#endif
+	APP_LOG(APP_LOG_LEVEL_INFO, "You are running version 2.3 of the Breathe app.");
 	settings_init(); // Subscribe to settings service
+	#if PBL_HEALTH
+		if (settings_get_displayText() == 2 || settings_get_displayText() == 3) {
+			health_init(); // Subscribe to health service if health API is available
+			data_init(); // Subscribe to data service
+		}
+	#endif
 	#if !PBL_PLATFORM_APLITE
 		achievement_init(); // Subscribe to the achievement service
 	#endif
 	wakeup_service_subscribe(wakeup_handler); // Subscribe to Wakeup Service
+	
+	#if !PBL_PLATFORM_APLITE
+	// Send settings on watch to phone to ensure most updated
+	settings_send_settings();
+	#endif
 	
 	if(launch_reason() == APP_LAUNCH_WAKEUP) { // The app was started by a wakeup event.
 		// Pushes the reminder window stack
@@ -34,7 +41,7 @@ static void init() {
 			wakeup_schedule_next_wakeup(settings_get_reminderHours(), 0, settings_get_reminderHoursStart());
 		}
 	} else {
-		// 		reminder_window_push(); // For testing
+// 				reminder_window_push(); // For testing
 		// The app was started by the user; push the standard breathe window
 		if (settings_get_rememberDuration() && data_read_last_duration_data() != 0) { // Set the minutes to breathe to the same as last one, unless the number is zero (meaning they haven't breathed yet)
 			breathe_window_push(data_read_last_duration_data());
@@ -60,7 +67,7 @@ static void init() {
 // 			char description[100];
 // 			snprintf(description, sizeof(description), localize_get_minutes_session_description(), 10);
 // 			achievement_window_push(localize_get_thirty_minutes_day_name(), description); // For testing
-				if ((!persist_exists(SEEN_NEW_VERSION_KEY)) || (persist_read_bool(SEEN_NEW_VERSION_KEY) == false) || (!persist_exists(SEEN_NEW_VERSION_NUMBER_KEY) || persist_read_int(SEEN_NEW_VERSION_NUMBER_KEY) != 22)) {
+				if ((!persist_exists(SEEN_NEW_VERSION_KEY)) || (persist_read_bool(SEEN_NEW_VERSION_KEY) == false) || (!persist_exists(SEEN_NEW_VERSION_NUMBER_KEY) || persist_read_int(SEEN_NEW_VERSION_NUMBER_KEY) != 23)) {
 // 						data_set_streak_date_persist_data();		
 						new_version_window_push(); // For testing
 				} else {
@@ -82,14 +89,14 @@ static void deinit() {
 	if (settings_get_appGlanceEnabled()) { // Check if app glance is enabled
 		char app_glance_text[79];
 		switch(settings_get_appGlanceType()) { 
-			case 2: // Show last session time on app glance
+			case 0: // Show last session time on app glance
 				snprintf(app_glance_text, sizeof(app_glance_text), localize_get_app_glance_text(settings_get_appGlanceType(), data_read_last_duration_data()), data_read_last_duration_data());
 				break;
 			case 1: // Show total daily time on app glance
 				snprintf(app_glance_text, sizeof(app_glance_text), localize_get_app_glance_text(settings_get_appGlanceType(), data_read_breathe_persist_data()), data_read_breathe_persist_data());
 				break;
 			#if !PBL_PLATFORM_APLITE
-			case 0: // Show streak on app glance
+			case 2: // Show streak on app glance
 				snprintf(app_glance_text, sizeof(app_glance_text), localize_get_app_glance_text(settings_get_appGlanceType(), data_get_streak_length()), data_get_streak_length());
 			#endif
 		}

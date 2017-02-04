@@ -5,6 +5,7 @@
 #include "src/c/graphics.h"
 #include "src/c/settings.h"
 #include "src/c/localize.h"
+#include "src/c/settings_menu.h"
 #if !PBL_PLATFORM_APLITE
 	#include "src/c/achievement.h"
 	#include "src/c/achievement_window.h"
@@ -591,12 +592,16 @@ static void main_animation_callback () {
 	if (s_animating && !s_main_done) {
 		animationTimer = app_timer_register(2 * s_breath_duration + 2 * D_BREATH_HOLD_TIME, main_animation_callback, NULL); // Run this method again to schedule the next breath
 		if (!layer_get_hidden(s_upper_text_layer) || !layer_get_hidden(s_lower_text_layer)) { // The text layers aren't hidden; this keep if HRV is enabled
+			#if !PBL_PLATFORM_APLITE
 			if (settings_get_heartRateVariation() && s_times_played > 1) {
 				layer_set_hidden(s_upper_text_layer, false); // For the HR text
 			} else { 
+			#endif
 				layer_set_hidden(s_upper_text_layer, true); // HRV isn't enabled, so hide the text layers
 				layer_set_hidden(s_lower_text_layer, true);
+			#if !PBL_PLATFORM_APLITE
 			}
+			#endif
 		}
 		main_animation();
 	} else { // This means that the main animation is complete
@@ -749,9 +754,16 @@ static void down_click_handler(ClickRecognizerRef recognizer, void *context) {
 }
 
 #if !PBL_PLATFORM_APLITE
-static void long_down_click_handler(ClickRecognizerRef regocnizer, void *context) {
+static void long_down_click_handler(ClickRecognizerRef recognizer, void *context) {
 	if ((s_animation_completed) && (!s_animating) && settings_get_achievementsEnabled() == true) {
 		achievement_menu_window_push();
+	}
+}
+// #endif
+
+static void long_up_click_handler(ClickRecognizerRef recognizer, void *context) {
+	if ((s_animation_completed) && (!s_animating)) {
+		settings_menu_window_push();
 	}
 }
 #endif
@@ -845,19 +857,32 @@ static void click_config_provider(void *context) {
 	window_single_click_subscribe(id_back, back_click_handler);
 	window_single_click_subscribe(id_select, select_click_handler);
 	#if !PBL_PLATFORM_APLITE
+	window_long_click_subscribe(id_up, 500, long_up_click_handler, NULL);
+	// #if !PBL_PLATFORM_APLITE
+	if (settings_get_achievementsEnabled()) {
 		window_long_click_subscribe(id_down, 500, long_down_click_handler, NULL); // Click for 500ms before firing
+	}
 	#endif
 }
 
 // ******************************************************************************************* Main App Functions
 static void inbox_received_handler(DictionaryIterator *iter, void *context) {
-	// When settings happen, save settings, and refresh screen
-	settings_handle_settings();
-	settings_save_settings();
-	window_set_background_color(s_main_window, settings_get_backgroundColor());
-	layer_mark_dirty(s_circle_layer);
-	layer_mark_dirty(s_inside_text_layer);
-	layer_mark_dirty(s_upper_text_layer);
+	#if !PBL_PLATFORM_APLITE
+	// Check if this is a request to send the settings on watch to the phone
+	Tuple *request_settings_t = dict_find(iter, MESSAGE_KEY_requestSettings);
+	if (request_settings_t) {
+		settings_send_settings(); // If yes, then send the settings
+	} else {
+	#endif
+		// Otherwise, save settings received from phone, and refresh screen
+		settings_handle_settings(iter, context);
+		window_set_background_color(s_main_window, settings_get_backgroundColor());
+		layer_mark_dirty(s_circle_layer);
+		layer_mark_dirty(s_inside_text_layer);
+		layer_mark_dirty(s_upper_text_layer);
+	#if !PBL_PLATFORM_APLITE
+	}
+	#endif
 }
 
 

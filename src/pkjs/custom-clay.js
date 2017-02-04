@@ -4,15 +4,15 @@ module.exports = function(minified) {
 	var $ = minified.$;
 	var HTML = minified.HTML;
 
-	function toggleReminder() {
-		if (this.get() !== "0") {
+	function toggleReminder() { // This means that reminders has been toggled
+		if (this.get() !== "0") { // If reminders have been toggled to on, enable setting start time
 			clayConfig.getItemByMessageKey('reminderHoursStart').enable();
-		} else {
+		} else { // Otherwise, disable that element of the page
 			clayConfig.getItemByMessageKey('reminderHoursStart').disable();
 		}
 	}
 
-	function toggleVibration() {
+	function toggleVibration() { // Same thing for vibration
 		if (this.get() !== false) {
 			clayConfig.getItemByMessageKey('vibrationType').enable();
 		} else {

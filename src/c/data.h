@@ -37,6 +37,7 @@ int data_read_last_duration_data();
 void data_write_wakeup_time_data(char* wakeup_time);
 char* data_read_wakeup_time_data();
 
+#if !PBL_PLATFORM_APLITE
 int data_get_today_epoch_time();
 void data_set_streak_date_persist_data();
 int data_get_streak_date_persist_data();
@@ -48,3 +49,4 @@ int data_get_total_minutes_breathed();
 void data_set_total_minutes_breathed(int value);
 int data_get_longest_streak();
 void data_set_longest_streak(int value);
+#endif
