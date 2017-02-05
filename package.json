@@ -4,13 +4,13 @@
         "pebble-clay": "^1.0.4"
     },
     "keywords": [],
-    "name": "breathe-beta",
+    "name": "breathe",
     "pebble": {
         "capabilities": [
             "configurable",
             "health"
         ],
-        "displayName": "Breathe (Beta)",
+        "displayName": "Breathe",
         "enableMultiJS": true,
         "messageKeys": [
             "backgroundColor",
@@ -35,12 +35,7 @@
                 {
                     "file": "images/update.png",
                     "name": "UPDATE_ICON",
-                    "targetPlatforms": [
-                        "basalt",
-                        "chalk",
-                        "diorite",
-                        "emery"
-                    ],
+                    "targetPlatforms": null,
                     "type": "bitmap"
                 },
                 {
@@ -100,10 +95,10 @@
             "diorite",
             "emery"
         ],
-        "uuid": "55b7c89c-40de-4b13-adf3-4d735b679cc4",
+        "uuid": "5d19cf9c-f432-4ed4-b666-6ee3777dcdf6",
         "watchapp": {
             "watchface": false
         }
     },
-    "version": "2.3.0"
+    "version": "2.30.0"
 }
