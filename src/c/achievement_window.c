@@ -47,7 +47,7 @@ static void canvas_update_proc(Layer *layer, GContext *ctx) {
 		));
 	}
 
-	// Advance to the next frame, wrapping if neccessary
+	// Advance to the next frame, stopping when done
 	int num_frames = gdraw_command_sequence_get_num_frames(s_command_seq);
 	s_index++;
 	if (s_index == num_frames) {
@@ -59,24 +59,16 @@ static void canvas_update_proc(Layer *layer, GContext *ctx) {
 }
 
 // Allow exiting the window only after the PDC is done animating; this prevents a crash.
-static void back_click_handler(ClickRecognizerRef recognizer, void *context) {
-	if (s_draw_complete) {
-// 		window_destroy(s_achievement_window);
-// 		gdraw_command_sequence_destroy(s_command_seq);
-// 		layer_destroy(s_canvas_layer);
-// 		layer_destroy(text_layer_get_layer(s_announce_text_layer));
-// 		layer_destroy(text_layer_get_layer(s_title_layer));
-// 		layer_destroy(text_layer_get_layer(s_description_layer));
-		s_index = 0;
-		s_draw_complete = false;
-		window_stack_remove(s_achievement_window, true);
-	}
-}
+// static void back_click_handler(ClickRecognizerRef recognizer, void *context) {
+// 	if (s_draw_complete) {
+// 		window_stack_remove(s_achievement_window, true);
+// 	}
+// }
 
-static void click_config_provider(void *context) {
-	ButtonId id_back = BUTTON_ID_BACK;
-	window_single_click_subscribe(id_back, back_click_handler);
-}
+// static void click_config_provider(void *context) {
+// 	ButtonId id_back = BUTTON_ID_BACK;
+// 	window_single_click_subscribe(id_back, back_click_handler);
+// }
 
 static void achievement_window_load(Window *window) {
 	// Information about screen
@@ -90,9 +82,9 @@ static void achievement_window_load(Window *window) {
 	#if PBL_RECT
 	if (text_layer_get_content_size(s_description_layer).h < bounds.size.h / 4) {
 		s_description_layer = text_layer_create(GRect(bounds.size.w / 12, bounds.size.h * 3 / 4, bounds.size.w * 5 / 6, bounds.size.h / 3));
-		text_layer_set_text(s_description_layer, s_achievement_description);
 	}
 	#endif
+	text_layer_set_text(s_description_layer, s_achievement_description);
 	text_layer_set_font(s_description_layer, fonts_get_system_font(FONT_KEY));
 	text_layer_set_background_color(s_description_layer, GColorClear);
 	text_layer_set_text_color(s_description_layer, text_color);
@@ -151,14 +143,16 @@ static void achievement_window_load(Window *window) {
 
 // DESTROY ALL THE THINGS (hopefully)
 static void achievement_window_unload(Window *window) {
-	window_destroy(s_achievement_window);
 	gdraw_command_sequence_destroy(s_command_seq);
 	layer_destroy(s_canvas_layer);
-	layer_destroy(text_layer_get_layer(s_announce_text_layer));
-	layer_destroy(text_layer_get_layer(s_title_layer));
-	layer_destroy(text_layer_get_layer(s_description_layer));
+	text_layer_destroy(s_announce_text_layer);
+	text_layer_destroy(s_title_layer);
+	text_layer_destroy(s_description_layer);
 	s_index = 0;
 	s_draw_complete = false;
+	window_destroy(s_achievement_window);
+	s_achievement_window = NULL;
+	APP_LOG(APP_LOG_LEVEL_DEBUG, "The number of bytes free is %d.", (int)heap_bytes_free());
 }
 
 // Method to open and display this window
@@ -192,6 +186,6 @@ void achievement_window_push(char *achievement_name, char *achievement_descripti
 	
 	s_timer = app_timer_register(DELTA, next_frame_handler, NULL);
 	
-	window_set_click_config_provider(s_achievement_window, click_config_provider);
+// 	window_set_click_config_provider(s_achievement_window, click_config_provider);
 }
 #endif

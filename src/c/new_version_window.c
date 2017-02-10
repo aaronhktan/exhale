@@ -45,7 +45,7 @@ static void window_load(Window *window) {
 	GRect bitmap_bounds = gbitmap_get_bounds(s_icon_bitmap);
 
   const GEdgeInsets background_insets = {.top = bounds.size.h  /* Start hidden */};
-  s_background_layer = layer_create(grect_inset(bounds, background_insets));
+	s_background_layer = layer_create(grect_inset(bounds, background_insets));
   layer_set_update_proc(s_background_layer, background_update_proc);
   layer_add_child(window_layer, s_background_layer);
 	
@@ -62,7 +62,7 @@ static void window_load(Window *window) {
   layer_set_update_proc(s_icon_layer, icon_update_proc);
   layer_add_child(window_layer, s_icon_layer);
 
-	s_title_layer = text_layer_create(GRect(NEW_VERSION_WINDOW_MARGIN, bounds.size.h + NEW_VERSION_WINDOW_MARGIN + bitmap_bounds.size.h, bounds.size.w - (2 * NEW_VERSION_WINDOW_MARGIN), bounds.size.h));
+	s_title_layer = text_layer_create(GRect(PBL_IF_RECT_ELSE(NEW_VERSION_WINDOW_MARGIN * 2 + bitmap_bounds.size.w, NEW_VERSION_WINDOW_MARGIN), bounds.size.h + NEW_VERSION_WINDOW_MARGIN + bitmap_bounds.size.h, bounds.size.w - (2 * NEW_VERSION_WINDOW_MARGIN), bounds.size.h));
   text_layer_set_text(s_title_layer, localize_get_new_version_title());
   text_layer_set_background_color(s_title_layer, GColorClear);
   text_layer_set_text_alignment(s_title_layer, PBL_IF_ROUND_ELSE(GTextAlignmentCenter, GTextAlignmentLeft));
@@ -81,13 +81,15 @@ static void window_load(Window *window) {
 
 static void window_unload(Window *window) {
   layer_destroy(s_background_layer);
+	layer_destroy(s_text_background_layer);
   layer_destroy(s_icon_layer);
 
-  text_layer_destroy(s_label_layer);
+  text_layer_destroy(s_title_layer);
+	text_layer_destroy(s_label_layer);
 
   gbitmap_destroy(s_icon_bitmap);
 
-  window_destroy(window);
+  window_destroy(s_main_window);
   s_main_window = NULL;
 }
 
@@ -111,7 +113,6 @@ static void window_appear(Window *window) {
 	finish = GRect(0, PBL_IF_RECT_ELSE(NEW_VERSION_WINDOW_MARGIN + bitmap_bounds.size.h + 10, NEW_VERSION_WINDOW_MARGIN + bitmap_bounds.size.h + 5 + 25 + 15), bounds.size.w, bounds.size.h);
 	Animation *text_background_anim = (Animation*)property_animation_create_layer_frame(s_text_background_layer, &start, &finish);
 
-  start = layer_get_frame(s_icon_layer);
   const GEdgeInsets icon_insets = {
     .top = NEW_VERSION_WINDOW_MARGIN,
     .left = PBL_IF_ROUND_ELSE((bounds.size.w - bitmap_bounds.size.w) / 2, NEW_VERSION_WINDOW_MARGIN)};
@@ -121,7 +122,7 @@ static void window_appear(Window *window) {
 	start = layer_get_frame(title_layer);
 	const GEdgeInsets finish_title_insets = {
 		.top = PBL_IF_RECT_ELSE(NEW_VERSION_WINDOW_MARGIN - 5, NEW_VERSION_WINDOW_MARGIN + bitmap_bounds.size.h + 5) /* small adjustment */,
-    .right = NEW_VERSION_WINDOW_MARGIN, .left = PBL_IF_RECT_ELSE(NEW_VERSION_WINDOW_MARGIN * 2 + bitmap_bounds.size.w, NEW_VERSION_WINDOW_MARGIN)};
+    /*.right = NEW_VERSION_WINDOW_MARGIN,*/ .left = PBL_IF_RECT_ELSE(NEW_VERSION_WINDOW_MARGIN * 2 + bitmap_bounds.size.w, NEW_VERSION_WINDOW_MARGIN)};
   finish = grect_inset(bounds, finish_title_insets);
   Animation *title_anim = (Animation*)property_animation_create_layer_frame(title_layer, &start, &finish);
 
@@ -136,7 +137,7 @@ static void window_appear(Window *window) {
   animation_set_handlers(s_appear_anim, (AnimationHandlers) {
     .stopped = anim_stopped_handler
   }, NULL);
-  animation_set_delay(s_appear_anim, 700);
+  animation_set_delay(s_appear_anim, 250);
   animation_schedule(s_appear_anim);
 }
 

@@ -1194,9 +1194,9 @@ char * localize_get_credits_row_title() {
 
 	char * localize_get_new_version_title() {
 		if (strncmp(localize_get_locale(), "es", 2) == 0) {
-			return "¡Versión 2.3!";
+			return "¡Versión 2.31!";
 		} else {
-			return "Version 2.3!";
+			return "Version 2.31!";
 		}
 	}
 

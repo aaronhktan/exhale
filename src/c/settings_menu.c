@@ -2,6 +2,7 @@
 #include "src/c/settings_menu.h"
 #include "src/c/localize.h"
 #include "src/c/settings.h"
+#include "src/c/new_version_window.h"
 
 static Window *s_settings_window;
 static MenuLayer *s_settings_layer;
@@ -75,7 +76,7 @@ static void menu_draw_header_callback(GContext* ctx, const Layer *cell_layer, ui
 static void menu_draw_row_callback(GContext* ctx, const Layer *cell_layer, MenuIndex *cell_index, void *data) {
 	// Determine which section we're going to draw in
   switch (cell_index->section) {
-    case 0: // This is the in-app section
+    case 0: // In-App Section
 			// Use the row to specify which item we'll draw
 			switch (cell_index->row) {
 				case 0: // Remember last duration
@@ -118,7 +119,7 @@ static void menu_draw_row_callback(GContext* ctx, const Layer *cell_layer, MenuI
 				break;
 			}
 			break;
-		case 1: // This is the health section (for non-Aplite watches) or reminders section (for Aplite Watches)
+		case 1: // Health
 			switch (cell_index->row) {
 				case 0: // Top Text Display
 				switch (settings_get_displayText()) {
@@ -142,7 +143,7 @@ static void menu_draw_row_callback(GContext* ctx, const Layer *cell_layer, MenuI
 				break;
 			}
 			break;
-		case 2: // This is the reminders section (non-Aplite)
+		case 2: // Reminders
 			switch (cell_index->row) {
 					case 0: ;// Reminder Frequency
 							if (settings_get_reminderHours() != 0) {
@@ -160,7 +161,7 @@ static void menu_draw_row_callback(GContext* ctx, const Layer *cell_layer, MenuI
 						break;
 			}
 			break;
-		case 3: // This is the App Glance Section for non-Aplite watches
+		case 3: // App Glance
 			switch (cell_index->row) {	
 				case 0: // App Glance Type
 						if (settings_get_appGlanceEnabled()) {
@@ -205,7 +206,7 @@ static void menu_draw_row_callback(GContext* ctx, const Layer *cell_layer, MenuI
 		case 5: // This is the about section
 			switch (cell_index->row) {
 				case 0: // This is the version number
-					menu_cell_basic_draw(ctx, cell_layer, localize_get_version_row_title(), "v2.3, 2016-02-03", NULL);
+					menu_cell_basic_draw(ctx, cell_layer, localize_get_version_row_title(), "v2.31, 2017-02-03", NULL);
 					break;
 				case 1: // This is the credits
 					menu_cell_basic_draw(ctx, cell_layer, localize_get_credits_row_title(), "cheeseisdisgusting", NULL);
@@ -252,7 +253,7 @@ static void menu_select_callback(MenuLayer *menu_layer, MenuIndex *cell_index, v
 						break;
 					}
 				break;
-				case 3: // Heart Rate Variation or Greeting depending on whether is Diorite or Aplite
+				case 3: // Heart Rate Variation for Diorite
 				#if PBL_PLATFORM_DIORITE || PBL_PLATFORM_EMERY
 					if (settings_get_heartRateVariation()) {
 						settings_set_heartRateVariation(false);
@@ -263,7 +264,7 @@ static void menu_select_callback(MenuLayer *menu_layer, MenuIndex *cell_index, v
 				break;
 			}
 			break;
-		case 1: // Health for non-aplite, reminders for aplite
+		case 1: // Health
 			switch (cell_index->row) {
 				case 0: // Top Text Display
 				switch (settings_get_displayText()) {
@@ -280,7 +281,7 @@ static void menu_select_callback(MenuLayer *menu_layer, MenuIndex *cell_index, v
 				}
 			}
 			break;
-		case 2: // This is the reminders section (non-Aplite)
+		case 2: // This is the reminders section
 			switch (cell_index->row) {
 					case 0: // Reminder Frequency
 						switch (settings_get_reminderHours()) {
@@ -306,7 +307,7 @@ static void menu_select_callback(MenuLayer *menu_layer, MenuIndex *cell_index, v
 						break;
 			}
 			break;
-		case 3: // This is the App Glance Section for non-Aplite watches
+		case 3: // This is the App Glance Section
 			switch (cell_index->row) {	
 					case 0: // App Glance Type
 						if (settings_get_appGlanceEnabled()) {
@@ -326,7 +327,7 @@ static void menu_select_callback(MenuLayer *menu_layer, MenuIndex *cell_index, v
 			}
 			break;
 			break;
-		case 4: // This is the Achievement Section for non-Aplite watches
+		case 4: // This is the Achievement Section
 			switch (cell_index->row) {	
 				case 0: // Enable or disable achievements
 						if (settings_get_achievementsEnabled()) {
@@ -344,6 +345,12 @@ static void menu_select_callback(MenuLayer *menu_layer, MenuIndex *cell_index, v
 							settings_set_bottomTextType(0);
 							break;
 					}
+				break;
+			}
+		case 5: // This is the About Section
+			switch (cell_index->row) {
+				case 0: // See information about new version
+					new_version_window_push();
 				break;
 			}
 		break;
