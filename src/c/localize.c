@@ -308,6 +308,51 @@ char * localize_get_greet_text() {
 	#endif
 }
 
+// Sets strings as English, change if watch is set to another language
+char * localize_get_top_text(int random_number) {
+	char *strings[9] = {"TAKE A MOMENT;", "BE STILL;", "CLEAR YOUR MIND;", "EMPTY YOUR THOUGHTS;", "BE CALM;", "THINK NOTHING;", "RELAX;", "CHILL FOR A SEC;", "SPACE OUT;"};
+	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+		char *french_strings[9] = {"PRENEZ UN MOMENT;", "NE BOUGEZ PAS;", "VIDEZ VOTRE ESPRIT;", "NE PENSEZ À RIEN;", "SOYEZ CALME;", "CONCENTREZ;", "RELAXEZ;", "NE VOUS INQUIETEZ PAS;", "DONNEZ-VOUS DE L'ESPACE;"};
+		for (int i = 0; i <= 8; i++) {
+			strings[i] = french_strings[i];
+		}
+	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+		char *spanish_strings[9] = {"TOMA UN DESCANSO;", "NO TE MUEVAS;", "ACLARA TU MENTE;", "NO PIENSA A NADA;", "SÉ CALMO;", "CONCÉNTRATE;", "RELÁJATE;", "NO TE PREOCUPES;", "TOMA UN RATO;"};
+		for (int i = 0; i <= 8; i++) {
+			strings[i] = spanish_strings[i];
+		}
+	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+		char *german_strings[9] = {"NIMM DIR ZEIT;", "STEHE STILL;", "LEERE DEINEN GEIST;", "DENKE AN NICHTS;", "WERDE RUHIG;", "EXISTIERE EINFACH;", "MACH'S DIR GEMÜTLICH;", "SPÜRE DEINE UMGEBUNG;", "KOMM RUNTER;"};
+		for (int i = 0; i <= 8; i++) {
+			strings[i] = german_strings[i];
+		}
+	}
+	return strings[random_number];
+}
+
+// Same thing as above but for bottom text
+char * localize_get_bottom_text(int random_number) {
+	char* strings[4] = {"BREATHE.", "EXHALE.", "CONCENTRATE.", "FOCUS."};
+	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+		char* french_strings[4] = {"RESPIREZ.", "EXHALEZ.", "RESPIREZ.", "EXHALEZ."};
+		for (int i = 0; i <= 3; i++) {
+			strings[i] = french_strings[i];
+		}	
+	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+		char* spanish_strings[4] = {"RESPIRA.", "EXHALA.", "RESPIRA.", "EXHALA."};
+		for (int i = 0; i <= 3; i++) {
+			strings[i] = spanish_strings[i];
+		}
+	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+		char* german_strings[4] = {"ATME.", "ATME AUS.", "KONZENTRIER DICH.", "FOKUSSIERE DICH."};
+		for (int i = 0; i <= 3; i++) {
+			strings[i] = german_strings[i];
+		}
+	}
+	
+	return strings[random_number];
+}
+
 /************************************************************************** Reminder window text */
 char * localize_get_reminder_action_menu_text() {
 	if (strncmp(localize_get_locale(), "fr", 2) == 0) {

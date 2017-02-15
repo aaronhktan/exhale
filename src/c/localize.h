@@ -2,6 +2,7 @@
 
 const char * localize_get_locale();
 
+// Main menu text
 #if !PBL_PLATFORM_APLITE
 char * localize_get_app_glance_text(int type, int minutes);
 #endif
@@ -14,6 +15,10 @@ char * localize_get_min_breathed_today_text();
 char * localize_get_steps_today_text(int thousands);
 char * localize_get_heart_rate_text();
 #endif
+char * localize_get_top_text(int random_number);
+char * localize_get_bottom_text(int random_number);
+
+// Reminder window text
 char * localize_get_reminder_action_menu_text();
 char * localize_get_reminder_text();
 char * localize_get_greet_text();
