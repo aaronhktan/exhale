@@ -56,7 +56,7 @@ static void window_load(Window *window) {
   s_icon_bitmap = gbitmap_create_with_resource(RESOURCE_ID_UPDATE_ICON);
 
   s_icon_layer = layer_create(PBL_IF_ROUND_ELSE(
-      GRect((bounds.size.w - bitmap_bounds.size.w) / 2, bounds.size.h + NEW_VERSION_WINDOW_MARGIN, bitmap_bounds.size.w, bitmap_bounds.size.h),
+      GRect(PBL_IF_ROUND_ELSE((bounds.size.w - bitmap_bounds.size.w) / 2, NEW_VERSION_WINDOW_MARGIN), bounds.size.h + NEW_VERSION_WINDOW_MARGIN, bitmap_bounds.size.w, bitmap_bounds.size.h),
       GRect(NEW_VERSION_WINDOW_MARGIN, bounds.size.h + NEW_VERSION_WINDOW_MARGIN, bitmap_bounds.size.w, bitmap_bounds.size.h)
   ));
   layer_set_update_proc(s_icon_layer, icon_update_proc);
@@ -108,22 +108,18 @@ static void window_appear(Window *window) {
   GRect start = layer_get_frame(s_background_layer);
   GRect finish = bounds;
   Animation *background_anim = (Animation*)property_animation_create_layer_frame(s_background_layer, &start, &finish);
-	
-	start = layer_get_frame(s_text_background_layer);
+
 	finish = GRect(0, PBL_IF_RECT_ELSE(NEW_VERSION_WINDOW_MARGIN + bitmap_bounds.size.h + 10, NEW_VERSION_WINDOW_MARGIN + bitmap_bounds.size.h + 5 + 25 + 15), bounds.size.w, bounds.size.h);
 	Animation *text_background_anim = (Animation*)property_animation_create_layer_frame(s_text_background_layer, &start, &finish);
 
-  const GEdgeInsets icon_insets = {
-    .top = NEW_VERSION_WINDOW_MARGIN,
-    .left = PBL_IF_ROUND_ELSE((bounds.size.w - bitmap_bounds.size.w) / 2, NEW_VERSION_WINDOW_MARGIN)};
-  finish = grect_inset(bounds, icon_insets);
+	start = layer_get_frame(s_icon_layer);
+  finish = PBL_IF_ROUND_ELSE(
+      GRect((bounds.size.w - bitmap_bounds.size.w) / 2, NEW_VERSION_WINDOW_MARGIN, bitmap_bounds.size.w, bitmap_bounds.size.h),
+      GRect(NEW_VERSION_WINDOW_MARGIN, NEW_VERSION_WINDOW_MARGIN, bitmap_bounds.size.w, bitmap_bounds.size.h));
   Animation *icon_anim = (Animation*)property_animation_create_layer_frame(s_icon_layer, &start, &finish);
 	
 	start = layer_get_frame(title_layer);
-	const GEdgeInsets finish_title_insets = {
-		.top = PBL_IF_RECT_ELSE(NEW_VERSION_WINDOW_MARGIN - 5, NEW_VERSION_WINDOW_MARGIN + bitmap_bounds.size.h + 5) /* small adjustment */,
-    /*.right = NEW_VERSION_WINDOW_MARGIN,*/ .left = PBL_IF_RECT_ELSE(NEW_VERSION_WINDOW_MARGIN * 2 + bitmap_bounds.size.w, NEW_VERSION_WINDOW_MARGIN)};
-  finish = grect_inset(bounds, finish_title_insets);
+  finish = GRect(PBL_IF_RECT_ELSE(NEW_VERSION_WINDOW_MARGIN * 2 + bitmap_bounds.size.w, NEW_VERSION_WINDOW_MARGIN), PBL_IF_RECT_ELSE(NEW_VERSION_WINDOW_MARGIN - 5, NEW_VERSION_WINDOW_MARGIN + bitmap_bounds.size.h + 5), bounds.size.w - (2 * NEW_VERSION_WINDOW_MARGIN), bounds.size.h);
   Animation *title_anim = (Animation*)property_animation_create_layer_frame(title_layer, &start, &finish);
 
   start = layer_get_frame(label_layer);

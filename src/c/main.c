@@ -15,7 +15,7 @@
 #endif
 
 static void init() {
-	APP_LOG(APP_LOG_LEVEL_INFO, "You are running version 2.3 of the Breathe app.");
+	APP_LOG(APP_LOG_LEVEL_INFO, "You are running version 2.31 of the Breathe app.");
 	settings_init(); // Subscribe to settings service
 	#if PBL_HEALTH
 		if (settings_get_displayText() == 2 || settings_get_displayText() == 3) {
