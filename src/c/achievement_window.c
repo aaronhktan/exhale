@@ -21,16 +21,14 @@ static Layer *s_canvas_layer;
 static TextLayer *s_announce_text_layer, *s_title_layer, *s_description_layer;
 static GDrawCommandSequence *s_command_seq;
 static GColor random_color, text_color;
-static AppTimer *s_timer;
 static char *s_achievement_name, *s_achievement_description;
 static bool s_draw_complete;
-
 static int s_index = 0;
 
 // Finds and displays the next frame in PDC
 static void next_frame_handler(void *context) {
 	layer_mark_dirty(s_canvas_layer);
-	s_timer = app_timer_register(DELTA, next_frame_handler, NULL);
+	app_timer_register(DELTA, next_frame_handler, NULL);
 }
 
 // Method to update the PDC layer
@@ -52,10 +50,8 @@ static void canvas_update_proc(Layer *layer, GContext *ctx) {
 	s_index++;
 	if (s_index == num_frames) {
 		--s_index;
-		app_timer_cancel(s_timer);
 		s_draw_complete = true;
 	}
-
 }
 
 // Allow exiting the window only after the PDC is done animating; this prevents a crash.
@@ -72,15 +68,14 @@ static void canvas_update_proc(Layer *layer, GContext *ctx) {
 
 static void achievement_window_load(Window *window) {
 	// Information about screen
-	Layer *window_layer = window_get_root_layer(window);
-	GRect bounds = layer_get_bounds(window_layer);
+	GRect bounds = layer_get_bounds(window_get_root_layer(window));
 	
 	// Layer for text with achievement description
 	s_description_layer = text_layer_create(GRect(bounds.size.w / 12, PBL_IF_RECT_ELSE(bounds.size.h * 11 / 16, bounds.size.h * 9 / 32), bounds.size.w * 5 / 6, bounds.size.h / 3));
-	text_layer_set_text(s_description_layer, s_achievement_description);
 	// Set text location a little bit lower if the text isn't that big
 	#if PBL_RECT
 	if (text_layer_get_content_size(s_description_layer).h < bounds.size.h / 4) {
+		text_layer_destroy(s_description_layer);
 		s_description_layer = text_layer_create(GRect(bounds.size.w / 12, bounds.size.h * 3 / 4, bounds.size.w * 5 / 6, bounds.size.h / 3));
 	}
 	#endif
@@ -89,8 +84,7 @@ static void achievement_window_load(Window *window) {
 	text_layer_set_background_color(s_description_layer, GColorClear);
 	text_layer_set_text_color(s_description_layer, text_color);
 	text_layer_set_text_alignment(s_description_layer, GTextAlignmentCenter);
-	
-	layer_add_child(window_layer, text_layer_get_layer(s_description_layer));
+	layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_description_layer));
 
 	// Layer for PDC
 	#if PBL_RECT
@@ -98,15 +92,12 @@ static void achievement_window_load(Window *window) {
 			s_canvas_layer = layer_create(GRect(0, -bounds.size.h / 24, bounds.size.w, bounds.size.h));
 	} else {
 	#endif
-	s_canvas_layer = layer_create(GRect(0, PBL_IF_RECT_ELSE(-bounds.size.h / 12, bounds.size.h / 4), bounds.size.w, bounds.size.h));
+		s_canvas_layer = layer_create(GRect(0, PBL_IF_RECT_ELSE(-bounds.size.h / 12, bounds.size.h / 4), bounds.size.w, bounds.size.h));
 	#if PBL_RECT
 	}
 	#endif
 	layer_set_update_proc(s_canvas_layer, canvas_update_proc);
-	
-	layer_add_child(window_layer, s_canvas_layer);
-	
-	window_set_background_color(s_achievement_window, PBL_IF_COLOR_ELSE(random_color, GColorWhite));
+	layer_add_child(window_get_root_layer(window), s_canvas_layer);
 	
 	// Layer for top text
 	s_announce_text_layer = text_layer_create(GRect(0, PBL_IF_RECT_ELSE(0, 15), bounds.size.w, bounds.size.h / 6));
@@ -114,11 +105,8 @@ static void achievement_window_load(Window *window) {
 	text_layer_set_background_color(s_announce_text_layer, GColorClear);
 	text_layer_set_text_color(s_announce_text_layer, text_color);
 	text_layer_set_text_alignment(s_announce_text_layer, GTextAlignmentCenter);
-	#if !PBL_PLATFORM_APLITE
-		text_layer_set_text(s_announce_text_layer, localize_get_achievement_text());
-	#endif
-	
-	layer_add_child(window_layer, text_layer_get_layer(s_announce_text_layer));
+	text_layer_set_text(s_announce_text_layer, localize_get_achievement_text());
+	layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_announce_text_layer));
 	
 	// Layer for text with achievement name
 	#if PBL_RECT
@@ -135,10 +123,13 @@ static void achievement_window_load(Window *window) {
 	text_layer_set_text_color(s_title_layer, text_color);
 	text_layer_set_text_alignment(s_title_layer, GTextAlignmentCenter);
 	text_layer_set_text(s_title_layer, s_achievement_name);
+	layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_title_layer));
 	
-	layer_add_child(window_layer, text_layer_get_layer(s_title_layer));
 	
+	// Miscellaneous
+	window_set_background_color(s_achievement_window, PBL_IF_COLOR_ELSE(random_color, GColorWhite));
 	vibes_double_pulse();
+	app_timer_register(DELTA, next_frame_handler, NULL);
 }
 
 // DESTROY ALL THE THINGS (hopefully)
@@ -151,7 +142,6 @@ static void achievement_window_unload(Window *window) {
 	s_index = 0;
 	s_draw_complete = false;
 	window_destroy(s_achievement_window);
-	s_achievement_window = NULL;
 	APP_LOG(APP_LOG_LEVEL_DEBUG, "The number of bytes free is %d.", (int)heap_bytes_free());
 }
 
@@ -183,8 +173,6 @@ void achievement_window_push(char *achievement_name, char *achievement_descripti
 	});
 	
 	window_stack_push(s_achievement_window, true);
-	
-	s_timer = app_timer_register(DELTA, next_frame_handler, NULL);
 	
 // 	window_set_click_config_provider(s_achievement_window, click_config_provider);
 }

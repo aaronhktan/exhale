@@ -5,7 +5,7 @@ module.exports = [
 	},
 	{
 		"type": "text",
-		"defaultValue": "Ceci est la page de configuration pour l'app Breathe. Vous utilisez version 2.31 de l'app.",
+		"defaultValue": "Ceci est la page de configuration pour l'app Breathe. Vous utilisez version 2.4 de l'app.",
 	},
 	{
 		"type": "section",
@@ -89,7 +89,7 @@ module.exports = [
 				"messageKey": "breathsPerMinute",
 				"defaultValue": 7,
 				"label": "Respirations par minute",
-				"min": 4,
+				"min": 2,
 				"max": 10,
 				"step": 1
 			}

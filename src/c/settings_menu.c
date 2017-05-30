@@ -206,7 +206,7 @@ static void menu_draw_row_callback(GContext* ctx, const Layer *cell_layer, MenuI
 		case 5: // This is the about section
 			switch (cell_index->row) {
 				case 0: // This is the version number
-					menu_cell_basic_draw(ctx, cell_layer, localize_get_version_row_title(), "v2.31, 2017-02-03", NULL);
+					menu_cell_basic_draw(ctx, cell_layer, localize_get_version_row_title(), "v2.4, 2017-05-29", NULL);
 					break;
 				case 1: // This is the credits
 					menu_cell_basic_draw(ctx, cell_layer, localize_get_credits_row_title(), "cheeseisdisgusting", NULL);
@@ -246,7 +246,7 @@ static void menu_select_callback(MenuLayer *menu_layer, MenuIndex *cell_index, v
 				case 2: // Breaths per minute
 					switch (settings_get_breathsPerMinute()) {
 						case 10:
-							settings_set_breathsPerMinute(4);
+							settings_set_breathsPerMinute(2);
 						break;
 						default:
 							settings_set_breathsPerMinute(settings_get_breathsPerMinute() + 1);

@@ -15,7 +15,7 @@ ClaySettings settings;
 int settings_version = 1, current_settings_version = 3;
 
 static void migrate_settings_data() {
-	switch (settings_version) { // Not useful now, but might become useful when there are more storage versions.
+	switch (settings_version) {
 		case 2: // Storage Version 2
 			#if !PBL_PLATFORM_APLITE
 				settings.achievementsEnabled = true;
