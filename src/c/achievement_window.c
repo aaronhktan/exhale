@@ -21,6 +21,7 @@ static Layer *s_canvas_layer;
 static TextLayer *s_announce_text_layer, *s_title_layer, *s_description_layer;
 static GDrawCommandSequence *s_command_seq;
 static GColor random_color, text_color;
+static AppTimer *s_timer;
 static char *s_achievement_name, *s_achievement_description;
 static bool s_draw_complete;
 static int s_index = 0;
@@ -28,7 +29,7 @@ static int s_index = 0;
 // Finds and displays the next frame in PDC
 static void next_frame_handler(void *context) {
 	layer_mark_dirty(s_canvas_layer);
-	app_timer_register(DELTA, next_frame_handler, NULL);
+	s_timer = app_timer_register(DELTA, next_frame_handler, NULL);
 }
 
 // Method to update the PDC layer
@@ -50,21 +51,22 @@ static void canvas_update_proc(Layer *layer, GContext *ctx) {
 	s_index++;
 	if (s_index == num_frames) {
 		--s_index;
+		app_timer_cancel(s_timer);
 		s_draw_complete = true;
 	}
 }
 
 // Allow exiting the window only after the PDC is done animating; this prevents a crash.
-// static void back_click_handler(ClickRecognizerRef recognizer, void *context) {
-// 	if (s_draw_complete) {
-// 		window_stack_remove(s_achievement_window, true);
-// 	}
-// }
+static void back_click_handler(ClickRecognizerRef recognizer, void *context) {
+	if (s_draw_complete) {
+		window_stack_remove(s_achievement_window, true);
+	}
+}
 
-// static void click_config_provider(void *context) {
-// 	ButtonId id_back = BUTTON_ID_BACK;
-// 	window_single_click_subscribe(id_back, back_click_handler);
-// }
+static void click_config_provider(void *context) {
+	ButtonId id_back = BUTTON_ID_BACK;
+	window_single_click_subscribe(id_back, back_click_handler);
+}
 
 static void achievement_window_load(Window *window) {
 	// Information about screen
@@ -72,6 +74,7 @@ static void achievement_window_load(Window *window) {
 	
 	// Layer for text with achievement description
 	s_description_layer = text_layer_create(GRect(bounds.size.w / 12, PBL_IF_RECT_ELSE(bounds.size.h * 11 / 16, bounds.size.h * 9 / 32), bounds.size.w * 5 / 6, bounds.size.h / 3));
+	text_layer_set_text(s_description_layer, s_achievement_description);
 	// Set text location a little bit lower if the text isn't that big
 	#if PBL_RECT
 	if (text_layer_get_content_size(s_description_layer).h < bounds.size.h / 4) {
@@ -129,7 +132,6 @@ static void achievement_window_load(Window *window) {
 	// Miscellaneous
 	window_set_background_color(s_achievement_window, PBL_IF_COLOR_ELSE(random_color, GColorWhite));
 	vibes_double_pulse();
-	app_timer_register(DELTA, next_frame_handler, NULL);
 }
 
 // DESTROY ALL THE THINGS (hopefully)
@@ -142,6 +144,7 @@ static void achievement_window_unload(Window *window) {
 	s_index = 0;
 	s_draw_complete = false;
 	window_destroy(s_achievement_window);
+	s_achievement_window = NULL;
 	APP_LOG(APP_LOG_LEVEL_DEBUG, "The number of bytes free is %d.", (int)heap_bytes_free());
 }
 
@@ -174,6 +177,8 @@ void achievement_window_push(char *achievement_name, char *achievement_descripti
 	
 	window_stack_push(s_achievement_window, true);
 	
-// 	window_set_click_config_provider(s_achievement_window, click_config_provider);
+	s_timer = app_timer_register(DELTA, next_frame_handler, NULL);
+	
+	window_set_click_config_provider(s_achievement_window, click_config_provider);
 }
 #endif
