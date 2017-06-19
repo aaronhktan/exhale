@@ -14,9 +14,31 @@
 	#include "src/c/new_version_window.h"
 #endif
 
+static void inbox_received_handler(DictionaryIterator *iter, void *context) {
+	#if !PBL_PLATFORM_APLITE
+	// Check if this is a request to send the settings on watch to the phone
+	Tuple *request_settings_t = dict_find(iter, MESSAGE_KEY_requestSettings);
+	Tuple *achievements_t = dict_find(iter, 0);
+	if (request_settings_t) {
+		settings_send_settings(); // If yes, then send the settings
+	} else if (achievements_t) {
+		achievement_handle_achievements(iter, context);
+	} else {
+	#endif
+		// Otherwise, save settings received from phone, and refresh screen
+		settings_handle_settings(iter, context);
+		breathe_window_redraw_window();
+	#if !PBL_PLATFORM_APLITE
+	}
+	#endif
+}
+
 static void init() {
-	APP_LOG(APP_LOG_LEVEL_INFO, "You are running version 2.31 of the Breathe app.");
+	APP_LOG(APP_LOG_LEVEL_INFO, "You are running version 2.4 of the Breathe app.");
+	// Open AppMessage connection
+	app_message_register_inbox_received(inbox_received_handler);
 	app_message_open(512, 512);
+	
 	settings_init(); // Subscribe to settings service
 	#if PBL_HEALTH
 		if (settings_get_displayText() == 2 || settings_get_displayText() == 3) {
@@ -38,7 +60,7 @@ static void init() {
 		}
 	} else {
 // 				reminder_window_push(); // For testing
-		// The app was started by the user; push the standard breathe window
+// 		The app was started by the user; push the standard breathe window
 		if (settings_get_rememberDuration() && data_read_last_duration_data() != 0) { // Set the minutes to breathe to the same as last one, unless the number is zero (meaning they haven't breathed yet)
 			breathe_window_push(data_read_last_duration_data());
 		} else {

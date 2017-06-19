@@ -5,7 +5,7 @@ module.exports = [
 	},
 	{
 		"type": "text",
-		"defaultValue": "Esta es la página de ajustes para la app Breathe. Estás usando la versión 2.4 de la app.",
+		"defaultValue": "Esto es la página de ajustes para la app Breathe. Estás usando la versión 2.4 de la app.",
 	},
 	{
 		"type": "section",
@@ -43,27 +43,27 @@ module.exports = [
 				"type": "toggle",
 				"messageKey": "rememberDuration",
 				"defaultValue": false,
-				"label": "¿Recordar la duración anterior y usarla cuando se lance la app?",
+				"label": "¿Recordar la duración anterior y usarla cuando se inicia la app?",
 			},
 			{
 				"type": "toggle",
 				"messageKey": "vibrationEnabled",
 				"defaultValue": true,
-				"label": "¿Activar las vibraciones durante la respiración?",
+				"label": "¿Activar la reacción háptica durante la respiración?",
 			},
 			{
 				"type": "select",
 				"messageKey": "vibrationType",
 				"defaultValue": "0",
 				"label": "Tipo de vibración",
-				"description": "Sacudidas es como el Apple Watch; Toques es un doble toque.",
+				"description": "Repentina es una serie de vibraciones rápidas; Toques es un doble toque.",
 				"options": [
 					{
-						"label": "Sacudidas - inhalación solamente",
+						"label": "Repentina - inhalación solamente",
 						"value": "0"
 					},
 					{
-						"label": "Sacudidas - inhalación y exhalación",
+						"label": "Repentina - inhalación y exhalación",
 						"value": "1"
 					},
 					{ 
@@ -81,8 +81,8 @@ module.exports = [
 					],
 				"messageKey": "heartRateVariation",
 				"defaultValue": false,
-				"label": "¿Escoger la velocidad de respiraciones según el ritmo cardiaco?",
-				"description": "NOTA: Esto requiere un reloj con un monitor de ritmo cardiaco."
+				"label": "¿Dejar que el reloj escoga la velocidad de respiraciones automaticamente según el ritmo cardiaco?",
+				"description": "NOTA: Esta opción requiere un reloj con un monitor de ritmo cardiaco."
 			},
 			{
 				"type": "slider",
@@ -97,42 +97,6 @@ module.exports = [
 	},
 	{
 		"type": "section",
-		"capabilities": ["HEALTH"],
-		"items": [
-			{
-				"type": "heading",
-				"defaultValue": "Salud"
-			},
-			{
-				"type": "select",
-				"messageKey": "displayText",
-				"defaultValue": "1",
-				"label": "Mostrar...",
-				"description": "Esto determina lo que está mostrado en el menu principal. NOTA: El ritmo cardiaco requiere un reloj con un monitor de ritmo cardiaco.",
-				"options": [
-					{
-						"label": "Nada",
-						"value": "0"
-					},
-					{
-						"label": "Saludo",
-						"value": "1"
-					},
-					{ 
-						"label": "Pasos hoy", 
-						"value": "2" 
-					},
-					{ 
-						"label": "Ritmo cardiaco",
-						"capabilities": ["PLATFORM_DIORITE", "PLATFORM_EMERY"],
-						"value": "3" 
-					}
-				]
-			},
-		]
-	},
-	{
-		"type": "section",
 		"items": [
 			{
 				"type": "heading",
@@ -142,7 +106,7 @@ module.exports = [
 				"type": "select",
 				"messageKey": "reminderHours",
 				"defaultValue": "4",
-				"label": "Recuérdame de respirar...",
+				"label": "Recuérdame respirar a...",
 				"description": "El app te recordará a este intervalo diariamente.",
 				"options": [
 					{ 
@@ -175,7 +139,7 @@ module.exports = [
 				"type": "slider",
 				"messageKey": "reminderHoursStart",
 				"defaultValue": 8,
-				"label": "¿Cuando debería empezar de recordarte la app?",
+				"label": "¿A qué hora debería empezar de recordarte la app?",
 				"description": "De esta hora (es decir, 8 = las 8 de la mañana) hasta 12 horas trás, la app de recordará de respirar.",
 				"min": 6,
 				"max": 10,
@@ -222,6 +186,42 @@ module.exports = [
 	},
 	{
 		"type": "section",
+		"capabilities": ["HEALTH"],
+		"items": [
+			{
+				"type": "heading",
+				"defaultValue": "Salud"
+			},
+			{
+				"type": "select",
+				"messageKey": "displayText",
+				"defaultValue": "1",
+				"label": "Mostrar...",
+				"description": "Esto determina lo que está mostrado en el menú principal. NOTA: El ritmo cardiaco requiere un reloj con un monitor de ritmo cardiaco.",
+				"options": [
+					{
+						"label": "Nada",
+						"value": "0"
+					},
+					{
+						"label": "Saludo",
+						"value": "1"
+					},
+					{ 
+						"label": "Pasos hoy", 
+						"value": "2" 
+					},
+					{ 
+						"label": "Ritmo cardiaco",
+						"capabilities": ["PLATFORM_DIORITE", "PLATFORM_EMERY"],
+						"value": "3" 
+					}
+				]
+			},
+		]
+	},
+	{
+		"type": "section",
 		"capabilities": ["NOT_PLATFORM_APLITE"],
 		"items": [
 			{
@@ -238,7 +238,7 @@ module.exports = [
 				"type": "select",
 				"messageKey": "bottomTextType",
 				"defaultValue": "0",
-				"label": "Tipo de texto en la parte inferior del menú principal",
+				"label": "Texto mostrado en la parte inferior del menú principal",
 				"options": [
 					{
 						"label": "Total hoy",
@@ -250,11 +250,24 @@ module.exports = [
 					}
 				]
 			},
+			{
+				"type": "input",
+				"messageKey": "achievementsBackup",
+				"defaultValue": "",
+				"label": "Copia de seguridad y restauración de logros",
+				"description": "El contenido del campo de texto te permite de hacer una copia de seguridad de tus logros, tus récordes, y cuántos minutos ya respiraste con esta app. ¡Guárdalo en un lugar seguro! Si quieres restaurar con un texto anteriormente guardado, pégalo en el campo de texto, pues puntea el botón 'Guardar ajustes'."
+			},
+			{
+				"type": "button",
+				"primary": false,
+				"defaultValue": "Reiniciar logros",
+				"id": "resetAchievementsButton",
+			}
 		]
 	},
 	{
 		"type": "text",
-		"defaultValue": "<em><center>Muchas gracias a los probadores beta: <br>Paula&nbsp;Bosca, Nikita&nbsp;Cheng, Ayush&nbsp;Gupta, Ellen&nbsp;Huang, Yvonne&nbsp;Tan, David&nbsp;Voicu, /u/dryingsocks, /u/JohnEdwa, y /u/PiwwowPants</center></em>",
+		"defaultValue": "<em><center>Muchas gracias a los probadores beta y los contribuyentes: <br>Paula&nbsp;Bosca, Nikita&nbsp;Cheng, Ayush&nbsp;Gupta, Ellen&nbsp;Huang, Yvonne&nbsp;Tan, David&nbsp;Voicu, /u/dryingsocks, /u/JohnEdwa, y /u/PiwwowPants</center></em>",
 	},
 	{
 		"type": "submit",

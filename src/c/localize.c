@@ -488,25 +488,25 @@ char * localize_get_disabled_text() {
 
 char * localize_get_vibration_shakes_inhale_type_text() {
 	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
-		return "Secousses - inhalation";
+		return "Pulsations - inhalation";
 	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
-		return "Sacudidas - inhalación";
+		return "Repentina - inhalación";
 	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
 		return "Graduell - nur Einatmen";
 	} else {
-		return "Shakes - inhale only";
+		return "Rumble - inhale only";
 	}	
 }
 
 char * localize_get_vibration_shakes_type_text() {
 	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
-		return "Secousses";
+		return "Pulsations";
 	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
-		return "Sacudidas";
+		return "Repentina";
 	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
 		return "Graduell";
 	} else {
-		return "Shakes";
+		return "Rumble";
 	}	
 }
 
@@ -518,7 +518,7 @@ char * localize_get_vibration_taps_type_text() {
 	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
 		return "Doppeltippen";
 	} else {
-		return "Taps";
+		return "Pulses";
 	}	
 }
 
@@ -572,7 +572,7 @@ char * localize_get_reminder_frequency_text(int value) {
 			}
 		case 1:
 			if (strncmp(localize_get_locale(), "fr", 2) == 0) {
-				return "Chaque heures";
+				return "Toutes les heures";
 			} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
 				return "Cada hora";
 			} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
@@ -582,7 +582,7 @@ char * localize_get_reminder_frequency_text(int value) {
 			}
 		default:
 			if (strncmp(localize_get_locale(), "fr", 2) == 0) {
-				return "Chaque %d heures";
+				return "Toutes les %d heures";
 			} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
 				return "Cada %d horas";
 			} else if (strncmp(localize_get_locale(), "de", 2) == 0) {

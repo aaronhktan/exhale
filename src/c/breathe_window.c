@@ -802,28 +802,12 @@ static void click_config_provider(void *context) {
 }
 
 // ******************************************************************************************* Main App Functions
-static void inbox_received_handler(DictionaryIterator *iter, void *context) {
-	#if !PBL_PLATFORM_APLITE
-	// Check if this is a request to send the settings on watch to the phone
-	Tuple *request_settings_t = dict_find(iter, MESSAGE_KEY_requestSettings);
-	Tuple *achievements_t = dict_find(iter, 0);
-	if (request_settings_t) {
-		settings_send_settings(); // If yes, then send the settings
-	} else if (achievements_t) {
-		achievement_handle_achievements(iter, context);
-	} else {
-	#endif
-		// Otherwise, save settings received from phone, and refresh screen
-		settings_handle_settings(iter, context);
-		window_set_background_color(s_main_window, settings_get_backgroundColor());
-		layer_mark_dirty(s_circle_layer);
-		layer_mark_dirty(s_inside_text_layer);
-		layer_mark_dirty(s_upper_text_layer);
-	#if !PBL_PLATFORM_APLITE
-	}
-	#endif
+void breathe_window_redraw_window() {
+	window_set_background_color(s_main_window, settings_get_backgroundColor());
+	layer_mark_dirty(s_circle_layer);
+	layer_mark_dirty(s_inside_text_layer);
+	layer_mark_dirty(s_upper_text_layer);
 }
-
 
 static void main_window_load(Window *window){
 	// Sets bounds of drawing layer
@@ -863,10 +847,6 @@ static void set_click_config_providers() {
 void breathe_window_push(int min) {
 	// Starts random number generator
 	srand((unsigned) time(&t));
-	
-	// Open AppMessage connection
-	app_message_register_inbox_received(inbox_received_handler);
-	app_message_open(128, 128);
 	
 	// Load text
 	s_min_breathed_today = data_read_breathe_persist_data(); // Read the number of minutes breathed today from persistent memory

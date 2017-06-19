@@ -76,8 +76,8 @@ static void action_performed_callback(ActionMenu *action_menu, const ActionMenuI
 	// Some amount of minutes was selected; find which one and pass to breathe_window to start
 	s_min_to_breathe = (int)action_menu_item_get_action_data(action);
 	app_timer_cancel(s_close_timer);
-	window_stack_remove(s_reminder_window, false);
 	breathe_window_push(s_min_to_breathe);
+	window_stack_remove(s_reminder_window, false);
 }
 
 static void snooze_performed_callback(ActionMenu *action_menu, const ActionMenuItem *action, void *context) {

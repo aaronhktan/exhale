@@ -56,18 +56,18 @@ module.exports = [
 				"messageKey": "vibrationType",
 				"defaultValue": "0",
 				"label": "Vibration Type",
-				"description": "Shakes is like the Apple Watch, Taps is double tap.",
+				"description": "Rumble is a series of short vibrations, Pulse is double tap.",
 				"options": [
 					{
-						"label": "Shakes - inhale only",
+						"label": "Rumble - inhale only",
 						"value": "0"
 					},
 					{
-						"label": "Shakes - inhale and exhale",
+						"label": "Rumble - inhale and exhale",
 						"value": "1"
 					},
 					{ 
-						"label": "Taps", 
+						"label": "Pulse", 
 						"value": "2"
 					}
 				]
@@ -93,42 +93,6 @@ module.exports = [
 				"max": 10,
 				"step": 1
 			}
-		]
-	},
-	{
-		"type": "section",
-		"capabilities": ["HEALTH"],
-		"items": [
-			{
-				"type": "heading",
-			 	"defaultValue": "Health"
-			},
-			{
-				"type": "select",
-				"messageKey": "displayText",
-				"defaultValue": "1",
-				"label": "Show...",
-				"description": "This determines what the app shows at the top part of the main menu. Heart rate requires a watch with a heart rate monitor.",
-				"options": [
-					{
-						"label": "Nothing",
-						"value": "0"
-					},
-					{
-						"label": "Greeting",
-						"value": "1"
-					},
-					{ 
-						"label": "Steps today", 
-						"value": "2" 
-					},
-					{ 
-						"label": "Heart Rate",
-						"capabilities": ["PLATFORM_DIORITE", "PLATFORM_EMERY"],
-						"value": "3" 
-					}
-				]
-			},
 		]
 	},
 	{
@@ -222,6 +186,42 @@ module.exports = [
 	},
 	{
 		"type": "section",
+		"capabilities": ["HEALTH"],
+		"items": [
+			{
+				"type": "heading",
+			 	"defaultValue": "Health"
+			},
+			{
+				"type": "select",
+				"messageKey": "displayText",
+				"defaultValue": "1",
+				"label": "Show...",
+				"description": "This determines what the app shows at the top part of the main menu. Heart rate requires a watch with a heart rate monitor.",
+				"options": [
+					{
+						"label": "Nothing",
+						"value": "0"
+					},
+					{
+						"label": "Greeting",
+						"value": "1"
+					},
+					{ 
+						"label": "Steps today", 
+						"value": "2" 
+					},
+					{ 
+						"label": "Heart Rate",
+						"capabilities": ["PLATFORM_DIORITE", "PLATFORM_EMERY"],
+						"value": "3" 
+					}
+				]
+			},
+		]
+	},
+	{
+		"type": "section",
 		"capabilities": ["NOT_PLATFORM_APLITE"],
 		"items": [
 			{
@@ -256,6 +256,12 @@ module.exports = [
 				"defaultValue": "",
 				"label": "Achievement Backup / Restore",
 				"description": "This text allows you to back up the achievements that you have earned, your current and record streak, as well as the total number of minutes you have breathed with this app. Keep it somewhere safe! If you want to restore with a previously saved text, paste it into the textbox and tap the \"Save Settings\" button at the bottom of the page."
+			},
+			{
+				"type": "button",
+				"primary": false,
+				"defaultValue": "Reset achievements",
+				"id": "resetAchievementsButton",
 			}
 		]
 	},
@@ -266,5 +272,5 @@ module.exports = [
 	{
 		"type": "submit",
 		"defaultValue": "Save Settings"
-	}
+	},
 ];

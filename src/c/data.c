@@ -210,7 +210,7 @@ static int data_calculate_time_difference() {
 int data_get_streak_length() {
 	// Get the last date and convert to time_t to use with difftime
 	// By default, last date is today's date with year set to 1900.
-	APP_LOG(APP_LOG_LEVEL_DEBUG, "The last time is %d, and the difftime is %d.", data_get_streak_date_persist_data(), data_calculate_time_difference());
+	APP_LOG(APP_LOG_LEVEL_DEBUG, "The last time breathed was %d, and the difftime is %d.", data_get_streak_date_persist_data(), data_calculate_time_difference());
 	
 	if (!persist_exists(STREAK_LENGTH_KEY) || ((data_calculate_time_difference() > SECONDS_PER_DAY) && data_get_streak_date_persist_data() != 631170000)) { 
 		// There is no streak in persist, or the length of time since the last time breathed is more than one day

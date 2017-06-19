@@ -248,7 +248,6 @@ void achievement_handle_achievements(DictionaryIterator *iter, void *context) {
 	Tuple *last_breathed_t = dict_find(iter, 2);
 	if (last_breathed_t) {
 		persist_write_int(STREAK_DATE_KEY, last_breathed_t->value->uint32);
-		APP_LOG(APP_LOG_LEVEL_DEBUG, "The streak date key is %d", last_breathed_t->value->uint32);
 	}
 	
 	Tuple *streak_length_t = dict_find(iter, 3);

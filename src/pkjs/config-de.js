@@ -97,42 +97,6 @@ module.exports = [
 	},
 	{
 		"type": "section",
-		"capabilities": ["HEALTH"],
-		"items": [
-			{
-				"type": "heading",
-			 	"defaultValue": "Gesundheit"
-			},
-			{
-				"type": "select",
-				"messageKey": "displayText",
-				"defaultValue": "1",
-				"label": "Schnellinfo",
-				"description": "Legt fest, was im Hauptmenü oben angezeigt wird. Herzfrequenz setzt eine Uhr mit HR-Sensor voraus.",
-				"options": [
-					{
-						"label": "Nichts",
-						"value": "0"
-					},
-					{
-						"label": "Begrüßung",
-						"value": "1"
-					},
-					{ 
-						"label": "Schritte", 
-						"value": "2" 
-					},
-					{ 
-						"label": "Herzfrequenz",
-						"capabilities": ["PLATFORM_DIORITE", "PLATFORM_EMERY"],
-						"value": "3" 
-					}
-				]
-			},
-		]
-	},
-	{
-		"type": "section",
 		"items": [
 			{
 				"type": "heading",
@@ -222,6 +186,42 @@ module.exports = [
 	},
 	{
 		"type": "section",
+		"capabilities": ["HEALTH"],
+		"items": [
+			{
+				"type": "heading",
+			 	"defaultValue": "Gesundheit"
+			},
+			{
+				"type": "select",
+				"messageKey": "displayText",
+				"defaultValue": "1",
+				"label": "Schnellinfo",
+				"description": "Legt fest, was im Hauptmenü oben angezeigt wird. Herzfrequenz setzt eine Uhr mit HR-Sensor voraus.",
+				"options": [
+					{
+						"label": "Nichts",
+						"value": "0"
+					},
+					{
+						"label": "Begrüßung",
+						"value": "1"
+					},
+					{ 
+						"label": "Schritte", 
+						"value": "2" 
+					},
+					{ 
+						"label": "Herzfrequenz",
+						"capabilities": ["PLATFORM_DIORITE", "PLATFORM_EMERY"],
+						"value": "3" 
+					}
+				]
+			},
+		]
+	},
+	{
+		"type": "section",
 		"capabilities": ["NOT_PLATFORM_APLITE"],
 		"items": [
 			{
@@ -250,6 +250,18 @@ module.exports = [
 					}
 				]
 			},
+			{
+				"type": "input",
+				"messageKey": "achievementsBackup",
+				"defaultValue": "",
+				"label": "Sicherung von Errungenschaften",
+			},
+			{
+				"type": "button",
+				"primary": false,
+				"defaultValue": "Einstellungen Zurücksetzen",
+				"id": "resetAchievementsButton",
+			}
 		]
 	},
 	{

@@ -28,6 +28,7 @@ Pebble.addEventListener('appmessage', function(e) {
 		}
 		for (var key in dict) {
 			achievements[key] = dict[key];
+			console.log(dict[key]);
 		}
 		localStorage.setItem('achievements', JSON.stringify(achievements));
 		
@@ -63,7 +64,7 @@ function requestSettings() {
 			dict[messageKeys.requestSettings] = 'true';
 
 			Pebble.sendAppMessage(dict, function() {
-				console.log('Settings Request sent successfully: ' + JSON.stringify(dict));
+				console.log('Settings Request sent successfully!');
 			}, function(e) {
 				console.log('Settings Request failed: ' + JSON.stringify(e));
 	});
@@ -78,11 +79,9 @@ function sendAchievements() {
 		for (var key in achievements) {
 			dict[key] = achievements[key];
 		}
-	
-		console.log(JSON.stringify(dict));
 		
 		Pebble.sendAppMessage(dict, function() {
-			console.log('Achievements sent successfully.');
+			console.log('Achievements sent successfully!');
 		}, function (e) {
 			console.log('Achievement sending failed: ' + JSON.stringify(e));
 			failedCount++;
@@ -123,7 +122,6 @@ Pebble.addEventListener('showConfiguration', function(e) {
 			} else {
 				achievementsString += achievements[key].toString();
 			}
-			console.log(achievementsString);
 		}
 	} else {
 		console.log('No achievements are stored in localStorage.');
