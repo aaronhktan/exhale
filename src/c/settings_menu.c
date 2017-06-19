@@ -347,6 +347,7 @@ static void menu_select_callback(MenuLayer *menu_layer, MenuIndex *cell_index, v
 					}
 				break;
 			}
+		break;
 		case 5: // This is the About Section
 			switch (cell_index->row) {
 				case 0: // See information about new version

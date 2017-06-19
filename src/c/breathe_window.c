@@ -313,6 +313,8 @@ static void animation_end_callback(void *data) {
 					}
 					break;
 			}
+		
+		achievement_send_achievements();
 		#endif
 		
 	} else if (complete == 1) { // The user interrupted their session, so only add what was breathed before aborting
@@ -804,8 +806,11 @@ static void inbox_received_handler(DictionaryIterator *iter, void *context) {
 	#if !PBL_PLATFORM_APLITE
 	// Check if this is a request to send the settings on watch to the phone
 	Tuple *request_settings_t = dict_find(iter, MESSAGE_KEY_requestSettings);
+	Tuple *achievements_t = dict_find(iter, 0);
 	if (request_settings_t) {
 		settings_send_settings(); // If yes, then send the settings
+	} else if (achievements_t) {
+		achievement_handle_achievements(iter, context);
 	} else {
 	#endif
 		// Otherwise, save settings received from phone, and refresh screen

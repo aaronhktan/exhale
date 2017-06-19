@@ -27,7 +27,9 @@
             "appGlanceType",
             "achievementsEnabled",
             "bottomTextType",
-            "requestSettings"
+            "requestSettings",
+            "achievementsBackup",
+            "requestAchievements"
         ],
         "projectType": "native",
         "resources": {

@@ -250,11 +250,18 @@ module.exports = [
 					}
 				]
 			},
+			{
+				"type": "input",
+				"messageKey": "achievementsBackup",
+				"defaultValue": "",
+				"label": "Achievement Backup / Restore",
+				"description": "This text allows you to back up the achievements that you have earned, your current and record streak, as well as the total number of minutes you have breathed with this app. Keep it somewhere safe! If you want to restore with a previously saved text, paste it into the textbox and tap the \"Save Settings\" button at the bottom of the page."
+			}
 		]
 	},
 	{
 		"type": "text",
-		"defaultValue": "<em><center>Many thanks to the beta testers: <br>Paula&nbsp;Bosca, Nikita&nbsp;Cheng, Ayush&nbsp;Gupta, Ellen&nbsp;Huang, Yvonne&nbsp;Tan, David&nbsp;Voicu, /u/dryingsocks, /u/JohnEdwa, and /u/PiwwowPants.</center></em>",
+		"defaultValue": "<em><center>Many thanks to the beta testers and contributors: <br>Paula&nbsp;Bosca, Nikita&nbsp;Cheng, Ayush&nbsp;Gupta, Ellen&nbsp;Huang, Yvonne&nbsp;Tan, David&nbsp;Voicu, /u/dryingsocks, /u/JohnEdwa, and /u/PiwwowPants.</center></em>",
 	},
 	{
 		"type": "submit",

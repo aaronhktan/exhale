@@ -9,31 +9,43 @@ var clayConfigES = require('./config-es.js');
 var clayConfigDE = require('./config-de.js');
 // Custom function that runs on the config page
 var customClay = require('./custom-clay.js');
-// Initialize Clay
-var clay = new Clay(clayConfig, customClay, { autoHandleEvents: false });
 
-// Get AppMessage events
+// Initialize Clay
+var clay = new Clay(clayConfig, customClay, { autoHandleEvents: false});
+								 
+// Receiving AppMessage events
 Pebble.addEventListener('appmessage', function(e) {
-	console.log('Received the appMessage from watch!');
-	
-	// Get the clay settings object from localStorage
-	var settings = JSON.parse(localStorage.getItem('clay-settings'));
-	
   // Get the dictionary from the message
   var dict = e.payload;
 	
 	// Set JSON values to match those in the dictionary
-	for (var key in dict) {
-		if (key == 'rememberDuration' || key == 'vibrationEnabled' || key == 'appGlanceEnabled' || key == 'achievementsEnabled') {
-			var booleanValue = dict[key] == 1; // Convert integer to boolean
-			settings[key] = booleanValue;
+	if ('0' in dict) {
+		console.log('Received achievements from watch!');
+		if (localStorage.getItem('achievements' !== null)) {
+			var achievements = JSON.parse(localStorage.getItem('achievements'));
 		} else {
-			settings[key] = dict[key];
+			var achievements = new Array();
 		}
+		for (var key in dict) {
+			achievements[key] = dict[key];
+		}
+		localStorage.setItem('achievements', JSON.stringify(achievements));
+		
+	} else if ('rememberDuration' in dict) {
+		console.log('Received settings from watch!');
+		// Get the clay settings object from localStorage
+		var settings = JSON.parse(localStorage.getItem('clay-settings'));
+		for (var key in dict) {
+			if (key == 'rememberDuration' || key == 'vibrationEnabled' || key == 'appGlanceEnabled' || key == 'achievementsEnabled') {
+				var booleanValue = dict[key] == 1; // Convert integer to boolean
+				settings[key] = booleanValue;
+			} else {
+				settings[key] = dict[key];
+			}
+		}
+		// Convert JSON back to object, then save the settings object back into localStorage
+		localStorage.setItem('clay-settings', JSON.stringify(settings));
 	}
-	
-	// Convert JSON back to object, then save the settings object back into localStorage
-	localStorage.setItem('clay-settings', JSON.stringify(settings));
 });
 
 // As soon as PebbleKit JS has been initialized, send request to get settings from watch
@@ -41,16 +53,47 @@ Pebble.addEventListener('ready', function() {
 	var info = Pebble.getActiveWatchInfo();
 	
 	if (info.platform != 'aplite') { // Do not get settings from watch if is on Aplite watch
-		var dict = {};
-		dict[messageKeys.requestSettings] = 'true';
-
-		Pebble.sendAppMessage(dict, function() {
-			console.log('Settings Request sent successfully: ' + JSON.stringify(dict));
-		}, function(e) {
-			console.log('Settings Request failed: ' + JSON.stringify(e));
-		});
+			requestSettings();
+			setTimeout(sendAchievements, 200);
 	}
 });
+
+function requestSettings() {
+	var dict = {};
+			dict[messageKeys.requestSettings] = 'true';
+
+			Pebble.sendAppMessage(dict, function() {
+				console.log('Settings Request sent successfully: ' + JSON.stringify(dict));
+			}, function(e) {
+				console.log('Settings Request failed: ' + JSON.stringify(e));
+	});
+}
+
+var failedCount = 0;
+function sendAchievements() {
+	if (localStorage.getItem('achievements') !== null) {
+		var achievements = JSON.parse(localStorage.getItem('achievements'));
+
+		var dict = {};
+		for (var key in achievements) {
+			dict[key] = achievements[key];
+		}
+	
+		console.log(JSON.stringify(dict));
+		
+		Pebble.sendAppMessage(dict, function() {
+			console.log('Achievements sent successfully.');
+		}, function (e) {
+			console.log('Achievement sending failed: ' + JSON.stringify(e));
+			failedCount++;
+			if (failedCount < 3) {
+				setTimeout(sendAchievements, 1000); // Tries to send achievements again in a second.
+			}
+		});
+	} else {
+		console.log('There are no achievements to send.');
+	}
+}
 
 // Open different config page for each language
 Pebble.addEventListener('showConfiguration', function(e) {
@@ -69,6 +112,29 @@ Pebble.addEventListener('showConfiguration', function(e) {
 			clay.config = clayConfigDE;
 			break;
 	}
+	
+	// Grab achievements and put into string for backup
+	var achievementsString = "";
+	if (localStorage.getItem('achievements') !== null) {
+		var achievements = JSON.parse(localStorage.getItem('achievements'));
+		for (var key in achievements) {
+			if (key == '0' || key == '1' || key == '3') {
+				achievementsString += ("00000" + achievements[key].toString()).slice(-5);
+			} else {
+				achievementsString += achievements[key].toString();
+			}
+			console.log(achievementsString);
+		}
+	} else {
+		console.log('No achievements are stored in localStorage.');
+	}
+	
+	// Convert to hex for fun obfuscation (and shorter values)! problem is that the number is larger than max value of int for JS :/
+// 	achievementsString = parseInt(achievementsString).toString(16);
+	
+	// Set the achievementsBackup key/value in Clay to show in settings page
+	clay.setSettings({achievementsBackup: achievementsString});
+	
 	Pebble.openURL(clay.generateUrl());
 });
 

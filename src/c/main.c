@@ -16,6 +16,7 @@
 
 static void init() {
 	APP_LOG(APP_LOG_LEVEL_INFO, "You are running version 2.31 of the Breathe app.");
+	app_message_open(512, 512);
 	settings_init(); // Subscribe to settings service
 	#if PBL_HEALTH
 		if (settings_get_displayText() == 2 || settings_get_displayText() == 3) {
@@ -27,11 +28,6 @@ static void init() {
 		achievement_init(); // Subscribe to the achievement service
 	#endif
 	wakeup_service_subscribe(wakeup_handler); // Subscribe to Wakeup Service
-	
-	#if !PBL_PLATFORM_APLITE
-	// Send settings on watch to phone to ensure most updated
-	settings_send_settings();
-	#endif
 	
 	if(launch_reason() == APP_LAUNCH_WAKEUP) { // The app was started by a wakeup event.
 		// Pushes the reminder window stack

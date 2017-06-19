@@ -48,8 +48,6 @@ void wakeup_force_next_schedule(int hours, int wakeup_id, int startHours) {
 
 	id = wakeup_schedule(future_timestamp, reason_for_launch, notify_if_missed);
 
-	APP_LOG(APP_LOG_LEVEL_DEBUG, "The app's launch_number is %d", launch_number);
-
 	// Check the scheduling was successful
 	if(id >= 0) {
 		struct tm *future_time = localtime(&future_timestamp);
@@ -73,7 +71,6 @@ void wakeup_schedule_next_wakeup(int hours, int wakeup_id, int startHours) {
       wakeup_force_next_schedule(hours, wakeup_id, startHours);
 		}
 	} else {
-		APP_LOG(APP_LOG_LEVEL_DEBUG, "There is no persisted wakeup ID.");
 		wakeup_force_next_schedule(hours, wakeup_id, startHours);
 	}
 }
