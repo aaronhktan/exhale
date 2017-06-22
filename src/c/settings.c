@@ -219,7 +219,6 @@ void settings_handle_settings(DictionaryIterator *iter, void *context) {
 	Tuple *achievements_t = dict_find(iter, MESSAGE_KEY_achievementsBackup);
 	if (achievements_t) {
 		char* achievements_string = achievements_t->value->cstring;
-		APP_LOG(APP_LOG_LEVEL_DEBUG, "The undecoded int is %s.", achievements_string);
 		
 		char date_buffer[11];
 		memcpy(date_buffer, &achievements_string[10], 10);
@@ -288,8 +287,6 @@ void settings_handle_settings(DictionaryIterator *iter, void *context) {
 					break;
 			}
 		}
-		
-		achievement_send_achievements();
 	}
 
 	if (achievement_get_changed_settings().complete == 0) {
@@ -297,8 +294,9 @@ void settings_handle_settings(DictionaryIterator *iter, void *context) {
 		if (settings.achievementsEnabled) {
 			achievement_window_push(localize_get_changed_settings_name(), localize_get_changed_settings_description());
 		}
-		achievement_send_achievements();
 	}
+	
+	achievement_send_achievements();
 	#endif
 	settings_save_settings();
 }

@@ -35,6 +35,17 @@
         "resources": {
             "media": [
                 {
+                    "file": "images/achievement-incomplete.png",
+                    "name": "ACHIEVEMENT_INCOMPLETE_ICON",
+                    "targetPlatforms": [
+                        "basalt",
+                        "chalk",
+                        "diorite",
+                        "emery"
+                    ],
+                    "type": "bitmap"
+                },
+                {
                     "file": "images/update.png",
                     "name": "UPDATE_ICON",
                     "targetPlatforms": null,
@@ -46,17 +57,6 @@
                     "name": "icon",
                     "storageFormat": "png",
                     "targetPlatforms": null,
-                    "type": "bitmap"
-                },
-                {
-                    "file": "images/achivement-incomplete.png",
-                    "name": "ACHIEVEMENT_INCOMPLETE_ICON",
-                    "targetPlatforms": [
-                        "basalt",
-                        "chalk",
-                        "diorite",
-                        "emery"
-                    ],
                     "type": "bitmap"
                 },
                 {
@@ -78,7 +78,7 @@
                 },
                 {
                     "file": "data/achievement_sequence.pdc",
-                    "name": "ACHIEVEMENT_SEQUENCE",
+                    "name": "ACHIEVEMENT_GDC_SEQUENCE",
                     "targetPlatforms": [
                         "basalt",
                         "chalk",

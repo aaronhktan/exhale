@@ -37,7 +37,7 @@ static void init() {
 	APP_LOG(APP_LOG_LEVEL_INFO, "You are running version 2.4 of the Breathe app.");
 	// Open AppMessage connection
 	app_message_register_inbox_received(inbox_received_handler);
-	app_message_open(512, 512);
+	app_message_open(256, 256);
 	
 	settings_init(); // Subscribe to settings service
 	#if PBL_HEALTH
@@ -55,10 +55,11 @@ static void init() {
 		// Pushes the reminder window stack
 		reminder_window_push();
 		// If the user still has reminders enabled, schedule next wakeup
-		if (settings_get_reminderHours() != 0) {
-			wakeup_schedule_next_wakeup(settings_get_reminderHours(), 0, settings_get_reminderHoursStart());
-		}
+// 		if (settings_get_reminderHours() != 0) {
+// 			wakeup_schedule_next_wakeup(settings_get_reminderHours(), 0, settings_get_reminderHoursStart());
+// 		}
 	} else {
+		APP_LOG(APP_LOG_LEVEL_DEBUG, "Heap free is %d.", (int)heap_bytes_free());
 // 				reminder_window_push(); // For testing
 // 		The app was started by the user; push the standard breathe window
 		if (settings_get_rememberDuration() && data_read_last_duration_data() != 0) { // Set the minutes to breathe to the same as last one, unless the number is zero (meaning they haven't breathed yet)
@@ -85,9 +86,11 @@ static void init() {
 // 			char description[100];
 // 			snprintf(description, sizeof(description), localize_get_minutes_session_description(), 10);
 // 			achievement_window_push(localize_get_thirty_minutes_day_name(), description); // For testing
-				if ((!persist_exists(SEEN_NEW_VERSION_KEY)) || (persist_read_bool(SEEN_NEW_VERSION_KEY) == false) || (!persist_exists(SEEN_NEW_VERSION_NUMBER_KEY) || persist_read_int(SEEN_NEW_VERSION_NUMBER_KEY) != 24)) {
+				if ((persist_read_bool(SEEN_NEW_VERSION_KEY) == false) || persist_read_int(SEEN_NEW_VERSION_NUMBER_KEY) != 24) {
 // 						data_set_streak_date_persist_data();		
-						new_version_window_push(); // For testing
+					new_version_window_push(false);
+				} else if (!persist_exists(SEEN_NEW_VERSION_KEY) || !persist_exists(SEEN_NEW_VERSION_NUMBER_KEY)){
+					new_version_window_push(true);
 				} else {
 					APP_LOG(APP_LOG_LEVEL_DEBUG, "The user has already seen the new version page!");
 				}

@@ -206,8 +206,8 @@ void achievement_send_achievements() {
 	
 	// Write the achievements:
 	#if !PBL_PLATFORM_APLITE
-	dict_write_int(iter, 0, &longest_streak, 1, false);
-	dict_write_int(iter, 1, &total_breathed, 1, false);
+	dict_write_int(iter, 0, &longest_streak, sizeof(longest_streak), false);
+	dict_write_int(iter, 1, &total_breathed, sizeof(longest_streak), false);
 	dict_write_int(iter, 2, &last_breathed, sizeof(last_breathed), false);
 	dict_write_int(iter, 3, &streak_length, sizeof(streak_length), false);
 	#endif

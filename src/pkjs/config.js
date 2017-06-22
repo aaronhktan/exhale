@@ -253,7 +253,7 @@ module.exports = [
 			{
 				"type": "input",
 				"messageKey": "achievementsBackup",
-				"defaultValue": "",
+				"defaultValue": "0000000000000000000000000000000000000",
 				"label": "Achievement Backup / Restore",
 				"description": "This text allows you to back up the achievements that you have earned, your current and record streak, as well as the total number of minutes you have breathed with this app. Keep it somewhere safe! If you want to restore with a previously saved text, paste it into the textbox and tap the \"Save Settings\" button at the bottom of the page."
 			},

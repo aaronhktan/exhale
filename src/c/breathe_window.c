@@ -871,4 +871,6 @@ void breathe_window_push(int min) {
 	
 	// Show window on the watch, with animated = true
 	window_stack_push(s_main_window, true);
+	
+	APP_LOG(APP_LOG_LEVEL_DEBUG, "Heap free is %d after launching the breathe window.", (int)heap_bytes_free());
 }

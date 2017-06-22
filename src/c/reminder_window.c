@@ -152,6 +152,10 @@ static void click_config_provider(void *context) {
 }
 
 static void reminder_window_load(Window *window) {
+	// Create sequence from PDC
+	s_command_seq = gdraw_command_sequence_create_with_resource(RESOURCE_ID_ALARM_SEQUENCE);
+	s_next_frame_timer = app_timer_register(DELTA, next_frame_handler, NULL);
+	
 	// Information about screen
 	Layer *window_layer = window_get_root_layer(window);
 	GRect bounds = layer_get_bounds(window_layer);
@@ -186,11 +190,14 @@ static void reminder_window_load(Window *window) {
 
 // DESTROY ALL THE THINGS (hopefully)
 static void reminder_window_unload(Window *window) {
-	layer_destroy(s_canvas_layer);
-	layer_destroy(text_layer_get_layer(s_text_layer));
+	app_timer_cancel(s_next_frame_timer);
+	app_timer_cancel(s_close_timer);
+	text_layer_destroy(s_text_layer);
 	gdraw_command_sequence_destroy(s_command_seq);
+	layer_destroy(s_canvas_layer);
 	action_menu_hierarchy_destroy(s_root_level, NULL, NULL);
 	window_destroy(s_reminder_window);
+	s_reminder_window = NULL;
 }
 
 // Method to open and display this window
@@ -206,9 +213,6 @@ void reminder_window_push() {
 		text_color = GColorBlack;
 	#endif
 	
-	// Create sequence from PDC
-	s_command_seq = gdraw_command_sequence_create_with_resource(RESOURCE_ID_ALARM_SEQUENCE);
-	
 	s_reminder_window = window_create();
 	window_set_window_handlers(s_reminder_window, (WindowHandlers) {
 		.load = reminder_window_load, 
@@ -218,5 +222,5 @@ void reminder_window_push() {
 	window_set_background_color(s_reminder_window, PBL_IF_COLOR_ELSE(random_color, GColorWhite));
 	window_stack_push(s_reminder_window, true);
 	
-	s_next_frame_timer = app_timer_register(DELTA, next_frame_handler, NULL);
+	APP_LOG(APP_LOG_LEVEL_DEBUG, "Heap free is %d after launching the reminder window.", (int)heap_bytes_free());
 }

@@ -28,6 +28,7 @@ static int s_index = 0;
 
 // Finds and displays the next frame in PDC
 static void next_frame_handler(void *context) {
+	APP_LOG(APP_LOG_LEVEL_DEBUG, "The next frame was loaded.");
 	layer_mark_dirty(s_canvas_layer);
 	s_timer = app_timer_register(DELTA, next_frame_handler, NULL);
 }
@@ -49,7 +50,8 @@ static void canvas_update_proc(Layer *layer, GContext *ctx) {
 	// Advance to the next frame, stopping when done
 	int num_frames = gdraw_command_sequence_get_num_frames(s_command_seq);
 	s_index++;
-	if (s_index == num_frames) {
+	APP_LOG(APP_LOG_LEVEL_DEBUG, "The number of frames in the sequence is %d and the played number of frames is %d.", num_frames, s_index);
+	if (s_index >= num_frames) {
 		--s_index;
 		app_timer_cancel(s_timer);
 		s_draw_complete = true;
@@ -59,13 +61,12 @@ static void canvas_update_proc(Layer *layer, GContext *ctx) {
 // Allow exiting the window only after the PDC is done animating; this prevents a crash.
 static void back_click_handler(ClickRecognizerRef recognizer, void *context) {
 	if (s_draw_complete) {
-		window_stack_remove(s_achievement_window, true);
+		window_stack_pop(true);
 	}
 }
 
 static void click_config_provider(void *context) {
-	ButtonId id_back = BUTTON_ID_BACK;
-	window_single_click_subscribe(id_back, back_click_handler);
+	window_single_click_subscribe(BUTTON_ID_BACK, back_click_handler);
 }
 
 static void achievement_window_load(Window *window) {
@@ -132,6 +133,7 @@ static void achievement_window_load(Window *window) {
 	// Miscellaneous
 	window_set_background_color(s_achievement_window, PBL_IF_COLOR_ELSE(random_color, GColorWhite));
 	vibes_double_pulse();
+	s_timer = app_timer_register(DELTA, next_frame_handler, NULL);
 }
 
 // DESTROY ALL THE THINGS (hopefully)
@@ -144,8 +146,6 @@ static void achievement_window_unload(Window *window) {
 	s_index = 0;
 	s_draw_complete = false;
 	window_destroy(s_achievement_window);
-	s_achievement_window = NULL;
-	APP_LOG(APP_LOG_LEVEL_DEBUG, "The number of bytes free is %d.", (int)heap_bytes_free());
 }
 
 // Method to open and display this window
@@ -154,7 +154,13 @@ void achievement_window_push(char *achievement_name, char *achievement_descripti
 	s_achievement_description = achievement_description;
 	
 	// Create sequence from PDC
-	s_command_seq = gdraw_command_sequence_create_with_resource(RESOURCE_ID_ACHIEVEMENT_SEQUENCE);
+	s_command_seq = gdraw_command_sequence_create_with_resource(RESOURCE_ID_ACHIEVEMENT_GDC_SEQUENCE);
+	
+	if (s_command_seq) {
+		APP_LOG(APP_LOG_LEVEL_DEBUG, "The command sequence was successfully created.");
+	} else {
+		APP_LOG(APP_LOG_LEVEL_DEBUG, "The command sequence was not successfully created.");
+	}
 	
 	#if PBL_COLOR
 		random_color = (GColor){ .a = 3, .r = rand() % 4, .g = rand() % 4, .b = rand() % 4 }; // Random color. Cool.
@@ -176,9 +182,7 @@ void achievement_window_push(char *achievement_name, char *achievement_descripti
 	});
 	
 	window_stack_push(s_achievement_window, true);
-	
-	s_timer = app_timer_register(DELTA, next_frame_handler, NULL);
-	
+
 	window_set_click_config_provider(s_achievement_window, click_config_provider);
 }
 #endif

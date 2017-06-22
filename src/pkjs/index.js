@@ -28,7 +28,6 @@ Pebble.addEventListener('appmessage', function(e) {
 		}
 		for (var key in dict) {
 			achievements[key] = dict[key];
-			console.log(dict[key]);
 		}
 		localStorage.setItem('achievements', JSON.stringify(achievements));
 		
@@ -60,14 +59,16 @@ Pebble.addEventListener('ready', function() {
 });
 
 function requestSettings() {
-	var dict = {};
-			dict[messageKeys.requestSettings] = 'true';
+	if (localStorage.getItem('clay-settings') !== null) {
+		var dict = {};
+				dict[messageKeys.requestSettings] = 'true';
 
-			Pebble.sendAppMessage(dict, function() {
-				console.log('Settings Request sent successfully!');
-			}, function(e) {
-				console.log('Settings Request failed: ' + JSON.stringify(e));
-	});
+				Pebble.sendAppMessage(dict, function() {
+					console.log('Settings Request sent successfully!');
+				}, function(e) {
+					console.log('Settings Request failed: ' + JSON.stringify(e));
+		});
+	}
 }
 
 var failedCount = 0;
@@ -96,6 +97,28 @@ function sendAchievements() {
 
 // Open different config page for each language
 Pebble.addEventListener('showConfiguration', function(e) {
+	// Grab achievements and put into string for backup
+	var achievementsString = "";
+	if (localStorage.getItem('achievements') !== null) {
+		var achievements = JSON.parse(localStorage.getItem('achievements'));
+		for (var key in achievements) {
+			if (key == '0' || key == '1' || key == '3') {
+				achievementsString += ("00000" + achievements[key].toString()).slice(-5);
+			} else if (key == '2') {
+				achievementsString += ("0000000000" + achievements[key].toString()).slice(-10);
+			} else {
+				achievementsString += achievements[key].toString();
+			}
+		}
+		// Set the achievementsBackup key/value in Clay to show in settings page
+		var settings = JSON.parse(localStorage.getItem('clay-settings'));
+		settings['achievementsBackup'] = achievementsString;
+		localStorage.setItem('clay-settings', JSON.stringify(settings));
+		console.log(JSON.stringify(settings));
+	} else {
+		console.log('No achievements are stored in localStorage.');
+	}
+	
 	var info = Pebble.getActiveWatchInfo();
 	
 	// Show the configuration page
@@ -111,27 +134,6 @@ Pebble.addEventListener('showConfiguration', function(e) {
 			clay.config = clayConfigDE;
 			break;
 	}
-	
-	// Grab achievements and put into string for backup
-	var achievementsString = "";
-	if (localStorage.getItem('achievements') !== null) {
-		var achievements = JSON.parse(localStorage.getItem('achievements'));
-		for (var key in achievements) {
-			if (key == '0' || key == '1' || key == '3') {
-				achievementsString += ("00000" + achievements[key].toString()).slice(-5);
-			} else {
-				achievementsString += achievements[key].toString();
-			}
-		}
-	} else {
-		console.log('No achievements are stored in localStorage.');
-	}
-	
-	// Convert to hex for fun obfuscation (and shorter values)! problem is that the number is larger than max value of int for JS :/
-// 	achievementsString = parseInt(achievementsString).toString(16);
-	
-	// Set the achievementsBackup key/value in Clay to show in settings page
-	clay.setSettings({achievementsBackup: achievementsString});
 	
 	Pebble.openURL(clay.generateUrl());
 });

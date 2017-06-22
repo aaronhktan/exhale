@@ -101,5 +101,7 @@ char * localize_get_credits_row_title();
 	char * localize_get_longest_streak_name();
 	char * localize_get_longest_streak_description(int days);
 	char * localize_get_new_version_title();
+	char * localize_get_new_user_title();
 	char * localize_get_new_version_description();
+	char * localize_get_new_user_description();
 #endif

@@ -46,7 +46,6 @@ module.exports = function(minified) {
 		appGlanceEnabledToggle.on('change', toggleAppGlance);
 		
 		var resetAchievementsButton = clayConfig.getItemById('resetAchievementsButton');
-		resetAchievements.call(resetAchievementsButton);
-		resetAchievementsButton.on('clicked', resetAchievements);
+		resetAchievementsButton.on('click', resetAchievements);
 	});
 };
