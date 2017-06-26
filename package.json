@@ -35,6 +35,27 @@
         "resources": {
             "media": [
                 {
+                    "file": "images/alarm.png",
+                    "name": "ALARM_BITMAP",
+                    "targetPlatforms": [
+                        "aplite"
+                    ],
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/achievement-complete_large.png",
+                    "memoryFormat": "Smallest",
+                    "name": "ACHIEVEMENT_COMPLETE_BITMAP",
+                    "spaceOptimization": "memory",
+                    "targetPlatforms": [
+                        "basalt",
+                        "chalk",
+                        "diorite",
+                        "emery"
+                    ],
+                    "type": "bitmap"
+                },
+                {
                     "file": "images/achievement-incomplete.png",
                     "name": "ACHIEVEMENT_INCOMPLETE_ICON",
                     "targetPlatforms": [
@@ -78,7 +99,7 @@
                 },
                 {
                     "file": "data/achievement_sequence.pdc",
-                    "name": "ACHIEVEMENT_GDC_SEQUENCE",
+                    "name": "ACHIEVEMENT_SEQUENCE",
                     "targetPlatforms": [
                         "basalt",
                         "chalk",

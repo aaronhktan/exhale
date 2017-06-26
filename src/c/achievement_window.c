@@ -20,6 +20,8 @@ static Window *s_achievement_window;
 static Layer *s_canvas_layer;
 static TextLayer *s_announce_text_layer, *s_title_layer, *s_description_layer;
 static GDrawCommandSequence *s_command_seq;
+static GBitmap *s_achievement_bitmap;
+static BitmapLayer *s_bitmap_layer;
 static GColor random_color, text_color;
 static AppTimer *s_timer;
 static char *s_achievement_name, *s_achievement_description;
@@ -129,16 +131,31 @@ static void achievement_window_load(Window *window) {
 	text_layer_set_text(s_title_layer, s_achievement_name);
 	layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_title_layer));
 	
-	
 	// Miscellaneous
 	window_set_background_color(s_achievement_window, PBL_IF_COLOR_ELSE(random_color, GColorWhite));
 	vibes_double_pulse();
-	s_timer = app_timer_register(DELTA, next_frame_handler, NULL);
+	if (s_command_seq) {
+		s_timer = app_timer_register(DELTA, next_frame_handler, NULL);
+	} else {
+		s_draw_complete = true;
+		s_bitmap_layer = bitmap_layer_create(GRect(0, 0, bounds.size.w, PBL_IF_RECT_ELSE(bounds.size.h * 3 / 4, bounds.size.h * 7 / 8)));
+		layer_add_child(window_get_root_layer(window), bitmap_layer_get_layer(s_bitmap_layer));
+		bitmap_layer_set_compositing_mode(s_bitmap_layer, GCompOpSet);
+		bitmap_layer_set_bitmap(s_bitmap_layer, s_achievement_bitmap);
+		#if PBL_ROUND
+			bitmap_layer_set_alignment(s_bitmap_layer, GAlignBottom);
+		#endif
+	}
 }
 
 // DESTROY ALL THE THINGS (hopefully)
 static void achievement_window_unload(Window *window) {
-	gdraw_command_sequence_destroy(s_command_seq);
+	if (s_command_seq) {
+		gdraw_command_sequence_destroy(s_command_seq);
+	} else {
+		bitmap_layer_destroy(s_bitmap_layer);
+		gbitmap_destroy(s_achievement_bitmap);
+	}
 	layer_destroy(s_canvas_layer);
 	text_layer_destroy(s_announce_text_layer);
 	text_layer_destroy(s_title_layer);
@@ -154,12 +171,13 @@ void achievement_window_push(char *achievement_name, char *achievement_descripti
 	s_achievement_description = achievement_description;
 	
 	// Create sequence from PDC
-	s_command_seq = gdraw_command_sequence_create_with_resource(RESOURCE_ID_ACHIEVEMENT_GDC_SEQUENCE);
+	s_command_seq = gdraw_command_sequence_create_with_resource(RESOURCE_ID_ACHIEVEMENT_SEQUENCE);
 	
 	if (s_command_seq) {
 		APP_LOG(APP_LOG_LEVEL_DEBUG, "The command sequence was successfully created.");
-	} else {
+	} else { // Not enough memory to allocate for PDC; fall back to displaying static PNG
 		APP_LOG(APP_LOG_LEVEL_DEBUG, "The command sequence was not successfully created.");
+		s_achievement_bitmap = gbitmap_create_with_resource(RESOURCE_ID_ACHIEVEMENT_COMPLETE_BITMAP);
 	}
 	
 	#if PBL_COLOR
