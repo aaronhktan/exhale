@@ -27,6 +27,10 @@ module.exports = function(minified) {
 			clayConfig.getItemByMessageKey('appGlanceType').disable();
 		}
 	}
+	
+	function resetAchievements() {
+		clayConfig.getItemByMessageKey('achievementsBackup').set('0000000000000000000000000000000000000');
+	}
 
 	clayConfig.on(clayConfig.EVENTS.AFTER_BUILD, function() {
 		var reminderSelect = clayConfig.getItemByMessageKey('reminderHours');
@@ -40,5 +44,8 @@ module.exports = function(minified) {
 		var appGlanceEnabledToggle = clayConfig.getItemByMessageKey('appGlanceEnabled');
 		toggleAppGlance.call(appGlanceEnabledToggle);
 		appGlanceEnabledToggle.on('change', toggleAppGlance);
+		
+		var resetAchievementsButton = clayConfig.getItemById('resetAchievementsButton');
+		resetAchievementsButton.on('click', resetAchievements);
 	});
 };

@@ -2,6 +2,7 @@
 #include "src/c/settings_menu.h"
 #include "src/c/localize.h"
 #include "src/c/settings.h"
+#include "src/c/new_version_window.h"
 
 static Window *s_settings_window;
 static MenuLayer *s_settings_layer;
@@ -29,11 +30,11 @@ static uint16_t menu_get_num_rows_callback(MenuLayer *menu_layer, uint16_t secti
     case 0:
       return NUM_IN_APP_MENU_ITEMS;
 		case 1:
-			return NUM_HEALTH_MENU_ITEMS;
-		case 2:
 			return NUM_REMINDERS_MENU_ITEMS;
-		case 3:
+		case 2:
 			return NUM_APP_GLANCE_MENU_ITEMS;
+		case 3:
+			return NUM_HEALTH_MENU_ITEMS;
 		case 4:
 			return NUM_ACHIEVEMENTS_MENU_ITEMS;
 		case 5:
@@ -55,13 +56,13 @@ static void menu_draw_header_callback(GContext* ctx, const Layer *cell_layer, ui
       menu_cell_basic_header_draw(ctx, cell_layer, localize_get_in_app_section_title());
       break;
     case 1:
-      menu_cell_basic_header_draw(ctx, cell_layer, localize_get_health_section_title());
-      break;
-		case 2:
       menu_cell_basic_header_draw(ctx, cell_layer, localize_get_reminders_section_title());
       break;
-		case 3:
+		case 2:
       menu_cell_basic_header_draw(ctx, cell_layer, localize_get_app_glance_section_title());
+      break;
+		case 3:
+      menu_cell_basic_header_draw(ctx, cell_layer, localize_get_health_section_title());
       break;
 		case 4:
       menu_cell_basic_header_draw(ctx, cell_layer, localize_get_achievements_section_title());
@@ -75,7 +76,7 @@ static void menu_draw_header_callback(GContext* ctx, const Layer *cell_layer, ui
 static void menu_draw_row_callback(GContext* ctx, const Layer *cell_layer, MenuIndex *cell_index, void *data) {
 	// Determine which section we're going to draw in
   switch (cell_index->section) {
-    case 0: // This is the in-app section
+    case 0: // In-App Section
 			// Use the row to specify which item we'll draw
 			switch (cell_index->row) {
 				case 0: // Remember last duration
@@ -118,7 +119,46 @@ static void menu_draw_row_callback(GContext* ctx, const Layer *cell_layer, MenuI
 				break;
 			}
 			break;
-		case 1: // This is the health section (for non-Aplite watches) or reminders section (for Aplite Watches)
+		case 1: // Reminders
+			switch (cell_index->row) {
+					case 0: ;// Reminder Frequency
+							if (settings_get_reminderHours() != 0) {
+								char frequency_text[30];
+								snprintf(frequency_text, sizeof(frequency_text), localize_get_reminder_frequency_text(settings_get_reminderHours()), settings_get_reminderHours());
+								menu_cell_basic_draw(ctx, cell_layer, localize_get_reminder_frequency_row_title(), frequency_text, NULL);
+							} else {
+								menu_cell_basic_draw(ctx, cell_layer, localize_get_reminder_frequency_row_title(), localize_get_reminder_frequency_text(settings_get_reminderHours()), NULL);
+							}
+						break;
+					case 1: ; // Reminder Start Time
+						char start_text[30];
+						snprintf(start_text, sizeof(start_text), localize_get_reminder_frequency_start_text(), settings_get_reminderHoursStart());
+						menu_cell_basic_draw(ctx, cell_layer, localize_get_reminder_start_row_title(), start_text, NULL);
+						break;
+			}
+			break;
+		case 2: // App Glance
+			switch (cell_index->row) {	
+				case 0: // App Glance Type
+						if (settings_get_appGlanceEnabled()) {
+							switch (settings_get_appGlanceType()) {
+								case 0: // Last session
+									menu_cell_basic_draw(ctx, cell_layer, localize_get_app_glance_row_title(), localize_get_app_glance_last_session_text(), NULL);
+									break;
+								case 1: // Current Daily Total
+									menu_cell_basic_draw(ctx, cell_layer, localize_get_app_glance_row_title(), localize_get_app_glance_daily_total_text(), NULL);
+									break;
+								case 2: // Streak
+									menu_cell_basic_draw(ctx, cell_layer, localize_get_app_glance_row_title(), localize_get_bottom_text_streak_type_text(), NULL);
+									break;
+							}
+						} else {
+							menu_cell_basic_draw(ctx, cell_layer, localize_get_app_glance_row_title(), localize_get_disabled_text(), NULL);
+						}
+				break;
+			}
+			break;
+		case 3: // Health
 			switch (cell_index->row) {
 				case 0: // Top Text Display
 				switch (settings_get_displayText()) {
@@ -139,45 +179,6 @@ static void menu_draw_row_callback(GContext* ctx, const Layer *cell_layer, MenuI
 					#endif
 					break;
 				}
-				break;
-			}
-			break;
-		case 2: // This is the reminders section (non-Aplite)
-			switch (cell_index->row) {
-					case 0: ;// Reminder Frequency
-							if (settings_get_reminderHours() != 0) {
-								char frequency_text[30];
-								snprintf(frequency_text, sizeof(frequency_text), localize_get_reminder_frequency_text(settings_get_reminderHours()), settings_get_reminderHours());
-								menu_cell_basic_draw(ctx, cell_layer, localize_get_reminder_frequency_row_title(), frequency_text, NULL);
-							} else {
-								menu_cell_basic_draw(ctx, cell_layer, localize_get_reminder_frequency_row_title(), localize_get_reminder_frequency_text(settings_get_reminderHours()), NULL);
-							}
-						break;
-					case 1: ; // Reminder Start Time
-						char start_text[30];
-						snprintf(start_text, sizeof(start_text), localize_get_reminder_frequency_start_text(), settings_get_reminderHoursStart());
-						menu_cell_basic_draw(ctx, cell_layer, localize_get_reminder_start_row_title(), start_text, NULL);
-						break;
-			}
-			break;
-		case 3: // This is the App Glance Section for non-Aplite watches
-			switch (cell_index->row) {	
-				case 0: // App Glance Type
-						if (settings_get_appGlanceEnabled()) {
-							switch (settings_get_appGlanceType()) {
-								case 0: // Last session
-									menu_cell_basic_draw(ctx, cell_layer, localize_get_app_glance_row_title(), localize_get_app_glance_last_session_text(), NULL);
-									break;
-								case 1: // Current Daily Total
-									menu_cell_basic_draw(ctx, cell_layer, localize_get_app_glance_row_title(), localize_get_app_glance_daily_total_text(), NULL);
-									break;
-								case 2: // Streak
-									menu_cell_basic_draw(ctx, cell_layer, localize_get_app_glance_row_title(), localize_get_bottom_text_streak_type_text(), NULL);
-									break;
-							}
-						} else {
-							menu_cell_basic_draw(ctx, cell_layer, localize_get_app_glance_row_title(), localize_get_disabled_text(), NULL);
-						}
 				break;
 			}
 			break;
@@ -205,7 +206,7 @@ static void menu_draw_row_callback(GContext* ctx, const Layer *cell_layer, MenuI
 		case 5: // This is the about section
 			switch (cell_index->row) {
 				case 0: // This is the version number
-					menu_cell_basic_draw(ctx, cell_layer, localize_get_version_row_title(), "v2.3, 2016-02-03", NULL);
+					menu_cell_basic_draw(ctx, cell_layer, localize_get_version_row_title(), "v2.4, 2017-07-01", NULL);
 					break;
 				case 1: // This is the credits
 					menu_cell_basic_draw(ctx, cell_layer, localize_get_credits_row_title(), "cheeseisdisgusting", NULL);
@@ -245,14 +246,14 @@ static void menu_select_callback(MenuLayer *menu_layer, MenuIndex *cell_index, v
 				case 2: // Breaths per minute
 					switch (settings_get_breathsPerMinute()) {
 						case 10:
-							settings_set_breathsPerMinute(4);
+							settings_set_breathsPerMinute(2);
 						break;
 						default:
 							settings_set_breathsPerMinute(settings_get_breathsPerMinute() + 1);
 						break;
 					}
 				break;
-				case 3: // Heart Rate Variation or Greeting depending on whether is Diorite or Aplite
+				case 3: // Heart Rate Variation for Diorite
 				#if PBL_PLATFORM_DIORITE || PBL_PLATFORM_EMERY
 					if (settings_get_heartRateVariation()) {
 						settings_set_heartRateVariation(false);
@@ -263,24 +264,7 @@ static void menu_select_callback(MenuLayer *menu_layer, MenuIndex *cell_index, v
 				break;
 			}
 			break;
-		case 1: // Health for non-aplite, reminders for aplite
-			switch (cell_index->row) {
-				case 0: // Top Text Display
-				switch (settings_get_displayText()) {
-					case 3:
-					settings_set_displayText(0);
-					break;
-					#if !PBL_PLATFORM_DIORITE && !PBL_PLATFORM_EMERY
-					case 2:
-					settings_set_displayText(0);
-					break;
-					#endif
-					default:
-					settings_set_displayText(settings_get_displayText() + 1);
-				}
-			}
-			break;
-		case 2: // This is the reminders section (non-Aplite)
+		case 1: // This is the reminders section
 			switch (cell_index->row) {
 					case 0: // Reminder Frequency
 						switch (settings_get_reminderHours()) {
@@ -306,7 +290,7 @@ static void menu_select_callback(MenuLayer *menu_layer, MenuIndex *cell_index, v
 						break;
 			}
 			break;
-		case 3: // This is the App Glance Section for non-Aplite watches
+		case 2: // This is the App Glance Section
 			switch (cell_index->row) {	
 					case 0: // App Glance Type
 						if (settings_get_appGlanceEnabled()) {
@@ -325,8 +309,24 @@ static void menu_select_callback(MenuLayer *menu_layer, MenuIndex *cell_index, v
 				break;
 			}
 			break;
+		case 3: // Health
+			switch (cell_index->row) {
+				case 0: // Top Text Display
+				switch (settings_get_displayText()) {
+					case 3:
+					settings_set_displayText(0);
+					break;
+					#if !PBL_PLATFORM_DIORITE && !PBL_PLATFORM_EMERY
+					case 2:
+					settings_set_displayText(0);
+					break;
+					#endif
+					default:
+					settings_set_displayText(settings_get_displayText() + 1);
+				}
+			}
 			break;
-		case 4: // This is the Achievement Section for non-Aplite watches
+		case 4: // This is the Achievement Section
 			switch (cell_index->row) {	
 				case 0: // Enable or disable achievements
 						if (settings_get_achievementsEnabled()) {
@@ -344,6 +344,13 @@ static void menu_select_callback(MenuLayer *menu_layer, MenuIndex *cell_index, v
 							settings_set_bottomTextType(0);
 							break;
 					}
+				break;
+			}
+		break;
+		case 5: // This is the About Section
+			switch (cell_index->row) {
+				case 0: // See information about new version
+					new_version_window_push(false);
 				break;
 			}
 		break;

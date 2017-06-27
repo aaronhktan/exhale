@@ -19,7 +19,12 @@ static int s_min_to_breathe;
 static Layer *s_canvas_layer;
 static TextLayer *s_text_layer;
 static AppTimer *s_close_timer, *s_next_frame_timer;
+#if !PBL_PLATFORM_APLITE
 static GDrawCommandSequence *s_command_seq;
+#else
+static GBitmap *s_remind_bitmap;
+static BitmapLayer *s_bitmap_layer;
+#endif
 static GColor random_color, text_color;
 static WakeupId id;
 
@@ -39,23 +44,28 @@ static void next_frame_handler(void *context) {
 // Method to update the PDC layer
 static void canvas_update_proc(Layer *layer, GContext *ctx) {
 	GRect bounds = layer_get_bounds(layer);
-	GSize seq_bounds = gdraw_command_sequence_get_bounds_size(s_command_seq);
+	
+	#if !PBL_PLATFORM_APLITE
+		GSize seq_bounds = gdraw_command_sequence_get_bounds_size(s_command_seq);
 
-	GDrawCommandFrame *frame = gdraw_command_sequence_get_frame_by_index(s_command_seq, s_index); // Grabs frame from PDC
+		GDrawCommandFrame *frame = gdraw_command_sequence_get_frame_by_index(s_command_seq, s_index); // Grabs frame from PDC
 
-	if (frame) { // A next frame was found
-		gdraw_command_frame_draw(ctx, s_command_seq, frame, GPoint(
-			(bounds.size.w - seq_bounds.w) / 2,
-			(bounds.size.h - seq_bounds.h) / 2
-		));
-	}
+		if (frame) { // A next frame was found
+			gdraw_command_frame_draw(ctx, s_command_seq, frame, GPoint(
+				(bounds.size.w - seq_bounds.w) / 2,
+				(bounds.size.h - seq_bounds.h) / 2
+			));
+		}
 
-	// Advance to the next frame, wrapping if neccessary
-	int num_frames = gdraw_command_sequence_get_num_frames(s_command_seq);
-	s_index++;
-	if (s_index == num_frames) {
-		s_index = 0;
-	}
+		// Advance to the next frame, wrapping if neccessary
+		int num_frames = gdraw_command_sequence_get_num_frames(s_command_seq);
+		s_index++;
+		if (s_index == num_frames) {
+			s_index = 0;
+		}
+	#else
+		
+	#endif
 	
 	#if PBL_COLOR
 	graphics_context_set_fill_color(ctx, gcolor_legible_over(random_color));
@@ -76,8 +86,8 @@ static void action_performed_callback(ActionMenu *action_menu, const ActionMenuI
 	// Some amount of minutes was selected; find which one and pass to breathe_window to start
 	s_min_to_breathe = (int)action_menu_item_get_action_data(action);
 	app_timer_cancel(s_close_timer);
-	window_stack_remove(s_reminder_window, false);
 	breathe_window_push(s_min_to_breathe);
+	window_stack_remove(s_reminder_window, false);
 }
 
 static void snooze_performed_callback(ActionMenu *action_menu, const ActionMenuItem *action, void *context) {
@@ -173,10 +183,23 @@ static void reminder_window_load(Window *window) {
 	
 	layer_add_child(window_layer, s_canvas_layer);
 	
+	#if !PBL_PLATFORM_APLITE
+		// Create sequence from PDC
+		s_command_seq = gdraw_command_sequence_create_with_resource(RESOURCE_ID_ALARM_SEQUENCE);
+		s_next_frame_timer = app_timer_register(DELTA, next_frame_handler, NULL);
+	#else
+		// Load static image because not enough memory for PDC
+		s_remind_bitmap = gbitmap_create_with_resource(RESOURCE_ID_ALARM_BITMAP);
+		s_bitmap_layer = bitmap_layer_create(bounds);
+		layer_add_child(s_canvas_layer, bitmap_layer_get_layer(s_bitmap_layer));
+		bitmap_layer_set_bitmap(s_bitmap_layer, s_remind_bitmap);
+		bitmap_layer_set_compositing_mode(s_bitmap_layer, GCompOpSet);
+	#endif
+	
 	init_action_menu();
 	
 	// Start timer to close the app after 30 seconds if the user doesn't respond as to not waste battery
-	s_close_timer = app_timer_register(30000, close_app, NULL);\
+	s_close_timer = app_timer_register(30000, close_app, NULL);
 		
 	// Only vibrate when the watch isn't in Quiet Time
 	if (!quiet_time_is_active()){
@@ -186,11 +209,19 @@ static void reminder_window_load(Window *window) {
 
 // DESTROY ALL THE THINGS (hopefully)
 static void reminder_window_unload(Window *window) {
+	app_timer_cancel(s_next_frame_timer);
+	app_timer_cancel(s_close_timer);
+	text_layer_destroy(s_text_layer);
+	#if !PBL_PLATFORM_APLITE
+		gdraw_command_sequence_destroy(s_command_seq);
+	#else
+		bitmap_layer_destroy(s_bitmap_layer);
+		gbitmap_destroy(s_remind_bitmap);
+	#endif
 	layer_destroy(s_canvas_layer);
-	layer_destroy(text_layer_get_layer(s_text_layer));
-	gdraw_command_sequence_destroy(s_command_seq);
 	action_menu_hierarchy_destroy(s_root_level, NULL, NULL);
 	window_destroy(s_reminder_window);
+	s_reminder_window = NULL;
 }
 
 // Method to open and display this window
@@ -206,9 +237,6 @@ void reminder_window_push() {
 		text_color = GColorBlack;
 	#endif
 	
-	// Create sequence from PDC
-	s_command_seq = gdraw_command_sequence_create_with_resource(RESOURCE_ID_ALARM_SEQUENCE);
-	
 	s_reminder_window = window_create();
 	window_set_window_handlers(s_reminder_window, (WindowHandlers) {
 		.load = reminder_window_load, 
@@ -218,5 +246,5 @@ void reminder_window_push() {
 	window_set_background_color(s_reminder_window, PBL_IF_COLOR_ELSE(random_color, GColorWhite));
 	window_stack_push(s_reminder_window, true);
 	
-	s_next_frame_timer = app_timer_register(DELTA, next_frame_handler, NULL);
+	APP_LOG(APP_LOG_LEVEL_DEBUG, "Heap free is %d after launching the reminder window.", (int)heap_bytes_free());
 }

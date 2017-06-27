@@ -15,7 +15,7 @@ ClaySettings settings;
 int settings_version = 1, current_settings_version = 3;
 
 static void migrate_settings_data() {
-	switch (settings_version) { // Not useful now, but might become useful when there are more storage versions.
+	switch (settings_version) {
 		case 2: // Storage Version 2
 			#if !PBL_PLATFORM_APLITE
 				settings.achievementsEnabled = true;
@@ -215,6 +215,80 @@ void settings_handle_settings(DictionaryIterator *iter, void *context) {
 	if (bottom_text_type_t) {
 		settings.bottomTextType = bottom_text_type_t->value->int8;
 	}
+	
+	Tuple *achievements_t = dict_find(iter, MESSAGE_KEY_achievementsBackup);
+	if (achievements_t) {
+		char* achievements_string = achievements_t->value->cstring;
+		APP_LOG(APP_LOG_LEVEL_DEBUG, "The string is %s.", achievements_string);
+		
+		char date_buffer[11];
+		memcpy(date_buffer, &achievements_string[10], 10);
+		date_buffer[10] = '\0';
+		persist_write_int(STREAK_DATE_KEY, atoi(date_buffer));
+		
+		char stat_buffer[6];
+		for (int i = 0; i < 21; i += 5) {
+			memcpy(stat_buffer, &achievements_string[i], 5);
+			stat_buffer[5] = '\0';
+			switch (i) {
+				case 0:
+					data_set_longest_streak(atoi(stat_buffer));
+					break;
+				case 5:
+					data_set_total_minutes_breathed(atoi(stat_buffer));
+					break;
+				case 20:
+					persist_write_int(STREAK_LENGTH_KEY, atoi(stat_buffer));
+					break;
+			}
+		}
+		
+		char other_buffer[2];
+		for (int i = 25; i < 37; i++) {
+			memcpy(other_buffer, &achievements_string[i], 1);
+			stat_buffer[1] = '\0';
+			switch (i) {
+				case 25:
+					achievement_set_one_week_streak(data_get_date_today(), atoi(other_buffer));
+					break;
+				case 26:
+					achievement_set_one_month_streak(data_get_date_today(), atoi(other_buffer));
+					break;
+				case 27:
+					achievement_set_one_year_streak(data_get_date_today(), atoi(other_buffer));
+					break;
+				case 28:
+					achievement_set_five_minutes_day(data_get_date_today(), atoi(other_buffer));
+					break;
+				case 29:
+					achievement_set_ten_minutes_day(data_get_date_today(), atoi(other_buffer));
+					break;
+				case 30:
+					achievement_set_thirty_minutes_day(data_get_date_today(), atoi(other_buffer));
+					break;
+				case 31:
+					achievement_set_one_hour_day(data_get_date_today(), atoi(other_buffer));
+					break;
+				case 32:
+					achievement_set_five_minutes_session(data_get_date_today(), atoi(other_buffer));
+					break;
+				case 33:
+					achievement_set_eight_minutes_session(data_get_date_today(), atoi(other_buffer));
+					break;
+				case 34:
+					achievement_set_ten_minutes_session(data_get_date_today(), atoi(other_buffer));
+					break;
+				case 35:
+					achievement_set_changed_settings(data_get_date_today(), atoi(other_buffer));
+					break;
+				case 36:
+					achievement_set_completionist(data_get_date_today(), atoi(other_buffer));
+					break;
+				default:
+					break;
+			}
+		}
+	}
 
 	if (achievement_get_changed_settings().complete == 0) {
 		achievement_set_changed_settings(data_get_date_today(), 1);
@@ -222,6 +296,8 @@ void settings_handle_settings(DictionaryIterator *iter, void *context) {
 			achievement_window_push(localize_get_changed_settings_name(), localize_get_changed_settings_description());
 		}
 	}
+	
+	achievement_send_achievements();
 	#endif
 	settings_save_settings();
 }
@@ -471,6 +547,6 @@ void settings_send_settings() {
 	// Send to phone
 	app_message_outbox_send();
 	
-	APP_LOG(APP_LOG_LEVEL_DEBUG, "The AppMessage containing the settings dict has been sent.");
+	APP_LOG(APP_LOG_LEVEL_DEBUG, "Settings have been sent from watch to phone!");
 }
 #endif

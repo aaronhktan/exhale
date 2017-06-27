@@ -5,7 +5,7 @@ module.exports = [
 	},
 	{
 		"type": "text",
-		"defaultValue": "Dies sind die Einstellungen für die Breathe-App. Sie benutzen Version 2.3 von Breathe.",
+		"defaultValue": "Dies sind die Einstellungen für die Breathe-App. Sie benutzen Version 2.4 von Breathe.",
 	},
 	{
 		"type": "section",
@@ -89,46 +89,10 @@ module.exports = [
 				"messageKey": "breathsPerMinute",
 				"defaultValue": 7,
 				"label": "Atemzüge pro Minute",
-				"min": 4,
+				"min": 2,
 				"max": 10,
 				"step": 1
 			}
-		]
-	},
-	{
-		"type": "section",
-		"capabilities": ["HEALTH"],
-		"items": [
-			{
-				"type": "heading",
-			 	"defaultValue": "Gesundheit"
-			},
-			{
-				"type": "select",
-				"messageKey": "displayText",
-				"defaultValue": "1",
-				"label": "Schnellinfo",
-				"description": "Legt fest, was im Hauptmenü oben angezeigt wird. Herzfrequenz setzt eine Uhr mit HR-Sensor voraus.",
-				"options": [
-					{
-						"label": "Nichts",
-						"value": "0"
-					},
-					{
-						"label": "Begrüßung",
-						"value": "1"
-					},
-					{ 
-						"label": "Schritte", 
-						"value": "2" 
-					},
-					{ 
-						"label": "Herzfrequenz",
-						"capabilities": ["PLATFORM_DIORITE", "PLATFORM_EMERY"],
-						"value": "3" 
-					}
-				]
-			},
 		]
 	},
 	{
@@ -222,6 +186,42 @@ module.exports = [
 	},
 	{
 		"type": "section",
+		"capabilities": ["HEALTH"],
+		"items": [
+			{
+				"type": "heading",
+			 	"defaultValue": "Gesundheit"
+			},
+			{
+				"type": "select",
+				"messageKey": "displayText",
+				"defaultValue": "1",
+				"label": "Schnellinfo",
+				"description": "Legt fest, was im Hauptmenü oben angezeigt wird. Herzfrequenz setzt eine Uhr mit HR-Sensor voraus.",
+				"options": [
+					{
+						"label": "Nichts",
+						"value": "0"
+					},
+					{
+						"label": "Begrüßung",
+						"value": "1"
+					},
+					{ 
+						"label": "Schritte", 
+						"value": "2" 
+					},
+					{ 
+						"label": "Herzfrequenz",
+						"capabilities": ["PLATFORM_DIORITE", "PLATFORM_EMERY"],
+						"value": "3" 
+					}
+				]
+			},
+		]
+	},
+	{
+		"type": "section",
 		"capabilities": ["NOT_PLATFORM_APLITE"],
 		"items": [
 			{
@@ -250,6 +250,18 @@ module.exports = [
 					}
 				]
 			},
+			{
+				"type": "input",
+				"messageKey": "achievementsBackup",
+				"defaultValue": "",
+				"label": "Sicherung von Errungenschaften",
+			},
+			{
+				"type": "button",
+				"primary": false,
+				"defaultValue": "Einstellungen Zurücksetzen",
+				"id": "resetAchievementsButton",
+			}
 		]
 	},
 	{

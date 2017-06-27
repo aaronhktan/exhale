@@ -14,8 +14,34 @@
 	#include "src/c/new_version_window.h"
 #endif
 
+static void inbox_received_handler(DictionaryIterator *iter, void *context) {
+	#if !PBL_PLATFORM_APLITE
+	// Check if this is a request to send the settings on watch to the phone
+	Tuple *request_settings_t = dict_find(iter, MESSAGE_KEY_requestSettings);
+	Tuple *request_achievements_t = dict_find(iter, MESSAGE_KEY_requestAchievements);
+	Tuple *achievements_t = dict_find(iter, 0);
+	if (request_settings_t) {
+		settings_send_settings(); // If yes, then send the settings
+	} else if (request_achievements_t) {
+		achievement_send_achievements(); // If yes, send the achievements
+	} else if (achievements_t) {
+		achievement_handle_achievements(iter, context);
+	} else {
+	#endif
+		// Otherwise, save settings received from phone, and refresh screen
+		settings_handle_settings(iter, context);
+		breathe_window_redraw_window();
+	#if !PBL_PLATFORM_APLITE
+	}
+	#endif
+}
+
 static void init() {
-	APP_LOG(APP_LOG_LEVEL_INFO, "You are running version 2.3 of the Breathe app.");
+	APP_LOG(APP_LOG_LEVEL_INFO, "You are running version 2.4 of the Breathe app.");
+	// Open AppMessage connection
+	app_message_register_inbox_received(inbox_received_handler);
+	app_message_open(256, 256);
+	
 	settings_init(); // Subscribe to settings service
 	#if PBL_HEALTH
 		if (settings_get_displayText() == 2 || settings_get_displayText() == 3) {
@@ -28,21 +54,17 @@ static void init() {
 	#endif
 	wakeup_service_subscribe(wakeup_handler); // Subscribe to Wakeup Service
 	
-	#if !PBL_PLATFORM_APLITE
-	// Send settings on watch to phone to ensure most updated
-	settings_send_settings();
-	#endif
-	
 	if(launch_reason() == APP_LAUNCH_WAKEUP) { // The app was started by a wakeup event.
 		// Pushes the reminder window stack
 		reminder_window_push();
 		// If the user still has reminders enabled, schedule next wakeup
-		if (settings_get_reminderHours() != 0) {
-			wakeup_schedule_next_wakeup(settings_get_reminderHours(), 0, settings_get_reminderHoursStart());
-		}
+// 		if (settings_get_reminderHours() != 0) {
+// 			wakeup_schedule_next_wakeup(settings_get_reminderHours(), 0, settings_get_reminderHoursStart());
+// 		}
 	} else {
+		APP_LOG(APP_LOG_LEVEL_DEBUG, "Heap free is %d.", (int)heap_bytes_free());
 // 				reminder_window_push(); // For testing
-		// The app was started by the user; push the standard breathe window
+// 		The app was started by the user; push the standard breathe window
 		if (settings_get_rememberDuration() && data_read_last_duration_data() != 0) { // Set the minutes to breathe to the same as last one, unless the number is zero (meaning they haven't breathed yet)
 			breathe_window_push(data_read_last_duration_data());
 		} else {
@@ -67,9 +89,11 @@ static void init() {
 // 			char description[100];
 // 			snprintf(description, sizeof(description), localize_get_minutes_session_description(), 10);
 // 			achievement_window_push(localize_get_thirty_minutes_day_name(), description); // For testing
-				if ((!persist_exists(SEEN_NEW_VERSION_KEY)) || (persist_read_bool(SEEN_NEW_VERSION_KEY) == false) || (!persist_exists(SEEN_NEW_VERSION_NUMBER_KEY) || persist_read_int(SEEN_NEW_VERSION_NUMBER_KEY) != 23)) {
+				if (!persist_exists(SEEN_NEW_VERSION_KEY) || !persist_exists(SEEN_NEW_VERSION_NUMBER_KEY)){
+					new_version_window_push(true);
+				} else if ((persist_read_bool(SEEN_NEW_VERSION_KEY) == false) || persist_read_int(SEEN_NEW_VERSION_NUMBER_KEY) != 24) {
 // 						data_set_streak_date_persist_data();		
-						new_version_window_push(); // For testing
+					new_version_window_push(false);
 				} else {
 					APP_LOG(APP_LOG_LEVEL_DEBUG, "The user has already seen the new version page!");
 				}

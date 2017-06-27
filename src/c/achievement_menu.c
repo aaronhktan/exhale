@@ -7,7 +7,7 @@
 #include "src/c/achievement_window.h"
 #include "src/c/data.h"
 
-static Window *s_achievement_window;
+static Window *s_achievement_menu_window;
 static MenuLayer *s_achievement_layer;
 static GBitmap *s_achievement_complete, *s_achievement_incomplete;
 
@@ -256,7 +256,7 @@ void achievement_window_load(Window *window) {
 	s_achievement_incomplete = gbitmap_create_with_resource(RESOURCE_ID_ACHIEVEMENT_INCOMPLETE_ICON);
 	
 	// Load the MenuLayer
-	Layer *window_layer = window_get_root_layer(s_achievement_window);
+	Layer *window_layer = window_get_root_layer(s_achievement_menu_window);
 	GRect bounds = layer_get_frame(window_layer);
 	
 	// Create the menu layer
@@ -279,18 +279,19 @@ void achievement_window_load(Window *window) {
 }
 
 void achievement_window_unload() {
-	window_destroy(s_achievement_window);
 	menu_layer_destroy(s_achievement_layer);
 	gbitmap_destroy(s_achievement_complete);
 	gbitmap_destroy(s_achievement_incomplete);
+	window_destroy(s_achievement_menu_window);
+	APP_LOG(APP_LOG_LEVEL_DEBUG, "The number of bytes free is %d.", (int)heap_bytes_free());
 }
 
 void achievement_menu_window_push() {
-	s_achievement_window = window_create();
-	window_set_window_handlers(s_achievement_window, (WindowHandlers) {
+	s_achievement_menu_window = window_create();
+	window_set_window_handlers(s_achievement_menu_window, (WindowHandlers) {
 		.load = achievement_window_load,
 		.unload = achievement_window_unload,
 	});
-	window_stack_push(s_achievement_window, true);
+	window_stack_push(s_achievement_menu_window, true);
 }
 #endif

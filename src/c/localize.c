@@ -308,6 +308,51 @@ char * localize_get_greet_text() {
 	#endif
 }
 
+// Sets strings as English, change if watch is set to another language
+char * localize_get_top_text(int random_number) {
+	char *strings[9] = {"TAKE A MOMENT;", "BE STILL;", "CLEAR YOUR MIND;", "EMPTY YOUR THOUGHTS;", "BE CALM;", "THINK NOTHING;", "RELAX;", "CHILL FOR A SEC;", "SPACE OUT;"};
+	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+		char *french_strings[9] = {"PRENEZ UN MOMENT;", "RÉFLECHISSEZ;", "VIDEZ VOTRE ESPRIT;", "NE PENSEZ À RIEN;", "SOYEZ CALME;", "CONCENTREZ;", "RELAXEZ;", "NE VOUS INQUIETEZ PAS;", "DONNEZ-VOUS DE L'ESPACE;"};
+		for (int i = 0; i <= 8; i++) {
+			strings[i] = french_strings[i];
+		}
+	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+		char *spanish_strings[9] = {"TÓMATE UN TIEMPO;", "NO TE MUEVAS;", "ACLARA TU MENTE;", "NO PIENSA A NADA;", "SÉ CALMO;", "CONCÉNTRATE;", "RELÁJATE;", "NO TE PREOCUPES;", "TOMA UN MOMENTO;"};
+		for (int i = 0; i <= 8; i++) {
+			strings[i] = spanish_strings[i];
+		}
+	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+		char *german_strings[9] = {"NIMM DIR ZEIT;", "STEHE STILL;", "LEERE DEINEN GEIST;", "DENKE AN NICHTS;", "WERDE RUHIG;", "EXISTIERE EINFACH;", "MACH'S DIR GEMÜTLICH;", "SPÜRE DEINE UMGEBUNG;", "KOMM RUNTER;"};
+		for (int i = 0; i <= 8; i++) {
+			strings[i] = german_strings[i];
+		}
+	}
+	return strings[random_number];
+}
+
+// Same thing as above but for bottom text
+char * localize_get_bottom_text(int random_number) {
+	char* strings[4] = {"BREATHE.", "EXHALE.", "CONCENTRATE.", "FOCUS."};
+	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+		char* french_strings[4] = {"RESPIREZ.", "EXHALEZ.", "RESPIREZ.", "EXHALEZ."};
+		for (int i = 0; i <= 3; i++) {
+			strings[i] = french_strings[i];
+		}	
+	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+		char* spanish_strings[4] = {"RESPIRA.", "EXHALA.", "RESPIRA.", "EXHALA."};
+		for (int i = 0; i <= 3; i++) {
+			strings[i] = spanish_strings[i];
+		}
+	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+		char* german_strings[4] = {"ATME.", "ATME AUS.", "KONZENTRIER DICH.", "FOKUSSIERE DICH."};
+		for (int i = 0; i <= 3; i++) {
+			strings[i] = german_strings[i];
+		}
+	}
+	
+	return strings[random_number];
+}
+
 /************************************************************************** Reminder window text */
 char * localize_get_reminder_action_menu_text() {
 	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
@@ -352,7 +397,7 @@ char * localize_get_in_app_section_title() {
 	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 		return "DANS L'APP";
 	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
-		return "APPLIACIÓN";
+		return "APLICACIÓN";
 	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
 		return "APP";
 	} else {
@@ -443,25 +488,25 @@ char * localize_get_disabled_text() {
 
 char * localize_get_vibration_shakes_inhale_type_text() {
 	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
-		return "Secousses - inhalation";
+		return "Pulsations - inhalation";
 	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
-		return "Sacudidas - inhalación";
+		return "Repentina - inhalación";
 	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
 		return "Graduell - nur Einatmen";
 	} else {
-		return "Shakes - inhale only";
+		return "Rumble - inhale only";
 	}	
 }
 
 char * localize_get_vibration_shakes_type_text() {
 	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
-		return "Secousses";
+		return "Pulsations";
 	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
-		return "Sacudidas";
+		return "Repentina";
 	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
 		return "Graduell";
 	} else {
-		return "Shakes";
+		return "Rumble";
 	}	
 }
 
@@ -473,7 +518,7 @@ char * localize_get_vibration_taps_type_text() {
 	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
 		return "Doppeltippen";
 	} else {
-		return "Taps";
+		return "Pulses";
 	}	
 }
 
@@ -527,7 +572,7 @@ char * localize_get_reminder_frequency_text(int value) {
 			}
 		case 1:
 			if (strncmp(localize_get_locale(), "fr", 2) == 0) {
-				return "Chaque heures";
+				return "Toutes les heures";
 			} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
 				return "Cada hora";
 			} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
@@ -537,7 +582,7 @@ char * localize_get_reminder_frequency_text(int value) {
 			}
 		default:
 			if (strncmp(localize_get_locale(), "fr", 2) == 0) {
-				return "Chaque %d heures";
+				return "Toutes les %d heures";
 			} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
 				return "Cada %d horas";
 			} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
@@ -1194,25 +1239,47 @@ char * localize_get_credits_row_title() {
 
 	char * localize_get_new_version_title() {
 		if (strncmp(localize_get_locale(), "es", 2) == 0) {
-			return "¡Versión 2.3!";
+			return "¡Versión 2.4!";
 		} else {
-			return "Version 2.3!";
+			return "Version 2.4!";
+		}
+	}
+
+	char * localize_get_new_user_title() {
+		if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+			return "Bienvenue!";
+		} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+			return "¡Bienvenido!";
+		} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+			return "Willkommen!";
+		} else {
+			return "WELCOME!";
 		}
 	}
 
 	char * localize_get_new_version_description() {
 		if (strncmp(localize_get_locale(), "fr", 2) == 0) {
-			return PBL_IF_RECT_ELSE("\nAppuyez longuement sur le bouton \"haut\" pour changer vos paramètres.\nLaissez un \u2764 sur l'App Store si vous aimez cette app!",
-															"\n\nAppuyez longuement sur le bouton \"haut\" pour changer vos paramètres.\nLaissez un \u2764 sur l'App Store\nsi vous aimez cette\napp!");
+			return "NOUVEAUTÉS:\n\n• Vos succès sont maintenant copiés sur votre célullaire, et se restaurent automatiquement si vous supprimez puis réinstallez cette app.\n• Le montant minimum de respirations par minute a diminué à 2.\n• Si vous voulez revoir ces notes, sélectionnez la version dans le menu des paramètres sur votre montre.\n• Corrigé plusieurs plantages.\n\nLaissez un \u2764 sur l'App Store si vous aimez cette app!";
 		} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
-			return PBL_IF_RECT_ELSE("\nNUEVO:\nCon una pulsación larga del botón arriba se puede cambiar ajustes.\n¡Da un \u2764 en el App Store si te gusta esta app!",
-															"\n\nCon una pulsación larga del botón arriba se puede \ncambiar ajustes.\n¡Da un \u2764 en el App Store\nsi te gusta esta\napp!");
+			return "NUEVO:\n\n• Ahora se realiza una copia de seguridad de todos tus logros, y estos se restauran automáticamente si eliminas y luego reinstalas esta app.\n• El número mínimo de respiraciones por minuto ha bajado a 2.\n• Si quieres ver de nuevo estas notas, selecciona el número de versión en el menú de ajustes en tu reloj.\n• Varios fallos de programa fueron eliminados.\n\n¡Da un \u2764 en el App Store si te gusta esta app!";
 		} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
-			return PBL_IF_RECT_ELSE("\nLange drücken Sie die Auf-Taste, Sie können die Einstellungen ändern.\nLassen Sie ein \u2764 auf dem App Store, wenn Sie diese App gefällt!",
-															"\n\nLange drücken Sie die Auf-Taste, Sie können die Einstellungen ändern.");
+			return PBL_IF_RECT_ELSE("Lange drücken Sie die Auf-Taste, Sie können die Einstellungen ändern.\nLassen Sie ein \u2764 auf dem App Store, wenn Sie diese App gefällt!",
+															"Lange drücken Sie die Auf-Taste, Sie können die Einstellungen ändern.");
 		} else {
-			return PBL_IF_RECT_ELSE("\nNEW FEATURES:\n\nLong press the up button to change settings.\nLeave a \u2764 on the Store if you like this app!",
-															"\n\nNEW FEATURES:\nLong press the up button to change settings.\nLeave a \u2764 on the Store if\nyou like this app!");
+			return "NEW FEATURES:\n\n• Your achievements are now backed up to your phone, and will restore if you delete and redownload this app!\n• Minimum breaths per minute decreased to 2.\n• If you ever want to check these update notes again, just click the version number in the settings menu on your watch.\n• Fixed many crashes and memory leaks, including the one after a reminder.\n\nLeave a \u2764 on the Store if you like this app!";
+		}
+	}
+
+	char * localize_get_new_user_description() {
+		if (strncmp(localize_get_locale(), "fr", 2) == 0) {
+			return "Prenez un moment pour respirer.\n\nRESPIREZ.\nChoississez la durée de votre session de respiration avec les boutons haut et bas. Quand vous êtes prêt à commencer, appuyez le bouton du milieu.\n\nPERSONNALISEZ.\nChangez vos paramètres directement sur votre montre ou sur votre céllulaire! Appuyez longuement sur le bouton haut pour les changer sur votre montre.\n\nACHEVEZ.\nAu fur et à mesure que vous utilisez la app, vous gagnerez des succès! Admirez-les en appuyant longuement sur le bouton bas.";
+		} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
+			return "Tómate un momento a respirar.\n\nRESPIRA.\nEscoge cuántos minutes quieres que dure la sesión con unas pulsaciones de los botónes arriba y abajo. Cuando estés listo a comenzar, presiona el botón central.\n\nPERSONALIZA.\nCambia los ajustes en tu reloj o en tu móvil. ¡Con una pulsación larga del botón arriba se pueden cambiar ajustes en tu reloj!\n\nALCANZA.\n¡Con la respiración regular se puede ganar logros! Se puede verlos con una pulsación larga del botón abajo.";
+		} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
+			return PBL_IF_RECT_ELSE("Lange drücken Sie die Auf-Taste, Sie können die Einstellungen ändern.\nLassen Sie ein \u2764 auf dem App Store, wenn Sie diese App gefällt!",
+															"Lange drücken Sie die Auf-Taste, Sie können die Einstellungen ändern.");
+		} else {
+			return "Take a moment to breathe.\n\nBREATHE.\nFrom the main menu, you can choose how many minutes to breathe with the up and down buttons. When you are ready to start your session, click the select button.\n\nCUSTOMIZE.\nYou can customize settings on your phone or on the watch. Long press the up button to change settings on your watch!\n\nACHIEVE.\nAs you breathe, you can earn achievements and see your stats! Long press the down button to see what you've unlocked.";
 		}
 	}
 #endif

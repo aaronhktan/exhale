@@ -4,13 +4,13 @@
         "pebble-clay": "^1.0.4"
     },
     "keywords": [],
-    "name": "breathe",
+    "name": "breathe-beta",
     "pebble": {
         "capabilities": [
             "configurable",
             "health"
         ],
-        "displayName": "Breathe",
+        "displayName": "Breathe (Beta)",
         "enableMultiJS": true,
         "messageKeys": [
             "backgroundColor",
@@ -27,11 +27,45 @@
             "appGlanceType",
             "achievementsEnabled",
             "bottomTextType",
-            "requestSettings"
+            "requestSettings",
+            "achievementsBackup",
+            "requestAchievements"
         ],
         "projectType": "native",
         "resources": {
             "media": [
+                {
+                    "file": "images/alarm.png",
+                    "name": "ALARM_BITMAP",
+                    "targetPlatforms": [
+                        "aplite"
+                    ],
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/achievement-complete_large.png",
+                    "memoryFormat": "Smallest",
+                    "name": "ACHIEVEMENT_COMPLETE_BITMAP",
+                    "spaceOptimization": "memory",
+                    "targetPlatforms": [
+                        "basalt",
+                        "chalk",
+                        "diorite",
+                        "emery"
+                    ],
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/achievement-incomplete.png",
+                    "name": "ACHIEVEMENT_INCOMPLETE_ICON",
+                    "targetPlatforms": [
+                        "basalt",
+                        "chalk",
+                        "diorite",
+                        "emery"
+                    ],
+                    "type": "bitmap"
+                },
                 {
                     "file": "images/update.png",
                     "name": "UPDATE_ICON",
@@ -44,17 +78,6 @@
                     "name": "icon",
                     "storageFormat": "png",
                     "targetPlatforms": null,
-                    "type": "bitmap"
-                },
-                {
-                    "file": "images/achivement-incomplete.png",
-                    "name": "ACHIEVEMENT_INCOMPLETE_ICON",
-                    "targetPlatforms": [
-                        "basalt",
-                        "chalk",
-                        "diorite",
-                        "emery"
-                    ],
                     "type": "bitmap"
                 },
                 {
@@ -95,10 +118,10 @@
             "diorite",
             "emery"
         ],
-        "uuid": "5d19cf9c-f432-4ed4-b666-6ee3777dcdf6",
+        "uuid": "55b7c89c-40de-4b13-adf3-4d735b679cc4",
         "watchapp": {
             "watchface": false
         }
     },
-    "version": "2.30.0"
+    "version": "2.4.0"
 }

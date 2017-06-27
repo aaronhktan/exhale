@@ -64,3 +64,7 @@ Achievement achievement_get_completionist();
 void achievement_set_completionist(char *date_completed, int complete);
 
 bool achievement_get_all_complete();
+
+void achievement_request_achievements();
+void achievement_send_achievements();
+void achievement_handle_achievements(DictionaryIterator *iter, void *context);
