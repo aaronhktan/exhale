@@ -20,17 +20,17 @@ Pebble.addEventListener('appmessage', function(e) {
 	
 	// Set JSON values to match those in the dictionary
 	if ('0' in dict) {
+		var achievements;
 		console.log('Received achievements from watch!');
 		if (localStorage.getItem('achievements' !== null)) {
-			var achievements = JSON.parse(localStorage.getItem('achievements'));
+			achievements = JSON.parse(localStorage.getItem('achievements'));
 		} else {
-			var achievements = new Array();
+			achievements = [];
 		}
 		for (var key in dict) {
 			achievements[key] = dict[key];
 		}
 		localStorage.setItem('achievements', JSON.stringify(achievements));
-		
 	} else if ('rememberDuration' in dict) {
 		console.log('Received settings from watch!');
 		// Get the clay settings object from localStorage
@@ -48,7 +48,7 @@ Pebble.addEventListener('appmessage', function(e) {
 	}
 });
 
-// As soon as PebbleKit JS has been initialized, send request to get settings from watch
+// As soon as PebbleKit JS has been initialized, send request to get settings from watch and to send achievements from localStorage
 Pebble.addEventListener('ready', function() {
 	var info = Pebble.getActiveWatchInfo();
 	
@@ -91,35 +91,53 @@ function sendAchievements() {
 			}
 		});
 	} else {
-		console.log('There are no achievements to send.');
+		console.log('There are no achievements to send; requesting from watch.');
+		// Get achievements from watch
+		var dict = {};
+		dict[messageKeys.requestAchievements] = 'true';
+
+		Pebble.sendAppMessage(dict, function() {
+			console.log('Achievements Request sent successfully!');
+		}, function(e) {
+			console.log('Achievements Request failed: ' + JSON.stringify(e));
+		});
 	}
 }
 
 // Open different config page for each language
 Pebble.addEventListener('showConfiguration', function(e) {
-	// Grab achievements and put into string for backup
-	var achievementsString = "";
-	if (localStorage.getItem('achievements') !== null) {
-		var achievements = JSON.parse(localStorage.getItem('achievements'));
-		for (var key in achievements) {
-			if (key == '0' || key == '1' || key == '3') {
-				achievementsString += ("00000" + achievements[key].toString()).slice(-5);
-			} else if (key == '2') {
-				achievementsString += ("0000000000" + achievements[key].toString()).slice(-10);
-			} else {
-				achievementsString += achievements[key].toString();
-			}
-		}
-		// Set the achievementsBackup key/value in Clay to show in settings page
-		var settings = JSON.parse(localStorage.getItem('clay-settings'));
-		settings['achievementsBackup'] = achievementsString;
-		localStorage.setItem('clay-settings', JSON.stringify(settings));
-		console.log(JSON.stringify(settings));
-	} else {
-		console.log('No achievements are stored in localStorage.');
-	}
 	
 	var info = Pebble.getActiveWatchInfo();
+	
+	if (info.platform != 'aplite') {
+		// Grab achievements and put into string for backup
+		var achievementsString = "";
+
+		if (localStorage.getItem('achievements') !== null) {
+			var achievements = JSON.parse(localStorage.getItem('achievements'));
+			for (var key in achievements) {
+				if (key == '0' || key == '1' || key == '3') {
+					achievementsString += ("00000" + achievements[key].toString()).slice(-5);
+				} else if (key == '2') {
+					achievementsString += ("0000000000" + achievements[key].toString()).slice(-10);
+				} else {
+					achievementsString += achievements[key].toString();
+				}
+			}
+			// Set the achievementsBackup key/value in Clay to show in settings page
+			if (localStorage.getItem('clay-settings') !== null) {
+				var settings = JSON.parse(localStorage.getItem('clay-settings'));
+			} else {
+				var settings = {
+					achievementsBackup: achievementsString
+				};
+			}
+			localStorage.setItem('clay-settings', JSON.stringify(settings));
+			console.log(JSON.stringify(settings));
+		} else {
+			console.log('No achievements are stored in localStorage.');
+		}
+	}
 	
 	// Show the configuration page
 	console.log('The language of the phone is ' + info.language.substr(0, 2));

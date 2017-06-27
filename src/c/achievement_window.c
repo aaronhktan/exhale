@@ -52,7 +52,6 @@ static void canvas_update_proc(Layer *layer, GContext *ctx) {
 	// Advance to the next frame, stopping when done
 	int num_frames = gdraw_command_sequence_get_num_frames(s_command_seq);
 	s_index++;
-	APP_LOG(APP_LOG_LEVEL_DEBUG, "The number of frames in the sequence is %d and the played number of frames is %d.", num_frames, s_index);
 	if (s_index >= num_frames) {
 		--s_index;
 		app_timer_cancel(s_timer);

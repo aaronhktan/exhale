@@ -219,6 +219,7 @@ void settings_handle_settings(DictionaryIterator *iter, void *context) {
 	Tuple *achievements_t = dict_find(iter, MESSAGE_KEY_achievementsBackup);
 	if (achievements_t) {
 		char* achievements_string = achievements_t->value->cstring;
+		APP_LOG(APP_LOG_LEVEL_DEBUG, "The string is %s.", achievements_string);
 		
 		char date_buffer[11];
 		memcpy(date_buffer, &achievements_string[10], 10);
@@ -243,7 +244,7 @@ void settings_handle_settings(DictionaryIterator *iter, void *context) {
 		}
 		
 		char other_buffer[2];
-		for (int i = 0; i < 37; i++) {
+		for (int i = 25; i < 37; i++) {
 			memcpy(other_buffer, &achievements_string[i], 1);
 			stat_buffer[1] = '\0';
 			switch (i) {

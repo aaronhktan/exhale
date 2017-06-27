@@ -18,9 +18,12 @@ static void inbox_received_handler(DictionaryIterator *iter, void *context) {
 	#if !PBL_PLATFORM_APLITE
 	// Check if this is a request to send the settings on watch to the phone
 	Tuple *request_settings_t = dict_find(iter, MESSAGE_KEY_requestSettings);
+	Tuple *request_achievements_t = dict_find(iter, MESSAGE_KEY_requestAchievements);
 	Tuple *achievements_t = dict_find(iter, 0);
 	if (request_settings_t) {
 		settings_send_settings(); // If yes, then send the settings
+	} else if (request_achievements_t) {
+		achievement_send_achievements(); // If yes, send the achievements
 	} else if (achievements_t) {
 		achievement_handle_achievements(iter, context);
 	} else {
@@ -37,7 +40,7 @@ static void init() {
 	APP_LOG(APP_LOG_LEVEL_INFO, "You are running version 2.4 of the Breathe app.");
 	// Open AppMessage connection
 	app_message_register_inbox_received(inbox_received_handler);
-	app_message_open(256, 128);
+	app_message_open(256, 256);
 	
 	settings_init(); // Subscribe to settings service
 	#if PBL_HEALTH
@@ -86,11 +89,11 @@ static void init() {
 // 			char description[100];
 // 			snprintf(description, sizeof(description), localize_get_minutes_session_description(), 10);
 // 			achievement_window_push(localize_get_thirty_minutes_day_name(), description); // For testing
-				if ((persist_read_bool(SEEN_NEW_VERSION_KEY) == false) || persist_read_int(SEEN_NEW_VERSION_NUMBER_KEY) != 24) {
+				if (!persist_exists(SEEN_NEW_VERSION_KEY) || !persist_exists(SEEN_NEW_VERSION_NUMBER_KEY)){
+					new_version_window_push(true);
+				} else if ((persist_read_bool(SEEN_NEW_VERSION_KEY) == false) || persist_read_int(SEEN_NEW_VERSION_NUMBER_KEY) != 24) {
 // 						data_set_streak_date_persist_data();		
 					new_version_window_push(false);
-				} else if (!persist_exists(SEEN_NEW_VERSION_KEY) || !persist_exists(SEEN_NEW_VERSION_NUMBER_KEY)){
-					new_version_window_push(true);
 				} else {
 					APP_LOG(APP_LOG_LEVEL_DEBUG, "The user has already seen the new version page!");
 				}
