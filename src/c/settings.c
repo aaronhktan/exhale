@@ -3,11 +3,11 @@
 #include "wakeup.h"
 #include "src/c/data.h"
 #if !PBL_PLATFORM_APLITE
-	#include "src/c/achievement.h"
-	#include "src/c/achievement_window.h"
-	#include "src/c/localize.h"
-	#include "src/c/data.h"
-	#include "src/c/health.h"
+#include "src/c/achievement.h"
+#include "src/c/achievement_window.h"
+#include "src/c/localize.h"
+#include "src/c/data.h"
+#include "src/c/health.h"
 #endif
 
 ClaySettings settings;
@@ -18,9 +18,9 @@ static void migrate_settings_data() {
 	switch (settings_version) {
 		case 2: // Storage Version 2
 			#if !PBL_PLATFORM_APLITE
-				settings.achievementsEnabled = true;
+			settings.achievementsEnabled = true;
 			#else
-				settings.achievementsEnabled = false;
+			settings.achievementsEnabled = false;
 			#endif
 			APP_LOG(APP_LOG_LEVEL_DEBUG, "Settings have been migrated from version 2 to version %d.", current_settings_version);
 			settings_save_settings();
@@ -48,9 +48,9 @@ static void migrate_settings_data() {
 			settings.appGlanceType = 0;
 			// Achievements were not available in the previous version of storage, so set these as well.
 			#if !PBL_PLATFORM_APLITE
-				settings.achievementsEnabled = true;
+			settings.achievementsEnabled = true;
 			#else
-				settings.achievementsEnabled = false;
+			settings.achievementsEnabled = false;
 			#endif
 			settings.bottomTextType = 0;
 			APP_LOG(APP_LOG_LEVEL_DEBUG, "Settings have been migrated from version 1 to version %d.", current_settings_version);
@@ -67,9 +67,9 @@ void settings_init() {
 	settings.vibrationType = 0;
 	settings.rememberDuration = false;
 	#if PBL_API_EXISTS(health_service_peek_current_value)
-		settings.displayText = 3;
+	settings.displayText = 3;
 	#else
-		settings.displayText = 2;
+	settings.displayText = 2;
 	#endif
 	settings.reminderHours = 4;
 	settings.reminderHoursStart = 8;
@@ -78,9 +78,9 @@ void settings_init() {
 	settings.appGlanceEnabled = true;
 	settings.appGlanceType = 0;
 	#if !PBL_PLATFORM_APLITE
-		settings.achievementsEnabled = true;
+	settings.achievementsEnabled = true;
 	#else
-		settings.achievementsEnabled = false;
+	settings.achievementsEnabled = false;
 	#endif
 	settings.bottomTextType = 0;
 	
@@ -221,13 +221,13 @@ void settings_handle_settings(DictionaryIterator *iter, void *context) {
 		char* achievements_string = achievements_t->value->cstring;
 		APP_LOG(APP_LOG_LEVEL_DEBUG, "The string is %s.", achievements_string);
 		
-		char date_buffer[11];
+		char date_buffer[11]; // The date last breathed is located at the 11th digit
 		memcpy(date_buffer, &achievements_string[10], 10);
 		date_buffer[10] = '\0';
 		persist_write_int(STREAK_DATE_KEY, atoi(date_buffer));
 		
 		char stat_buffer[6];
-		for (int i = 0; i < 21; i += 5) {
+		for (int i = 0; i < 21; i += 5) { // The longest streak, current streak, and total minutes breathed have a max of 5 digits
 			memcpy(stat_buffer, &achievements_string[i], 5);
 			stat_buffer[5] = '\0';
 			switch (i) {
@@ -243,7 +243,7 @@ void settings_handle_settings(DictionaryIterator *iter, void *context) {
 			}
 		}
 		
-		char other_buffer[2];
+		char other_buffer[2]; // These track whether the user has an accomplishment; 0 = false 1 = true
 		for (int i = 25; i < 37; i++) {
 			memcpy(other_buffer, &achievements_string[i], 1);
 			stat_buffer[1] = '\0';
@@ -390,7 +390,7 @@ int settings_get_breathDuration() {
 		return (MILLISECONDS_PER_MINUTE - (2000 * settings.breathsPerMinute)) / settings.breathsPerMinute / 2;
 	}
 	#else
-		return (MILLISECONDS_PER_MINUTE - (2000 * settings.breathsPerMinute)) / settings.breathsPerMinute / 2;
+	return (MILLISECONDS_PER_MINUTE - (2000 * settings.breathsPerMinute)) / settings.breathsPerMinute / 2;
 	#endif
 }
 

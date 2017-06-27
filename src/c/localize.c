@@ -3,14 +3,14 @@
 #include "src/c/settings.h"
 #include "src/c/data.h"
 
-const char * localize_get_locale() {
+const char* localize_get_locale() {
 	return i18n_get_system_locale();
 }
 
 /************************************************************************** App Glance */
 #if !PBL_PLATFORM_APLITE
 // App Glance Text
-char * localize_get_app_glance_text(int type, int minutes) {
+char* localize_get_app_glance_text(int type, int minutes) {
 	switch (type) {
 		case 0: // Last session
 			switch (minutes) {
@@ -86,7 +86,7 @@ char * localize_get_app_glance_text(int type, int minutes) {
 #endif
 
 /************************************************************************** Main app text */
-char * localize_get_breathe_text() {
+char* localize_get_breathe_text() {
 	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 		return "RESPIRER";
 	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
@@ -98,7 +98,7 @@ char * localize_get_breathe_text() {
 	}
 }
 
-char * localize_get_well_done_text() {
+char* localize_get_well_done_text() {
 	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 		return "Bien fait.";
 	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
@@ -110,7 +110,7 @@ char * localize_get_well_done_text() {
 	}
 }
 
-char * localize_get_inhale_text() {
+char* localize_get_inhale_text() {
 	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 		return "INHALEZ...";
 	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
@@ -122,7 +122,7 @@ char * localize_get_inhale_text() {
 	}
 }
 
-char * localize_get_exhale_text() {
+char* localize_get_exhale_text() {
 	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 		return "...ET EXHALEZ.";
 	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
@@ -134,7 +134,7 @@ char * localize_get_exhale_text() {
 	}
 }
 
-char * localize_get_min_breathed_today_text() {
+char* localize_get_min_breathed_today_text() {
 	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 		#ifdef PBL_ROUND
 			return "AUJ.: %d MIN";
@@ -151,7 +151,7 @@ char * localize_get_min_breathed_today_text() {
 }
 
 #if !PBL_PLATFORM_APLITE
-char * localize_get_steps_today_text(int thousands) {
+char* localize_get_steps_today_text(int thousands) {
 	if (settings_get_heartRateVariation() && data_get_current_heart_rate() != 0) {
 		if(thousands >= 10) { // There's a ten thousands digit!
 			if (strncmp(localize_get_locale(), "fr", 2) == 0) {
@@ -251,7 +251,7 @@ char * localize_get_steps_today_text(int thousands) {
 	}
 }
 
-char * localize_get_heart_rate_text() {
+char* localize_get_heart_rate_text() {
 	#if defined(PBL_HEALTH)
 	if (settings_get_heartRateVariation() && data_get_current_heart_rate() != 0) {
 		if (strncmp(localize_get_locale(), "fr", 2) == 0) {
@@ -280,7 +280,7 @@ char * localize_get_heart_rate_text() {
 }
 #endif
 
-char * localize_get_greet_text() {
+char* localize_get_greet_text() {
 	#if defined(PBL_HEALTH)
 	if (settings_get_heartRateVariation() && data_get_current_heart_rate() != 0) {
 		if (strncmp(localize_get_locale(), "fr", 2) == 0) {
@@ -309,20 +309,20 @@ char * localize_get_greet_text() {
 }
 
 // Sets strings as English, change if watch is set to another language
-char * localize_get_top_text(int random_number) {
-	char *strings[9] = {"TAKE A MOMENT;", "BE STILL;", "CLEAR YOUR MIND;", "EMPTY YOUR THOUGHTS;", "BE CALM;", "THINK NOTHING;", "RELAX;", "CHILL FOR A SEC;", "SPACE OUT;"};
+char* localize_get_top_text(int random_number) {
+	char*strings[9] = {"TAKE A MOMENT;", "BE STILL;", "CLEAR YOUR MIND;", "EMPTY YOUR THOUGHTS;", "BE CALM;", "THINK NOTHING;", "RELAX;", "CHILL FOR A SEC;", "SPACE OUT;"};
 	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
-		char *french_strings[9] = {"PRENEZ UN MOMENT;", "RÉFLECHISSEZ;", "VIDEZ VOTRE ESPRIT;", "NE PENSEZ À RIEN;", "SOYEZ CALME;", "CONCENTREZ;", "RELAXEZ;", "NE VOUS INQUIETEZ PAS;", "DONNEZ-VOUS DE L'ESPACE;"};
+		char*french_strings[9] = {"PRENEZ UN MOMENT;", "RÉFLECHISSEZ;", "VIDEZ VOTRE ESPRIT;", "NE PENSEZ À RIEN;", "SOYEZ CALME;", "CONCENTREZ;", "RELAXEZ;", "NE VOUS INQUIETEZ PAS;", "DONNEZ-VOUS DE L'ESPACE;"};
 		for (int i = 0; i <= 8; i++) {
 			strings[i] = french_strings[i];
 		}
 	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
-		char *spanish_strings[9] = {"TÓMATE UN TIEMPO;", "NO TE MUEVAS;", "ACLARA TU MENTE;", "NO PIENSA A NADA;", "SÉ CALMO;", "CONCÉNTRATE;", "RELÁJATE;", "NO TE PREOCUPES;", "TOMA UN MOMENTO;"};
+		char*spanish_strings[9] = {"TÓMATE UN TIEMPO;", "NO TE MUEVAS;", "ACLARA TU MENTE;", "NO PIENSA A NADA;", "SÉ CALMO;", "CONCÉNTRATE;", "RELÁJATE;", "NO TE PREOCUPES;", "TOMA UN MOMENTO;"};
 		for (int i = 0; i <= 8; i++) {
 			strings[i] = spanish_strings[i];
 		}
 	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
-		char *german_strings[9] = {"NIMM DIR ZEIT;", "STEHE STILL;", "LEERE DEINEN GEIST;", "DENKE AN NICHTS;", "WERDE RUHIG;", "EXISTIERE EINFACH;", "MACH'S DIR GEMÜTLICH;", "SPÜRE DEINE UMGEBUNG;", "KOMM RUNTER;"};
+		char*german_strings[9] = {"NIMM DIR ZEIT;", "STEHE STILL;", "LEERE DEINEN GEIST;", "DENKE AN NICHTS;", "WERDE RUHIG;", "EXISTIERE EINFACH;", "MACH'S DIR GEMÜTLICH;", "SPÜRE DEINE UMGEBUNG;", "KOMM RUNTER;"};
 		for (int i = 0; i <= 8; i++) {
 			strings[i] = german_strings[i];
 		}
@@ -331,7 +331,7 @@ char * localize_get_top_text(int random_number) {
 }
 
 // Same thing as above but for bottom text
-char * localize_get_bottom_text(int random_number) {
+char* localize_get_bottom_text(int random_number) {
 	char* strings[4] = {"BREATHE.", "EXHALE.", "CONCENTRATE.", "FOCUS."};
 	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 		char* french_strings[4] = {"RESPIREZ.", "EXHALEZ.", "RESPIREZ.", "EXHALEZ."};
@@ -354,7 +354,7 @@ char * localize_get_bottom_text(int random_number) {
 }
 
 /************************************************************************** Reminder window text */
-char * localize_get_reminder_action_menu_text() {
+char* localize_get_reminder_action_menu_text() {
 	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 		return "Respirer %d min";
 	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
@@ -366,7 +366,7 @@ char * localize_get_reminder_action_menu_text() {
 	}
 }
 
-char * localize_get_reminder_text() {
+char* localize_get_reminder_text() {
 	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 		return "Respirez!";
 	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
@@ -378,7 +378,7 @@ char * localize_get_reminder_text() {
 	}
 }
 
-char * localize_get_snooze_text() {
+char* localize_get_snooze_text() {
 	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 		return "Snooze pendant %d min";
 	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
@@ -393,7 +393,7 @@ char * localize_get_snooze_text() {
 /************************************************************************** Settings */
 #if !PBL_PLATFORM_APLITE
 /************************************************************* Section Titles */
-char * localize_get_in_app_section_title() {
+char* localize_get_in_app_section_title() {
 	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 		return "DANS L'APP";
 	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
@@ -405,7 +405,7 @@ char * localize_get_in_app_section_title() {
 	}
 }
 
-char * localize_get_health_section_title() {
+char* localize_get_health_section_title() {
 	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 		return "SANTÉ";
 	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
@@ -417,7 +417,7 @@ char * localize_get_health_section_title() {
 	}
 }
 
-char * localize_get_reminders_section_title() {
+char* localize_get_reminders_section_title() {
 	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 		return "RAPPELS";
 	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
@@ -429,7 +429,7 @@ char * localize_get_reminders_section_title() {
 	}
 }
 
-char * localize_get_app_glance_section_title() {
+char* localize_get_app_glance_section_title() {
 	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 		return "APP GLANCE";
 	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
@@ -441,7 +441,7 @@ char * localize_get_app_glance_section_title() {
 	}
 }
 
-char * localize_get_achievements_title() {
+char* localize_get_achievements_title() {
 	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 		return "SUCCÈS";
 	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
@@ -453,7 +453,7 @@ char * localize_get_achievements_title() {
 	}
 }
 
-char * localize_get_about_section_title() {
+char* localize_get_about_section_title() {
 	if (strncmp(localize_get_locale(), "en", 2) == 0) {
 		return "ABOUT";
 	} else {
@@ -462,7 +462,7 @@ char * localize_get_about_section_title() {
 }
 
 /************************************************************* Row Text */
-char * localize_get_enabled_text() {
+char* localize_get_enabled_text() {
 	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 		return "Activé";
 	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
@@ -474,7 +474,7 @@ char * localize_get_enabled_text() {
 	}	
 }
 
-char * localize_get_disabled_text() {
+char* localize_get_disabled_text() {
 	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 		return "Désactivé";
 	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
@@ -486,7 +486,7 @@ char * localize_get_disabled_text() {
 	}	
 }
 
-char * localize_get_vibration_shakes_inhale_type_text() {
+char* localize_get_vibration_shakes_inhale_type_text() {
 	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 		return "Pulsations - inhalation";
 	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
@@ -498,7 +498,7 @@ char * localize_get_vibration_shakes_inhale_type_text() {
 	}	
 }
 
-char * localize_get_vibration_shakes_type_text() {
+char* localize_get_vibration_shakes_type_text() {
 	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 		return "Pulsations";
 	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
@@ -510,7 +510,7 @@ char * localize_get_vibration_shakes_type_text() {
 	}	
 }
 
-char * localize_get_vibration_taps_type_text() {
+char* localize_get_vibration_taps_type_text() {
 	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 		return "Tapes";
 	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
@@ -522,7 +522,7 @@ char * localize_get_vibration_taps_type_text() {
 	}	
 }
 
-char * localize_get_top_text_greeting_type_text() {
+char* localize_get_top_text_greeting_type_text() {
 	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 		return "Salut";
 	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
@@ -534,7 +534,7 @@ char * localize_get_top_text_greeting_type_text() {
 	}	
 }
 
-char * localize_get_top_text_steps_type_text() {
+char* localize_get_top_text_steps_type_text() {
 	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 		return "# de pas";
 	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
@@ -546,7 +546,7 @@ char * localize_get_top_text_steps_type_text() {
 	}		
 }
 
-char * localize_get_top_text_heart_rate_type_text() {
+char* localize_get_top_text_heart_rate_type_text() {
 	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 		return "Rhythme cardiaqueRitmo cardiaco";
 	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
@@ -558,7 +558,7 @@ char * localize_get_top_text_heart_rate_type_text() {
 	}		
 }
 
-char * localize_get_reminder_frequency_text(int value) {
+char* localize_get_reminder_frequency_text(int value) {
 	switch (value) {
 		case 0:
 			if (strncmp(localize_get_locale(), "fr", 2) == 0) {
@@ -593,7 +593,7 @@ char * localize_get_reminder_frequency_text(int value) {
 	}
 }
 
-char * localize_get_reminder_frequency_start_text() {
+char* localize_get_reminder_frequency_start_text() {
 	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 		return "%d heures";
 	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
@@ -605,7 +605,7 @@ char * localize_get_reminder_frequency_start_text() {
 	}	
 }
 
-char * localize_get_app_glance_last_session_text() {
+char* localize_get_app_glance_last_session_text() {
 	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 		return "Dernière session";
 	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
@@ -617,7 +617,7 @@ char * localize_get_app_glance_last_session_text() {
 	}
 }
 
-char * localize_get_app_glance_daily_total_text() {
+char* localize_get_app_glance_daily_total_text() {
 	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 		return "Total auj.";
 	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
@@ -629,7 +629,7 @@ char * localize_get_app_glance_daily_total_text() {
 	}	
 }
 
-char * localize_get_bottom_text_total_type_text() {
+char* localize_get_bottom_text_total_type_text() {
 	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 		return "Total aujourd'hui";
 	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
@@ -641,7 +641,7 @@ char * localize_get_bottom_text_total_type_text() {
 	}	
 }
 
-char * localize_get_bottom_text_streak_type_text() {
+char* localize_get_bottom_text_streak_type_text() {
 	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 		return "Série";
 	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
@@ -654,7 +654,7 @@ char * localize_get_bottom_text_streak_type_text() {
 }
 
 /************************************************************* Settings row titles */
-char * localize_get_remember_duration_row_title() {
+char* localize_get_remember_duration_row_title() {
 	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 		return "Utiliser dur. préc.";
 	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
@@ -666,7 +666,7 @@ char * localize_get_remember_duration_row_title() {
 	}	
 }
 
-char * localize_get_vibrations_row_title() {
+char* localize_get_vibrations_row_title() {
 	if (strncmp(localize_get_locale(), "es", 2) == 0) {
 		return "Vibraciones";
 	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
@@ -676,7 +676,7 @@ char * localize_get_vibrations_row_title() {
 	}		
 }
 
-char * localize_get_breaths_per_minute_row_title() {
+char* localize_get_breaths_per_minute_row_title() {
 	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 		return "Respirations/min.";
 	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
@@ -689,7 +689,7 @@ char * localize_get_breaths_per_minute_row_title() {
 }
 
 #if PBL_PLATFORM_DIORITE || PBL_PLATFORM_EMERY
-char * localize_get_heart_rate_variation_row_title() {
+char* localize_get_heart_rate_variation_row_title() {
 	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 		return "Vitesse selon RC";
 	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
@@ -702,7 +702,7 @@ char * localize_get_heart_rate_variation_row_title() {
 }
 #endif
 
-char * localize_get_top_text_row_title() {
+char* localize_get_top_text_row_title() {
 	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 		return "Texte en haut";
 	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
@@ -714,7 +714,7 @@ char * localize_get_top_text_row_title() {
 	}	
 }
 
-char * localize_get_reminder_frequency_row_title() {
+char* localize_get_reminder_frequency_row_title() {
 	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 		return "Fréq. des rappels";
 	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
@@ -726,7 +726,7 @@ char * localize_get_reminder_frequency_row_title() {
 	}			
 }
 
-char * localize_get_reminder_start_row_title() {
+char* localize_get_reminder_start_row_title() {
 	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 		return "Début des rappels";
 	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
@@ -738,11 +738,11 @@ char * localize_get_reminder_start_row_title() {
 	}	
 }
 
-char * localize_get_app_glance_row_title() {
+char* localize_get_app_glance_row_title() {
 	return "App Glance";
 }
 
-char * localize_get_bottom_text_row_title() {
+char* localize_get_bottom_text_row_title() {
 	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 		return "Texte en bas";
 	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
@@ -754,7 +754,7 @@ char * localize_get_bottom_text_row_title() {
 	}		
 }
 
-char * localize_get_achievement_row_title() {
+char* localize_get_achievement_row_title() {
 	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 		return "Succès";
 	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
@@ -766,7 +766,7 @@ char * localize_get_achievement_row_title() {
 	}	
 }
 
-char * localize_get_version_row_title() {
+char* localize_get_version_row_title() {
 	if (strncmp(localize_get_locale(), "es", 2) == 0) {
 		return "Versión";
 	} else {
@@ -774,7 +774,7 @@ char * localize_get_version_row_title() {
 	}
 }
 
-char * localize_get_credits_row_title() {
+char* localize_get_credits_row_title() {
 	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 		return "Fait avec \u2764 par";
 	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
@@ -789,7 +789,7 @@ char * localize_get_credits_row_title() {
 
 /************************************************************************** Achievements */
 #if !PBL_PLATFORM_APLITE
-	char * localize_get_achievement_text() {
+	char* localize_get_achievement_text() {
 		if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 			return "Succès!";
 		} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
@@ -801,7 +801,7 @@ char * localize_get_credits_row_title() {
 		}
 	}
 
-	char * localize_get_streak_text(int streak_length) {
+	char* localize_get_streak_text(int streak_length) {
 		if (streak_length >= data_get_longest_streak() && data_get_today_epoch_time() == data_get_streak_date_persist_data()) { // This means that it's the longest streak and user has breathed today
 			if (streak_length == 1) {
 				if (strncmp(localize_get_locale(), "fr", 2) == 0) {
@@ -893,7 +893,7 @@ char * localize_get_credits_row_title() {
 		}
 	}
 
-	char * localize_get_five_minutes_session_name() {
+	char* localize_get_five_minutes_session_name() {
 		if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 			return "PROFOND";
 		} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
@@ -905,7 +905,7 @@ char * localize_get_credits_row_title() {
 		}
 	}
 
-	char * localize_get_minutes_session_description() {
+	char* localize_get_minutes_session_description() {
 		if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 			return "Respirez %d min. pendant une session.";
 		} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
@@ -917,7 +917,7 @@ char * localize_get_credits_row_title() {
 		}
 	}
 
-	char * localize_get_eight_minutes_session_name() {
+	char* localize_get_eight_minutes_session_name() {
 		if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 			return "CHANCEUX";
 		} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
@@ -929,7 +929,7 @@ char * localize_get_credits_row_title() {
 		}
 	}
 
-	char * localize_get_ten_minutes_session_name() {
+	char* localize_get_ten_minutes_session_name() {
 		if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 			return "DÉTENDEUR";
 		} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
@@ -941,7 +941,7 @@ char * localize_get_credits_row_title() {
 		}
 	}
 
-	char * localize_get_changed_settings_name() {
+	char* localize_get_changed_settings_name() {
 		if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 			return "PERSONNALISATEUR";
 		} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
@@ -953,7 +953,7 @@ char * localize_get_credits_row_title() {
 		}
 	}
 
-	char * localize_get_changed_settings_description() {
+	char* localize_get_changed_settings_description() {
 		if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 			return "Changez les réglages pour la première fois.";
 		} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
@@ -965,7 +965,7 @@ char * localize_get_credits_row_title() {
 		}
 	}
 
-	char * localize_get_one_week_streak_name() {
+	char* localize_get_one_week_streak_name() {
 		if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 			return "CONSTANTE";
 		} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
@@ -977,7 +977,7 @@ char * localize_get_credits_row_title() {
 		}
 	}
 
-	char * localize_get_one_week_streak_description() {
+	char* localize_get_one_week_streak_description() {
 		if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 			return "Respirez quotidiennement pour une semaine.";
 		} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
@@ -989,7 +989,7 @@ char * localize_get_credits_row_title() {
 		}
 	}
 
-	char * localize_get_one_month_streak_name() {
+	char* localize_get_one_month_streak_name() {
 		if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 			return "DÉTERMINÉ";
 		} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
@@ -1001,7 +1001,7 @@ char * localize_get_credits_row_title() {
 		}
 	}
 
-	char * localize_get_one_month_streak_description() {
+	char* localize_get_one_month_streak_description() {
 		if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 			return "Respirez quotidiennement pour un mois.";
 		} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
@@ -1013,7 +1013,7 @@ char * localize_get_credits_row_title() {
 		}		
 	}
 
-	char * localize_get_one_year_streak_name() {
+	char* localize_get_one_year_streak_name() {
 		if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 			return "RÉSOLU";
 		} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
@@ -1025,7 +1025,7 @@ char * localize_get_credits_row_title() {
 		}
 	}
 
-	char * localize_get_one_year_streak_description() {
+	char* localize_get_one_year_streak_description() {
 		if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 			return "Respirez quotidiennement pour une année.";
 		} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
@@ -1037,7 +1037,7 @@ char * localize_get_credits_row_title() {
 		}		
 	}
 
-	char * localize_get_five_minutes_day_name() {
+	char* localize_get_five_minutes_day_name() {
 		if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 			return "HABITUEL";
 		} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
@@ -1049,7 +1049,7 @@ char * localize_get_credits_row_title() {
 		}		
 	}
 
-	char * localize_get_minutes_day_description() {
+	char* localize_get_minutes_day_description() {
 		if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 			return "Respirez %d min. en une journée.";
 		} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
@@ -1061,7 +1061,7 @@ char * localize_get_credits_row_title() {
 		}				
 	}
 
-	char * localize_get_ten_minutes_day_name() {
+	char* localize_get_ten_minutes_day_name() {
 		if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 			return "HABILE";
 		} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
@@ -1073,7 +1073,7 @@ char * localize_get_credits_row_title() {
 		}		
 	}
 
-	char * localize_get_thirty_minutes_day_name() {
+	char* localize_get_thirty_minutes_day_name() {
 		if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 			return "DISCIPLINÉ";
 		} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
@@ -1085,7 +1085,7 @@ char * localize_get_credits_row_title() {
 		}
 	}
 
-	char * localize_get_one_hour_day_name() {
+	char* localize_get_one_hour_day_name() {
 		if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 			return "PRO";
 		} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
@@ -1097,7 +1097,7 @@ char * localize_get_credits_row_title() {
 		}
 	}
 
-	char * localize_get_one_hour_day_description() {
+	char* localize_get_one_hour_day_description() {
 		if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 			return "Respirez 1 heure en une journée.";
 		} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
@@ -1109,7 +1109,7 @@ char * localize_get_credits_row_title() {
 		}
 	}
 
-	char * localize_get_completionist_name() {
+	char* localize_get_completionist_name() {
 		if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 			return "COMPLÉTEUR";
 		} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
@@ -1121,7 +1121,7 @@ char * localize_get_credits_row_title() {
 		}
 	}
 
-	char * localize_get_completionist_description() {
+	char* localize_get_completionist_description() {
 		if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 			return "Obtenez tous les succès.";
 		} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
@@ -1133,7 +1133,7 @@ char * localize_get_credits_row_title() {
 		}
 	}
 
-	char * localize_get_achievements_section_title() {
+	char* localize_get_achievements_section_title() {
 		if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 			return "SUCCÈS";
 		} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
@@ -1145,7 +1145,7 @@ char * localize_get_credits_row_title() {
 		}
 	}
 
-	char * localize_get_stats_section_title() {
+	char* localize_get_stats_section_title() {
 		if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 			return "STATISTIQUES";
 		} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
@@ -1157,7 +1157,7 @@ char * localize_get_credits_row_title() {
 		}
 	}
 
-	char * localize_get_locked_title() {
+	char* localize_get_locked_title() {
 		if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 			return "VERROUILLÉ!";
 		} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
@@ -1169,7 +1169,7 @@ char * localize_get_credits_row_title() {
 		}
 	}
 
-	char * localize_get_locked_description() {
+	char* localize_get_locked_description() {
 		if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 			return "Respirez plus!";
 		} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
@@ -1181,7 +1181,7 @@ char * localize_get_credits_row_title() {
 		}
 	}
 
-	char * localize_get_total_breathed_name() {
+	char* localize_get_total_breathed_name() {
 		if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 			return "Total respiré";
 		} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
@@ -1193,7 +1193,7 @@ char * localize_get_credits_row_title() {
 		}
 	}
 
-	char * localize_get_total_breathed_description() {
+	char* localize_get_total_breathed_description() {
 		if (strncmp(localize_get_locale(), "de", 2) == 0) {
 			return "%d Min.";
 		} else {
@@ -1201,7 +1201,7 @@ char * localize_get_credits_row_title() {
 		}
 	}
 
-	char * localize_get_longest_streak_name() {
+	char* localize_get_longest_streak_name() {
 		if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 			return "Série la plus longue";
 		} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
@@ -1213,7 +1213,7 @@ char * localize_get_credits_row_title() {
 		}
 	}
 
-	char * localize_get_longest_streak_description(int days) {
+	char* localize_get_longest_streak_description(int days) {
 		if (days != 1) {
 			if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 				return "%d jours de suite";
@@ -1237,7 +1237,7 @@ char * localize_get_credits_row_title() {
 		}
 	}
 
-	char * localize_get_new_version_title() {
+	char* localize_get_new_version_title() {
 		if (strncmp(localize_get_locale(), "es", 2) == 0) {
 			return "¡Versión 2.4!";
 		} else {
@@ -1245,7 +1245,7 @@ char * localize_get_credits_row_title() {
 		}
 	}
 
-	char * localize_get_new_user_title() {
+	char* localize_get_new_user_title() {
 		if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 			return "Bienvenue!";
 		} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
@@ -1257,7 +1257,7 @@ char * localize_get_credits_row_title() {
 		}
 	}
 
-	char * localize_get_new_version_description() {
+	char* localize_get_new_version_description() {
 		if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 			return "NOUVEAUTÉS:\n\n• Vos succès sont maintenant copiés sur votre célullaire, et se restaurent automatiquement si vous supprimez puis réinstallez cette app.\n• Le montant minimum de respirations par minute a diminué à 2.\n• Si vous voulez revoir ces notes, sélectionnez la version dans le menu des paramètres sur votre montre.\n• Corrigé plusieurs plantages.\n\nLaissez un \u2764 sur l'App Store si vous aimez cette app!";
 		} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
@@ -1270,7 +1270,7 @@ char * localize_get_credits_row_title() {
 		}
 	}
 
-	char * localize_get_new_user_description() {
+	char* localize_get_new_user_description() {
 		if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 			return "Prenez un moment pour respirer.\n\nRESPIREZ.\nChoississez la durée de votre session de respiration avec les boutons haut et bas. Quand vous êtes prêt à commencer, appuyez le bouton du milieu.\n\nPERSONNALISEZ.\nChangez vos paramètres directement sur votre montre ou sur votre céllulaire! Appuyez longuement sur le bouton haut pour les changer sur votre montre.\n\nACHEVEZ.\nAu fur et à mesure que vous utilisez la app, vous gagnerez des succès! Admirez-les en appuyant longuement sur le bouton bas.";
 		} else if (strncmp(localize_get_locale(), "es", 2) == 0) {

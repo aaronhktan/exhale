@@ -15,8 +15,8 @@ var clay = new Clay(clayConfig, customClay, { autoHandleEvents: false});
 								 
 // Receiving AppMessage events
 Pebble.addEventListener('appmessage', function(e) {
-  // Get the dictionary from the message
-  var dict = e.payload;
+	// Get the dictionary from the message
+	var dict = e.payload;
 	
 	// Set JSON values to match those in the dictionary
 	if ('0' in dict) {

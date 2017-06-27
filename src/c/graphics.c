@@ -5,38 +5,38 @@ static GPath *s_up_triangle, *s_down_triangle;
 
 // Depending on display size, change location of up and down arrows
 #if PBL_DISPLAY_HEIGHT == 168
-	static const 	GPathInfo UP_PATH_INFO = {
-			.num_points = 3,
-			.points = (GPoint []) {{72, 39}, {77, 44}, {67, 44}}
-		};
-	static const GPathInfo DOWN_PATH_INFO = {
-			.num_points = 3,
-			.points = (GPoint []) {{72, 129}, {67, 124}, {77, 124}}
-		};
+static const 	GPathInfo UP_PATH_INFO = {
+		.num_points = 3,
+		.points = (GPoint []) {{72, 39}, {77, 44}, {67, 44}}
+	};
+static const GPathInfo DOWN_PATH_INFO = {
+		.num_points = 3,
+		.points = (GPoint []) {{72, 129}, {67, 124}, {77, 124}}
+	};
 #elif PBL_DISPLAY_HEIGHT == 180
-	static const 	GPathInfo UP_PATH_INFO = {
-			.num_points = 3,
-			.points = (GPoint []) {{90, 45}, {85, 50}, {95, 50}}
-		};
-	static const GPathInfo DOWN_PATH_INFO = {
-			.num_points = 3,
-			.points = (GPoint []) {{90, 135}, {85, 130}, {95, 130}}
-		};
+static const 	GPathInfo UP_PATH_INFO = {
+		.num_points = 3,
+		.points = (GPoint []) {{90, 45}, {85, 50}, {95, 50}}
+	};
+static const GPathInfo DOWN_PATH_INFO = {
+		.num_points = 3,
+		.points = (GPoint []) {{90, 135}, {85, 130}, {95, 130}}
+	};
 #else
-	static const GPathInfo UP_PATH_INFO = {
-			.num_points = 3,
-			.points = (GPoint []) {{105, 65}, {95, 65}, {100, 60}}
-		};
-	static const GPathInfo DOWN_PATH_INFO = {
-			.num_points = 3,
-			.points = (GPoint []) {{105, 164}, {95, 164}, {100, 169}}
-		};
+static const GPathInfo UP_PATH_INFO = {
+		.num_points = 3,
+		.points = (GPoint []) {{105, 65}, {95, 65}, {100, 60}}
+	};
+static const GPathInfo DOWN_PATH_INFO = {
+		.num_points = 3,
+		.points = (GPoint []) {{105, 164}, {95, 164}, {100, 169}}
+	};
 #endif
 
 // Method for updating the upper text layer
-void graphics_draw_upper_text(GContext *ctx, GRect bounds, bool is_animating, int display_text, GColor textColor, char *greet_text) {
+void graphics_draw_upper_text(GContext *ctx, GRect bounds, bool is_animating, int display_text, GColor textColor, char* greet_text) {
 	#if defined(PBL_HEALTH)
-		const char *steps_buffer = data_get_current_steps_buffer(); // Pebble Health exists; fetch the number of steps walked today
+	const char* steps_buffer = data_get_current_steps_buffer(); // Pebble Health exists; fetch the number of steps walked today
 	#endif
 	
 	graphics_context_set_text_color(ctx, (is_animating) ? textColor : PBL_IF_COLOR_ELSE(GColorDarkGray, textColor)); // Set text color to dark gray on main menu, but white for other sections
@@ -50,7 +50,7 @@ void graphics_draw_upper_text(GContext *ctx, GRect bounds, bool is_animating, in
 	} else {
 		#if defined(PBL_HEALTH)
 		if (display_text == 3 && data_get_current_heart_rate() > 0) { // If heart rate monitor is enabled in configuration and is available, show heart rate
-			const char *heart_rate_buffer = data_get_current_heart_rate_buffer();
+			const char* heart_rate_buffer = data_get_current_heart_rate_buffer();
 			graphics_draw_text(ctx, heart_rate_buffer, fonts_get_system_font(FONT_KEY), 
 											 GRect((bounds.size.w - greet_text_bounds.w) / 2, PBL_IF_RECT_ELSE(5, 15), greet_text_bounds.w, greet_text_bounds.h),
 											 GTextOverflowModeWordWrap, GTextAlignmentCenter, NULL);
@@ -79,7 +79,7 @@ void graphics_draw_upper_text(GContext *ctx, GRect bounds, bool is_animating, in
 }
 
 // Method for updating the lower text layer
-void graphics_draw_lower_text(GContext *ctx, GRect bounds, bool is_animating, int bottom_text, GColor textColor, char *min_today) {
+void graphics_draw_lower_text(GContext *ctx, GRect bounds, bool is_animating, int bottom_text, GColor textColor, char* min_today) {
 	
 	graphics_context_set_text_color(ctx, (is_animating) ? textColor : PBL_IF_COLOR_ELSE(GColorDarkGray, textColor)); // Like above, sets text color to dark gray on main menu, but white for other sections
 	GSize today_text_bounds = graphics_text_layout_get_content_size("TODAY: 10,000 MINUTES", fonts_get_system_font(FONT_KEY),
@@ -108,17 +108,17 @@ void graphics_draw_lower_text(GContext *ctx, GRect bounds, bool is_animating, in
 }
 
 // Method for updating the inner text, triangles, and the semicircle on the right center of the screen
-void graphics_draw_inner_text(GContext *ctx, GRect bounds, bool is_animating, int min_to_breathe, GColor textColor, char *min_to_breathe_text, char *instruct_text, char *min_text) {
+void graphics_draw_inner_text(GContext *ctx, GRect bounds, bool is_animating, int min_to_breathe, GColor textColor, char* min_to_breathe_text, char* instruct_text, char* min_text) {
 	// Draw side circle
 	graphics_context_set_fill_color(ctx, textColor);
 	#ifdef PBL_PLATFORM_EMERY
-		graphics_fill_circle(ctx, GPoint(bounds.size.w + 7, bounds.size.h / 2), 12);
+	graphics_fill_circle(ctx, GPoint(bounds.size.w + 7, bounds.size.h / 2), 12);
 	#elif PBL_PLATFORM_CHALK
-		if (!is_animating) {
-			graphics_fill_circle(ctx, GPoint(bounds.size.w + 1, bounds.size.h / 2), 12);
-		}
+	if (!is_animating) {
+		graphics_fill_circle(ctx, GPoint(bounds.size.w + 1, bounds.size.h / 2), 12);
+	}
 	#else
-		graphics_fill_circle(ctx, GPoint(bounds.size.w + 5, bounds.size.h / 2), 10);
+	graphics_fill_circle(ctx, GPoint(bounds.size.w + 5, bounds.size.h / 2), 10);
 	#endif
 
 	if (!is_animating) {

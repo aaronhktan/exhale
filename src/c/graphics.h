@@ -3,9 +3,9 @@
 #include "src/c/data.h"
 
 #ifdef PBL_PLATFORM_EMERY
-	#define FONT_KEY FONT_KEY_GOTHIC_18_BOLD
+#define FONT_KEY FONT_KEY_GOTHIC_18_BOLD
 #else
-	#define FONT_KEY FONT_KEY_GOTHIC_14_BOLD
+#define FONT_KEY FONT_KEY_GOTHIC_14_BOLD
 #endif
 
 void graphics_draw_upper_text(GContext *ctx, GRect bounds, bool is_animating, int displayText, GColor textColor, char *);
