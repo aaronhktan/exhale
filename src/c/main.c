@@ -25,7 +25,15 @@ static void inbox_received_handler(DictionaryIterator *iter, void *context) {
 	} else if (request_achievements_t) {
 		achievement_send_achievements(); // If yes, send the achievements
 	} else if (achievements_t) {
-		achievement_handle_achievements(iter, context);
+		if (persist_exists(ACHIEVEMENT_OFFLINE_KEY)) {
+			if (persist_read_bool(ACHIEVEMENT_OFFLINE_KEY) == false) { // This means that achievements were earned while offline
+				achievement_send_achievements(); // So send the achievements
+			} else {
+				achievement_handle_achievements(iter, context); // Otherwise, the version on the phone is the best version
+			}
+		} else {
+			achievement_handle_achievements(iter, context);
+		}
 	} else {
 	#endif
 		// Otherwise, save settings received from phone, and refresh screen

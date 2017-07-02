@@ -27,8 +27,9 @@ void achievement_init() {
 
 // Save achievements
 void achievement_save_achievements() {
-		persist_write_data(ACHIEVEMENT_KEY, &achievements, sizeof(achievements));
-		persist_write_int(ACHIEVEMENT_VERSION_KEY, 1);
+	persist_write_data(ACHIEVEMENT_KEY, &achievements, sizeof(achievements));
+	persist_write_int(ACHIEVEMENT_VERSION_KEY, 1);
+	persist_write_bool(ACHIEVEMENT_OFFLINE_KEY, connection_service_peek_pebble_app_connection());
 }
 
 // Getters and setters for each achievement in the AchievementList Struct
@@ -314,5 +315,7 @@ void achievement_handle_achievements(DictionaryIterator *iter, void *context) {
 	Tuple *completionist_complete_t = dict_find(iter, 15);
 	if (completionist_complete_t) {
 		achievements.completionist.complete = completionist_complete_t->value->int32;
-	}	
+	}
+	
+	achievement_save_achievements();
 }

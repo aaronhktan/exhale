@@ -2,6 +2,7 @@
 
 #define ACHIEVEMENT_KEY 10
 #define ACHIEVEMENT_VERSION_KEY 11
+#define ACHIEVEMENT_OFFLINE_KEY 12
 
 // Struct for each achievement, with completion status and date complete
 typedef struct Achievement {
