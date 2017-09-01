@@ -447,7 +447,7 @@ char* localize_get_achievements_title() {
 	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
 		return "LOGROS";
 	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
-		return "ERRUNGENSCHAFTEN";
+		return "ERFOLGE";
 	} else {
 		return "ACHIEVEMENTS";
 	}
@@ -660,7 +660,7 @@ char* localize_get_remember_duration_row_title() {
 	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
 		return "Usar dur. ant.";
 	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
-		return "Letze Dauer merken";
+		return "Dauer merken";
 	} else {
 		return "Use last duration";
 	}	
@@ -708,7 +708,7 @@ char* localize_get_top_text_row_title() {
 	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
 		return "Texto superior";
 	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
-		return "Oben im Hauptmenü";
+		return "Oberer Text";
 	} else {
 		return "Top Text";
 	}	
@@ -732,7 +732,7 @@ char* localize_get_reminder_start_row_title() {
 	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
 		return "Empiezo de rdo.";
 	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
-		return "Beginn der Erinnerung";
+		return "Erste Erinnerung";
 	} else {
 		return "Reminder Start";
 	}	
@@ -748,7 +748,7 @@ char* localize_get_bottom_text_row_title() {
 	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
 		return "Texto abajo";
 	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
-		return "Unten im Hauptmenü";
+		return "Unterer Text";
 	} else {
 		return "Bottom Text";
 	}		
@@ -760,7 +760,7 @@ char* localize_get_achievement_row_title() {
 	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
 		return "Logros";
 	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
-		return "Errungenschaften";
+		return "Erfolge";
 	} else {
 		return "Achievements";
 	}	
@@ -780,7 +780,7 @@ char* localize_get_credits_row_title() {
 	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
 		return "Hecho con \u2764 por";
 	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
-		return "Gemacht mit \u2764 von";
+		return "Code mit \u2764 von";
 	} else {
 		return "Made with \u2764 by";
 	}	
@@ -795,7 +795,7 @@ char* localize_get_credits_row_title() {
 		} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
 			return "¡Logro!";
 		} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
-			return "Errungenschaft!";
+			return "Erfolg!";
 		} else {
 			return "Achievement!";
 		}
@@ -1127,7 +1127,7 @@ char* localize_get_credits_row_title() {
 		} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
 			return "Obtén todos los logros.";
 		} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
-			return "Holen Sie sich alle Errungenschaften.";
+			return "Holen Sie sich alle Erfolge.";
 		} else {
 			return "Get all the achievements.";
 		}
@@ -1139,7 +1139,7 @@ char* localize_get_credits_row_title() {
 		} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
 			return "LOGROS";
 		} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
-			return "ERRUNGENSCHAFTEN";
+			return "ERFOLGE";
 		} else {
 			return "ACHIEVEMENTS";
 		}
@@ -1175,7 +1175,7 @@ char* localize_get_credits_row_title() {
 		} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
 			return "¡Respira más!";
 		} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
-			return "Atme mehr!";
+			return "Atme weiter!";
 		} else {
 			return "Keep breathing!";
 		}
@@ -1187,7 +1187,7 @@ char* localize_get_credits_row_title() {
 		} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
 			return "Total respirado";
 		} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
-			return "Insgesamt geatmet";
+			return "Insgesamt";
 		} else {
 			return "Total breathed";
 		}
@@ -1263,8 +1263,7 @@ char* localize_get_credits_row_title() {
 		} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
 			return "NUEVO:\n\n• Ahora se realiza una copia de seguridad de todos tus logros, y estos se restauran automáticamente si eliminas y luego reinstalas esta app.\n• El número mínimo de respiraciones por minuto ha bajado a 2.\n• Si quieres ver de nuevo estas notas, selecciona el número de versión en el menú de ajustes en tu reloj.\n• Varios fallos de programa fueron eliminados.\n\n¡Da un \u2764 en el App Store si te gusta esta app!";
 		} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
-			return PBL_IF_RECT_ELSE("Lange drücken Sie die Auf-Taste, Sie können die Einstellungen ändern.\nLassen Sie ein \u2764 auf dem App Store, wenn Sie diese App gefällt!",
-															"Lange drücken Sie die Auf-Taste, Sie können die Einstellungen ändern.");
+			return "NEU:\n\n• Ihre Erfolge werden nun auf dem Handy gespeichert, sodass sie bei einer Neuinstallation erhalten bleiben.\n• Die Anzahl Atemzüge pro Minute kann jetzt minimal 2 sein\n• Die Änderungen können erneut eingesehen werden, wenn Sie die Versionsnummer in den Einstellungen auf der Uhr anwählen\n• Mehrere Crashes und Speicherlecks behoben, darunter einer nach einer Erinnerung\n• Hinterlassen Sie ein \u2764 im App Store, wenn Ihnen diese App gefällt!";
 		} else {
 			return "NEW FEATURES:\n\n• Your achievements are now backed up to your phone, and will restore if you delete and redownload this app!\n• Minimum breaths per minute decreased to 2.\n• If you ever want to check these update notes again, just click the version number in the settings menu on your watch.\n• Fixed many crashes and memory leaks, including the one after a reminder.\n\nLeave a \u2764 on the Store if you like this app!";
 		}
@@ -1276,8 +1275,7 @@ char* localize_get_credits_row_title() {
 		} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
 			return "Tómate un momento a respirar.\n\nRESPIRA.\nEscoge cuántos minutes quieres que dure la sesión con unas pulsaciones de los botónes arriba y abajo. Cuando estés listo a comenzar, presiona el botón central.\n\nPERSONALIZA.\nCambia los ajustes en tu reloj o en tu móvil. ¡Con una pulsación larga del botón arriba se pueden cambiar ajustes en tu reloj!\n\nALCANZA.\n¡Con la respiración regular se puede ganar logros! Se puede verlos con una pulsación larga del botón abajo.";
 		} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
-			return PBL_IF_RECT_ELSE("Lange drücken Sie die Auf-Taste, Sie können die Einstellungen ändern.\nLassen Sie ein \u2764 auf dem App Store, wenn Sie diese App gefällt!",
-															"Lange drücken Sie die Auf-Taste, Sie können die Einstellungen ändern.");
+			return "Ein Moment zum Durchatmen.\n\nBREATHE.\nIm Hauptmenü können Sie die Dauer der Atemübung mit dem oberen und dem unteren Knopf. Starten Sie die Übung mit dem mittleren Knopf.\nSie können Einstellungen auf dem Telefon und auf der Uhr vornehmnen. Drücken Sie den oberen Knopf lange, um die Einstellungen auf der Uhr zu öffnen.\n\nERFOLGE.\nWenn Sie Übungen machen, können Sie Erfolge erreichen und Statistiken sehen! Drücken und halten Sie den unteren Knopf um zu sehen, was Sie freigeschaltet haben.";
 		} else {
 			return "Take a moment to breathe.\n\nBREATHE.\nFrom the main menu, you can choose how many minutes to breathe with the up and down buttons. When you are ready to start your session, click the select button.\n\nCUSTOMIZE.\nYou can customize settings on your phone or on the watch. Long press the up button to change settings on your watch!\n\nACHIEVE.\nAs you breathe, you can earn achievements and see your stats! Long press the down button to see what you've unlocked.";
 		}

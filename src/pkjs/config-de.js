@@ -59,7 +59,7 @@ module.exports = [
 				"description": "Graduell fühlt sich an wie die Apple-Watch-App, Doppeltippen ist die Standard-Pebble-Vibration.",
 				"options": [
 					{
-						"label": "Graduell - Einatmen nur",
+						"label": "Graduell - nur Einatmen",
 						"value": "0"
 					},
 					{
@@ -226,13 +226,13 @@ module.exports = [
 		"items": [
 			{
 				"type": "heading",
-				"defaultValue": "Errungenschaften",
+				"defaultValue": "Erfolge",
 			},
 			{
 				"type": "toggle",
 				"messageKey": "achievementsEnabled",
 				"defaultValue": true,
-			"label": "Errungenschaften erhalten"
+			"label": "Erfolge erhalten"
 			},
 			{
 				"type": "select",
@@ -253,8 +253,9 @@ module.exports = [
 			{
 				"type": "input",
 				"messageKey": "achievementsBackup",
-				"defaultValue": "",
-				"label": "Sicherung von Errungenschaften",
+				"defaultValue": "0000000000000000000000000000000000000",
+				"label": "Erfolge-Backup",
+				"description": "Dieser Text enthält die Information zu Ihren Erfolge. Er wird automatisch in der Pebble-App gespeichert, Sie können ihn aber auch kopieren und einfügen, wenn Sie die App neu installieren."
 			},
 			{
 				"type": "button",
