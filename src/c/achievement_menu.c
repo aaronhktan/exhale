@@ -23,36 +23,36 @@ static uint16_t menu_get_num_sections_callback(MenuLayer *menu_layer, void *data
 
 static uint16_t menu_get_num_rows_callback(MenuLayer *menu_layer, uint16_t section_index, void *data) {
 	switch (section_index) {
-    case 0:
-      return NUM_ACHIEVEMENT_MENU_ITEMS;
-    case 1:
-      return NUM_STATS_MENU_ITEMS;
-    default:
-      return 0;
-  }
+	case 0:
+		return NUM_ACHIEVEMENT_MENU_ITEMS;
+	case 1:
+		return NUM_STATS_MENU_ITEMS;
+	default:
+		return 0;
+	}
 }
 
 static int16_t menu_get_header_height_callback(MenuLayer *menu_layer, uint16_t section_index, void *data) {
-  return MENU_CELL_BASIC_HEADER_HEIGHT;
+	return MENU_CELL_BASIC_HEADER_HEIGHT;
 }
 
 static void menu_draw_header_callback(GContext* ctx, const Layer *cell_layer, uint16_t section_index, void *data) {
-  // Determine which section we're working with
-  switch (section_index) {
-    case 0:
-      // Draw title text in the section header
-      menu_cell_basic_header_draw(ctx, cell_layer, localize_get_achievements_section_title());
-      break;
-    case 1:
-      menu_cell_basic_header_draw(ctx, cell_layer, localize_get_stats_section_title());
-      break;
-  }
+	// Determine which section we're working with
+	switch (section_index) {
+	case 0:
+		// Draw title text in the section header
+		menu_cell_basic_header_draw(ctx, cell_layer, localize_get_achievements_section_title());
+		break;
+	case 1:
+		menu_cell_basic_header_draw(ctx, cell_layer, localize_get_stats_section_title());
+		break;
+	}
 }
 
 static void menu_draw_row_callback(GContext* ctx, const Layer *cell_layer, MenuIndex *cell_index, void *data) {
 	// Determine which section we're going to draw in
-  switch (cell_index->section) {
-    case 0: // These are the achievements
+	switch (cell_index->section) {
+		case 0: // These are the achievements
 			// Use the row to specify which item we'll draw
 			switch (cell_index->row) {
 				case 0: // One week streak
@@ -260,17 +260,17 @@ void achievement_window_load(Window *window) {
 	GRect bounds = layer_get_frame(window_layer);
 	
 	// Create the menu layer
-  s_achievement_layer = menu_layer_create(bounds);
+	s_achievement_layer = menu_layer_create(bounds);
 	menu_layer_set_normal_colors(s_achievement_layer, settings_get_backgroundColor(), gcolor_legible_over(settings_get_backgroundColor()));
 	menu_layer_set_highlight_colors(s_achievement_layer, settings_get_circleColor(), gcolor_legible_over(settings_get_circleColor()));
-  menu_layer_set_callbacks(s_achievement_layer, NULL, (MenuLayerCallbacks){
-    .get_num_sections = menu_get_num_sections_callback,
-    .get_num_rows = menu_get_num_rows_callback,
+	menu_layer_set_callbacks(s_achievement_layer, NULL, (MenuLayerCallbacks){
+		.get_num_sections = menu_get_num_sections_callback,
+		.get_num_rows = menu_get_num_rows_callback,
 		.draw_header = menu_draw_header_callback,
-    .get_header_height = menu_get_header_height_callback,
-    .draw_row = menu_draw_row_callback,
+		.get_header_height = menu_get_header_height_callback,
+		.draw_row = menu_draw_row_callback,
 		.select_click = menu_select_callback,
-  });
+	});
 	
 	// Bind the menu layer's click config provider to the window for interactivity
 	menu_layer_set_click_config_onto_window(s_achievement_layer, window);

@@ -7,9 +7,9 @@
 #include "src/c/localize.h"
 #include "src/c/settings_menu.h"
 #if !PBL_PLATFORM_APLITE
-	#include "src/c/achievement.h"
-	#include "src/c/achievement_window.h"
-	#include "src/c/achievement_menu.h"
+#include "src/c/achievement.h"
+#include "src/c/achievement_window.h"
+#include "src/c/achievement_menu.h"
 #endif
 
 #define D_START_DELAY 2100
@@ -153,167 +153,167 @@ static void animation_end_callback(void *data) {
 		
 		// Achievements
 		#if !PBL_PLATFORM_APLITE
-			data_calculate_streak_length();
-			// Check whether it's the longest streak and save if it is
-			if (data_get_longest_streak() < data_get_streak_length()) {
-				data_set_longest_streak(data_get_streak_length());
-			}
-		
-			// Add the minutes breathed to the total number of minutes breathed
-			data_set_total_minutes_breathed(data_get_total_minutes_breathed() + s_min_to_breathe);
-		
-			// String to hold the description
-			char * description = "1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ!@";
-		
-			// Show achievements for 5, 8, and 10 minutes breathed in this session if achievements are enabled
-			switch (s_min_to_breathe) {
-				case 5:
-					if (achievement_get_five_minutes_session().complete == 0) {
-						achievement_set_five_minutes_session(data_get_date_today(), 1);
-						if (settings_get_achievementsEnabled() && !s_achievement_window_pushed) {
-							s_achievement_window_pushed = true;
-							snprintf(description, 37, localize_get_minutes_session_description(), 5);
-							achievement_window_push(localize_get_five_minutes_session_name(), description);
-						}
-						if (achievement_get_all_complete()) {
-							achievement_set_completionist(data_get_date_today(), 1);
-						}
+		data_calculate_streak_length();
+		// Check whether it's the longest streak and save if it is
+		if (data_get_longest_streak() < data_get_streak_length()) {
+			data_set_longest_streak(data_get_streak_length());
+		}
+	
+		// Add the minutes breathed to the total number of minutes breathed
+		data_set_total_minutes_breathed(data_get_total_minutes_breathed() + s_min_to_breathe);
+	
+		// String to hold the description
+		char * description = "1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ!@";
+	
+		// Show achievements for 5, 8, and 10 minutes breathed in this session if achievements are enabled
+		switch (s_min_to_breathe) {
+			case 5:
+				if (achievement_get_five_minutes_session().complete == 0) {
+					achievement_set_five_minutes_session(data_get_date_today(), 1);
+					if (settings_get_achievementsEnabled() && !s_achievement_window_pushed) {
+						s_achievement_window_pushed = true;
+						snprintf(description, 37, localize_get_minutes_session_description(), 5);
+						achievement_window_push(localize_get_five_minutes_session_name(), description);
 					}
-					break;
-				case 8:
-					if (achievement_get_eight_minutes_session().complete == 0) {
-						achievement_set_eight_minutes_session(data_get_date_today(), 1);
-						if (settings_get_achievementsEnabled() && !s_achievement_window_pushed) {
-							s_achievement_window_pushed = true;
-							snprintf(description, 37, localize_get_minutes_session_description(), 8);
-							achievement_window_push(localize_get_eight_minutes_session_name(), description);
-						}
-						if (achievement_get_all_complete()) {
-							achievement_set_completionist(data_get_date_today(), 1);
-						}
+					if (achievement_get_all_complete()) {
+						achievement_set_completionist(data_get_date_today(), 1);
 					}
-					break;
-				case 10:
-					if (achievement_get_ten_minutes_session().complete == 0) {
-						achievement_set_ten_minutes_session(data_get_date_today(), 1);
-						if (settings_get_achievementsEnabled() && !s_achievement_window_pushed) {
-							s_achievement_window_pushed = true;
-							snprintf(description, 38, localize_get_minutes_session_description(), 10);
-							achievement_window_push(localize_get_ten_minutes_session_name(), description);
-						}
-						if (achievement_get_all_complete()) {
-							achievement_set_completionist(data_get_date_today(), 1);
-						}
+				}
+				break;
+			case 8:
+				if (achievement_get_eight_minutes_session().complete == 0) {
+					achievement_set_eight_minutes_session(data_get_date_today(), 1);
+					if (settings_get_achievementsEnabled() && !s_achievement_window_pushed) {
+						s_achievement_window_pushed = true;
+						snprintf(description, 37, localize_get_minutes_session_description(), 8);
+						achievement_window_push(localize_get_eight_minutes_session_name(), description);
 					}
-					break;
-			}
-		
-			// Show achievements for 5, 10, 30 and 50 minutes breathed in one day if achievements are enabled
-			int achievement_case = 0;
-			if (s_min_breathed_today >= 60) {
-				achievement_case = 60;
-			} else if (s_min_breathed_today < 60 && s_min_breathed_today >= 30) {
-				achievement_case = 30;
-			} else if (s_min_breathed_today < 30 && s_min_breathed_today >= 10) {
-				achievement_case = 10;
-			} else if (s_min_breathed_today < 10 && s_min_breathed_today >= 5) {
-				achievement_case = 5;
-			}
-			switch (achievement_case) {
-				case 10: // 10 is first because we have to check for 10 min in one day and 5 in one day
-					if (achievement_get_ten_minutes_day().complete == 0) {
-						achievement_set_ten_minutes_day(data_get_date_today(), 1);
-						if (settings_get_achievementsEnabled() && !s_achievement_window_pushed) {
-							s_achievement_window_pushed = true;
-							snprintf(description, 34, localize_get_minutes_day_description(), 10);							
-							achievement_window_push(localize_get_ten_minutes_day_name(), description);
-						}
-						if (achievement_get_all_complete()) {
-							achievement_set_completionist(data_get_date_today(), 1);
-						}
+					if (achievement_get_all_complete()) {
+						achievement_set_completionist(data_get_date_today(), 1);
 					}
-				case 5:
-					if (achievement_get_five_minutes_day().complete == 0) {
-						achievement_set_five_minutes_day(data_get_date_today(), 1);
-						if (settings_get_achievementsEnabled() && !s_achievement_window_pushed) {
-							s_achievement_window_pushed = true;
-							snprintf(description, 33, localize_get_minutes_day_description(), 5);							
-							achievement_window_push(localize_get_five_minutes_day_name(), description);
-						}
-						if (achievement_get_all_complete()) {
-							achievement_set_completionist(data_get_date_today(), 1);
-						}
+				}
+				break;
+			case 10:
+				if (achievement_get_ten_minutes_session().complete == 0) {
+					achievement_set_ten_minutes_session(data_get_date_today(), 1);
+					if (settings_get_achievementsEnabled() && !s_achievement_window_pushed) {
+						s_achievement_window_pushed = true;
+						snprintf(description, 38, localize_get_minutes_session_description(), 10);
+						achievement_window_push(localize_get_ten_minutes_session_name(), description);
 					}
-					break;
-				case 30:
-					if (achievement_get_thirty_minutes_day().complete == 0) {
-						achievement_set_thirty_minutes_day(data_get_date_today(), 1);
-						if (settings_get_achievementsEnabled() && !s_achievement_window_pushed) {
-							s_achievement_window_pushed = true;
-							snprintf(description, 34, localize_get_minutes_day_description(), 30);
-							achievement_window_push(localize_get_thirty_minutes_day_name(), description);
-						}
-						if (achievement_get_all_complete()) {
-							achievement_set_completionist(data_get_date_today(), 1);
-						}
+					if (achievement_get_all_complete()) {
+						achievement_set_completionist(data_get_date_today(), 1);
 					}
-					break;
-				case 60:
-					if (achievement_get_one_hour_day().complete == 0) {
-						achievement_set_one_hour_day(data_get_date_today(), 1);
-						if (settings_get_achievementsEnabled() && !s_achievement_window_pushed) {
-							s_achievement_window_pushed = true;
-							achievement_window_push(localize_get_one_hour_day_name(), localize_get_one_hour_day_description());
-						}
-						if (achievement_get_all_complete()) {
-							achievement_set_completionist(data_get_date_today(), 1);
-						}
+				}
+				break;
+		}
+	
+		// Show achievements for 5, 10, 30 and 50 minutes breathed in one day if achievements are enabled
+		int achievement_case = 0;
+		if (s_min_breathed_today >= 60) {
+			achievement_case = 60;
+		} else if (s_min_breathed_today < 60 && s_min_breathed_today >= 30) {
+			achievement_case = 30;
+		} else if (s_min_breathed_today < 30 && s_min_breathed_today >= 10) {
+			achievement_case = 10;
+		} else if (s_min_breathed_today < 10 && s_min_breathed_today >= 5) {
+			achievement_case = 5;
+		}
+		switch (achievement_case) {
+			case 10: // 10 is first because we have to check for 10 min in one day and 5 in one day
+				if (achievement_get_ten_minutes_day().complete == 0) {
+					achievement_set_ten_minutes_day(data_get_date_today(), 1);
+					if (settings_get_achievementsEnabled() && !s_achievement_window_pushed) {
+						s_achievement_window_pushed = true;
+						snprintf(description, 34, localize_get_minutes_day_description(), 10);							
+						achievement_window_push(localize_get_ten_minutes_day_name(), description);
 					}
-					break;
-				default:
-					break;
-			}
-		
-			// Show achievements for one week, one month, and one year streak if achievements are enabled
-			switch(data_get_streak_length()) {
-				case 7:
-					if (achievement_get_one_week_streak().complete == 0) {
-						achievement_set_one_week_streak(data_get_date_today(), 1);
-						if (settings_get_achievementsEnabled() && !s_achievement_window_pushed) {
-							s_achievement_window_pushed = true;
-							achievement_window_push(localize_get_one_week_streak_name(), localize_get_one_week_streak_description());
-						}
-						if (achievement_get_all_complete()) {
-							achievement_set_completionist(data_get_date_today(), 1);
-						}
+					if (achievement_get_all_complete()) {
+						achievement_set_completionist(data_get_date_today(), 1);
 					}
-					break;
-				case 30:
-					if (achievement_get_one_month_streak().complete == 0) {
-						achievement_set_one_month_streak(data_get_date_today(), 1);
-						if (settings_get_achievementsEnabled() && !s_achievement_window_pushed) {
-							s_achievement_window_pushed = true;
-							achievement_window_push(localize_get_one_month_streak_name(), localize_get_one_month_streak_description());
-						}
-						if (achievement_get_all_complete()) {
-							achievement_set_completionist(data_get_date_today(), 1);
-						}
+				}
+			case 5:
+				if (achievement_get_five_minutes_day().complete == 0) {
+					achievement_set_five_minutes_day(data_get_date_today(), 1);
+					if (settings_get_achievementsEnabled() && !s_achievement_window_pushed) {
+						s_achievement_window_pushed = true;
+						snprintf(description, 33, localize_get_minutes_day_description(), 5);							
+						achievement_window_push(localize_get_five_minutes_day_name(), description);
 					}
-					break;
-				case 365:
-					if (achievement_get_one_year_streak().complete == 0) {
-						achievement_set_one_year_streak(data_get_date_today(), 1);
-						if (settings_get_achievementsEnabled() && !s_achievement_window_pushed) {
-							s_achievement_window_pushed = true;
-							achievement_window_push(localize_get_one_year_streak_name(), localize_get_one_year_streak_description());
-						}
-						if (achievement_get_all_complete()) {
-							achievement_set_completionist(data_get_date_today(), 1);
-						}
+					if (achievement_get_all_complete()) {
+						achievement_set_completionist(data_get_date_today(), 1);
 					}
-					break;
-			}
-		
+				}
+				break;
+			case 30:
+				if (achievement_get_thirty_minutes_day().complete == 0) {
+					achievement_set_thirty_minutes_day(data_get_date_today(), 1);
+					if (settings_get_achievementsEnabled() && !s_achievement_window_pushed) {
+						s_achievement_window_pushed = true;
+						snprintf(description, 34, localize_get_minutes_day_description(), 30);
+						achievement_window_push(localize_get_thirty_minutes_day_name(), description);
+					}
+					if (achievement_get_all_complete()) {
+						achievement_set_completionist(data_get_date_today(), 1);
+					}
+				}
+				break;
+			case 60:
+				if (achievement_get_one_hour_day().complete == 0) {
+					achievement_set_one_hour_day(data_get_date_today(), 1);
+					if (settings_get_achievementsEnabled() && !s_achievement_window_pushed) {
+						s_achievement_window_pushed = true;
+						achievement_window_push(localize_get_one_hour_day_name(), localize_get_one_hour_day_description());
+					}
+					if (achievement_get_all_complete()) {
+						achievement_set_completionist(data_get_date_today(), 1);
+					}
+				}
+				break;
+			default:
+				break;
+		}
+	
+		// Show achievements for one week, one month, and one year streak if achievements are enabled
+		switch(data_get_streak_length()) {
+			case 7:
+				if (achievement_get_one_week_streak().complete == 0) {
+					achievement_set_one_week_streak(data_get_date_today(), 1);
+					if (settings_get_achievementsEnabled() && !s_achievement_window_pushed) {
+						s_achievement_window_pushed = true;
+						achievement_window_push(localize_get_one_week_streak_name(), localize_get_one_week_streak_description());
+					}
+					if (achievement_get_all_complete()) {
+						achievement_set_completionist(data_get_date_today(), 1);
+					}
+				}
+				break;
+			case 30:
+				if (achievement_get_one_month_streak().complete == 0) {
+					achievement_set_one_month_streak(data_get_date_today(), 1);
+					if (settings_get_achievementsEnabled() && !s_achievement_window_pushed) {
+						s_achievement_window_pushed = true;
+						achievement_window_push(localize_get_one_month_streak_name(), localize_get_one_month_streak_description());
+					}
+					if (achievement_get_all_complete()) {
+						achievement_set_completionist(data_get_date_today(), 1);
+					}
+				}
+				break;
+			case 365:
+				if (achievement_get_one_year_streak().complete == 0) {
+					achievement_set_one_year_streak(data_get_date_today(), 1);
+					if (settings_get_achievementsEnabled() && !s_achievement_window_pushed) {
+						s_achievement_window_pushed = true;
+						achievement_window_push(localize_get_one_year_streak_name(), localize_get_one_year_streak_description());
+					}
+					if (achievement_get_all_complete()) {
+						achievement_set_completionist(data_get_date_today(), 1);
+					}
+				}
+				break;
+		}
+	
 		achievement_send_achievements();
 		#endif
 		
@@ -344,8 +344,8 @@ static void animation_end_callback(void *data) {
 	
 	// Shows all the layers because breathing is done
 	#ifdef PBL_ROUND
-		set_min_text(s_min_to_breathe, s_min_text);
-		snprintf(s_instruct_text, sizeof(s_instruct_text), "%s", localize_get_breathe_text());
+	set_min_text(s_min_to_breathe, s_min_text);
+	snprintf(s_instruct_text, sizeof(s_instruct_text), "%s", localize_get_breathe_text());
 	#endif
 	layer_set_hidden(s_inside_text_layer, false);
 	layer_set_hidden(s_upper_text_layer, false);
@@ -562,7 +562,7 @@ static void main_animation_callback () {
 		s_breath_duration = settings_get_breathDuration(); // Check for changes in the breath duration; it may have been changed in the settings
 	}
 	#else
-		s_breath_duration = settings_get_breathDuration(); // Check for changes in the breath duration; it may have been changed in the settings
+	s_breath_duration = settings_get_breathDuration(); // Check for changes in the breath duration; it may have been changed in the settings
 	#endif
 	s_breaths_per_minute = settings_get_breathsPerMinute();
 	
@@ -645,16 +645,16 @@ static void animation_start_callback(void *context) {
 	int random_number_2 = rand() % 4;
 	
 	#ifdef PBL_RECT
-		// Shows the text at top and bottom
-		snprintf(s_greet_text, sizeof(s_greet_text), "%s", localize_get_top_text(random_number));
-		snprintf(s_min_today, sizeof(s_min_today), "%s", localize_get_bottom_text(random_number_2));
-		layer_set_hidden(s_upper_text_layer, false);
-		layer_set_hidden(s_lower_text_layer, false);
+	// Shows the text at top and bottom
+	snprintf(s_greet_text, sizeof(s_greet_text), "%s", localize_get_top_text(random_number));
+	snprintf(s_min_today, sizeof(s_min_today), "%s", localize_get_bottom_text(random_number_2));
+	layer_set_hidden(s_upper_text_layer, false);
+	layer_set_hidden(s_lower_text_layer, false);
 	#else
-		// Shows the text near the center of the screen
-		snprintf(s_instruct_text, sizeof(s_instruct_text), "%s", localize_get_top_text(random_number));
-		snprintf(s_min_text, sizeof(s_min_text), "%s", localize_get_bottom_text(random_number_2));
-		layer_set_hidden(s_inside_text_layer, false);
+	// Shows the text near the center of the screen
+	snprintf(s_instruct_text, sizeof(s_instruct_text), "%s", localize_get_top_text(random_number));
+	snprintf(s_min_text, sizeof(s_min_text), "%s", localize_get_bottom_text(random_number_2));
+	layer_set_hidden(s_inside_text_layer, false);
 	#endif
 }
 

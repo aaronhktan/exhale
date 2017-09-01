@@ -63,12 +63,12 @@ void wakeup_force_next_schedule(int hours, int wakeup_id, int startHours) {
 // Check if there is a wakeup scheduled at the time, if so, do not schedule a new one.
 void wakeup_schedule_next_wakeup(int hours, int wakeup_id, int startHours) {
 	if (persist_exists(PERSIST_WAKEUP)) {
-    id = persist_read_int(PERSIST_WAKEUP);
-    // query if event is still valid, otherwise delete
-    if (wakeup_query(id, NULL)) {
-      APP_LOG(APP_LOG_LEVEL_DEBUG, "There is already a wakeup scheduled at %s!", data_read_wakeup_time_data());
-    } else {
-      wakeup_force_next_schedule(hours, wakeup_id, startHours);
+	id = persist_read_int(PERSIST_WAKEUP);
+	// query if event is still valid, otherwise delete
+	if (wakeup_query(id, NULL)) {
+		APP_LOG(APP_LOG_LEVEL_DEBUG, "There is already a wakeup scheduled at %s!", data_read_wakeup_time_data());
+	} else {
+	wakeup_force_next_schedule(hours, wakeup_id, startHours);
 		}
 	} else {
 		wakeup_force_next_schedule(hours, wakeup_id, startHours);
@@ -76,6 +76,6 @@ void wakeup_schedule_next_wakeup(int hours, int wakeup_id, int startHours) {
 }
 
 void wakeup_handler(WakeupId id, int32_t reason) {
-  // A wakeup event has occurred while the app was already open
+	// A wakeup event has occurred while the app was already open
 	wakeup_schedule_next_wakeup(settings_get_reminderHours(), reason, settings_get_reminderHoursStart());
 }

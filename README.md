@@ -7,9 +7,11 @@
 ![alt tag](https://github.com/cheeseisdisgusting/exhale/blob/master/screenshots/index_green.png)
 ![alt tag](https://github.com/cheeseisdisgusting/exhale/blob/master/screenshots/index_yellow.png)
 
- [![Available on the Pebble App Store](http://pblweb.com/badge/583dc06f00355abe66000862/black/small)][appstore]
 
-##Features
+### Featured on the Pebble App Store from 12 December 2016 to 16 January 2017!
+ [![Available on the Pebble App Store](https://github.com/cheeseisdisgusting/exhale/blob/master/screenshots/badge.png)][appstore]
+
+## Description:
 
 ### Breathe with a beautiful interface.
 - A simple circle animation expands and contracts to help you visualize and focus on breathing.
@@ -35,7 +37,7 @@
 ### Supports multiple languages.
 - Don't speak English? This app supports English, French, Spanish, and German (text in app, settings page all correspond to the watch's chosen language). Thanks to [noiob](https://github.com/noiob) for the German translation!
 
-##Some more screenshots:
+## Some more screenshots:
 
 *Pebble Classic/Steel/2, Pebble Time (Steel), Pebble Time Round, Pebble Time 2*
 

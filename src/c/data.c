@@ -31,8 +31,8 @@ static void load_health_data_handler() {
 	s_current_steps = health_service_sum_today(HealthMetricStepCount);
 	data_update_steps_buffer();
 	#if PBL_API_EXISTS(health_service_peek_current_value)
-		s_current_heart_rate = health_service_peek_current_value(HealthMetricHeartRateBPM);
-		data_update_heart_rate_buffer();
+	s_current_heart_rate = health_service_peek_current_value(HealthMetricHeartRateBPM);
+	data_update_heart_rate_buffer();
 	#endif
 }
 
@@ -63,12 +63,12 @@ void data_set_current_heart_rate(int value) {
 // Sets heart rate sample period to get fresh data
 void data_set_heart_rate_period(int val){
 	#if PBL_API_EXISTS(health_service_set_heart_rate_sample_period)
-		health_service_set_heart_rate_sample_period(val);
+	health_service_set_heart_rate_sample_period(val);
 	#endif
 }
 
 char* data_get_current_steps_buffer() {
-  return s_current_steps_buffer;
+	return s_current_steps_buffer;
 }
 
 char* data_get_current_heart_rate_buffer() {

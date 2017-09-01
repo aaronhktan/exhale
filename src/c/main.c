@@ -6,12 +6,12 @@
 #include "src/c/localize.h"
 #include "src/c/data.h"
 #if !PBL_PLATFORM_APLITE
-	#include "src/c/health.h"
-	#include "src/c/appglance.h"
-	#include "src/c/achievement.h"
+#include "src/c/health.h"
+#include "src/c/appglance.h"
+#include "src/c/achievement.h"
 // 	#include "src/c/achievement_menu.h"
 // 	#include "src/c/achievement_window.h"
-	#include "src/c/new_version_window.h"
+#include "src/c/new_version_window.h"
 #endif
 
 static void inbox_received_handler(DictionaryIterator *iter, void *context) {
@@ -36,9 +36,9 @@ static void inbox_received_handler(DictionaryIterator *iter, void *context) {
 		}
 	} else {
 	#endif
-		// Otherwise, save settings received from phone, and refresh screen
-		settings_handle_settings(iter, context);
-		breathe_window_redraw_window();
+	// Otherwise, save settings received from phone, and refresh screen
+	settings_handle_settings(iter, context);
+	breathe_window_redraw_window();
 	#if !PBL_PLATFORM_APLITE
 	}
 	#endif
@@ -52,13 +52,13 @@ static void init() {
 	
 	settings_init(); // Subscribe to settings service
 	#if PBL_HEALTH
-		if (settings_get_displayText() == 2 || settings_get_displayText() == 3) {
-			health_init(); // Subscribe to health service if health API is available
-			data_init(); // Subscribe to data service
-		}
+	if (settings_get_displayText() == 2 || settings_get_displayText() == 3) {
+		health_init(); // Subscribe to health service if health API is available
+		data_init(); // Subscribe to data service
+	}
 	#endif
 	#if !PBL_PLATFORM_APLITE
-		achievement_init(); // Subscribe to the achievement service
+	achievement_init(); // Subscribe to the achievement service
 	#endif
 	wakeup_service_subscribe(wakeup_handler); // Subscribe to Wakeup Service
 	
@@ -97,14 +97,14 @@ static void init() {
 // 			char description[100];
 // 			snprintf(description, sizeof(description), localize_get_minutes_session_description(), 10);
 // 			achievement_window_push(localize_get_thirty_minutes_day_name(), description); // For testing
-				if (!persist_exists(SEEN_NEW_VERSION_KEY) || !persist_exists(SEEN_NEW_VERSION_NUMBER_KEY)){
-					new_version_window_push(true);
-				} else if ((persist_read_bool(SEEN_NEW_VERSION_KEY) == false) || persist_read_int(SEEN_NEW_VERSION_NUMBER_KEY) != 24) {
+		if (!persist_exists(SEEN_NEW_VERSION_KEY) || !persist_exists(SEEN_NEW_VERSION_NUMBER_KEY)){
+			new_version_window_push(true);
+		} else if ((persist_read_bool(SEEN_NEW_VERSION_KEY) == false) || persist_read_int(SEEN_NEW_VERSION_NUMBER_KEY) != 24) {
 // 						data_set_streak_date_persist_data();		
-					new_version_window_push(false);
-				} else {
-					APP_LOG(APP_LOG_LEVEL_DEBUG, "The user has already seen the new version page!");
-				}
+			new_version_window_push(false);
+		} else {
+			APP_LOG(APP_LOG_LEVEL_DEBUG, "The user has already seen the new version page!");
+		}
 		#endif
 // 		achievement_menu_window_push(); // For testing
 	}

@@ -5,11 +5,11 @@
 
 #define DELTA 33
 #ifdef PBL_PLATFORM_EMERY
-	#define FONT_KEY FONT_KEY_GOTHIC_28_BOLD
+#define FONT_KEY FONT_KEY_GOTHIC_28_BOLD
 #elif PBL_PLATFORM_CHALK
-	#define FONT_KEY FONT_KEY_GOTHIC_18_BOLD
+#define FONT_KEY FONT_KEY_GOTHIC_18_BOLD
 #else
-	#define FONT_KEY FONT_KEY_GOTHIC_24_BOLD
+#define FONT_KEY FONT_KEY_GOTHIC_24_BOLD
 #endif
 
 static Window *s_reminder_window;
@@ -46,23 +46,23 @@ static void canvas_update_proc(Layer *layer, GContext *ctx) {
 	GRect bounds = layer_get_bounds(layer);
 	
 	#if !PBL_PLATFORM_APLITE
-		GSize seq_bounds = gdraw_command_sequence_get_bounds_size(s_command_seq);
+	GSize seq_bounds = gdraw_command_sequence_get_bounds_size(s_command_seq);
 
-		GDrawCommandFrame *frame = gdraw_command_sequence_get_frame_by_index(s_command_seq, s_index); // Grabs frame from PDC
+	GDrawCommandFrame *frame = gdraw_command_sequence_get_frame_by_index(s_command_seq, s_index); // Grabs frame from PDC
 
-		if (frame) { // A next frame was found
-			gdraw_command_frame_draw(ctx, s_command_seq, frame, GPoint(
-				(bounds.size.w - seq_bounds.w) / 2,
-				(bounds.size.h - seq_bounds.h) / 2
-			));
-		}
+	if (frame) { // A next frame was found
+		gdraw_command_frame_draw(ctx, s_command_seq, frame, GPoint(
+			(bounds.size.w - seq_bounds.w) / 2,
+			(bounds.size.h - seq_bounds.h) / 2
+		));
+	}
 
-		// Advance to the next frame, wrapping if neccessary
-		int num_frames = gdraw_command_sequence_get_num_frames(s_command_seq);
-		s_index++;
-		if (s_index == num_frames) {
-			s_index = 0;
-		}
+	// Advance to the next frame, wrapping if neccessary
+	int num_frames = gdraw_command_sequence_get_num_frames(s_command_seq);
+	s_index++;
+	if (s_index == num_frames) {
+		s_index = 0;
+	}
 	#else
 		
 	#endif
@@ -147,7 +147,7 @@ static void select_click_handler(ClickRecognizerRef recognizer, void *context) {
 			.foreground = GColorBlack,
 		},
 		.align = ActionMenuAlignTop
-};
+	};
 	
 	// Show the ActionMenu
 	s_action_menu = action_menu_open(&config);
@@ -184,16 +184,16 @@ static void reminder_window_load(Window *window) {
 	layer_add_child(window_layer, s_canvas_layer);
 	
 	#if !PBL_PLATFORM_APLITE
-		// Create sequence from PDC
-		s_command_seq = gdraw_command_sequence_create_with_resource(RESOURCE_ID_ALARM_SEQUENCE);
-		s_next_frame_timer = app_timer_register(DELTA, next_frame_handler, NULL);
+	// Create sequence from PDC
+	s_command_seq = gdraw_command_sequence_create_with_resource(RESOURCE_ID_ALARM_SEQUENCE);
+	s_next_frame_timer = app_timer_register(DELTA, next_frame_handler, NULL);
 	#else
-		// Load static image because not enough memory for PDC
-		s_remind_bitmap = gbitmap_create_with_resource(RESOURCE_ID_ALARM_BITMAP);
-		s_bitmap_layer = bitmap_layer_create(bounds);
-		layer_add_child(s_canvas_layer, bitmap_layer_get_layer(s_bitmap_layer));
-		bitmap_layer_set_bitmap(s_bitmap_layer, s_remind_bitmap);
-		bitmap_layer_set_compositing_mode(s_bitmap_layer, GCompOpSet);
+	// Load static image because not enough memory for PDC
+	s_remind_bitmap = gbitmap_create_with_resource(RESOURCE_ID_ALARM_BITMAP);
+	s_bitmap_layer = bitmap_layer_create(bounds);
+	layer_add_child(s_canvas_layer, bitmap_layer_get_layer(s_bitmap_layer));
+	bitmap_layer_set_bitmap(s_bitmap_layer, s_remind_bitmap);
+	bitmap_layer_set_compositing_mode(s_bitmap_layer, GCompOpSet);
 	#endif
 	
 	init_action_menu();
@@ -213,10 +213,10 @@ static void reminder_window_unload(Window *window) {
 	app_timer_cancel(s_close_timer);
 	text_layer_destroy(s_text_layer);
 	#if !PBL_PLATFORM_APLITE
-		gdraw_command_sequence_destroy(s_command_seq);
+	gdraw_command_sequence_destroy(s_command_seq);
 	#else
-		bitmap_layer_destroy(s_bitmap_layer);
-		gbitmap_destroy(s_remind_bitmap);
+	bitmap_layer_destroy(s_bitmap_layer);
+	gbitmap_destroy(s_remind_bitmap);
 	#endif
 	layer_destroy(s_canvas_layer);
 	action_menu_hierarchy_destroy(s_root_level, NULL, NULL);
@@ -227,14 +227,14 @@ static void reminder_window_unload(Window *window) {
 // Method to open and display this window
 void reminder_window_push() {
 	#if PBL_COLOR
-		random_color = (GColor){ .a = 3, .r = rand() % 4, .g = rand() % 4, .b = rand() % 4 }; // Random color. Cool.
-		while (random_color.r == 0 && random_color.g == 0 && random_color.b == 0) {
-			random_color = (GColor){ .a = 3, .r = rand() % 4, .g = rand() % 4, .b = rand() % 4 }; // To make sure that the background color is not black.
-		}
-		text_color = gcolor_legible_over(random_color);
+	random_color = (GColor){ .a = 3, .r = rand() % 4, .g = rand() % 4, .b = rand() % 4 }; // Random color. Cool.
+	while (random_color.r == 0 && random_color.g == 0 && random_color.b == 0) {
+		random_color = (GColor){ .a = 3, .r = rand() % 4, .g = rand() % 4, .b = rand() % 4 }; // To make sure that the background color is not black.
+	}
+	text_color = gcolor_legible_over(random_color);
 	#else
-		random_color = GColorWhite;
-		text_color = GColorBlack;
+	random_color = GColorWhite;
+	text_color = GColorBlack;
 	#endif
 	
 	s_reminder_window = window_create();

@@ -5,14 +5,14 @@
 #define DELTA 50
 
 #ifdef PBL_PLATFORM_EMERY
-	#define FONT_KEY FONT_KEY_GOTHIC_18_BOLD
-	#define LARGE_FONT_KEY FONT_KEY_GOTHIC_24_BOLD
+#define FONT_KEY FONT_KEY_GOTHIC_18_BOLD
+#define LARGE_FONT_KEY FONT_KEY_GOTHIC_24_BOLD
 #elif PBL_PLATFORM_CHALK
-	#define FONT_KEY FONT_KEY_GOTHIC_14
-	#define LARGE_FONT_KEY FONT_KEY_GOTHIC_18_BOLD
+#define FONT_KEY FONT_KEY_GOTHIC_14
+#define LARGE_FONT_KEY FONT_KEY_GOTHIC_18_BOLD
 #else
-	#define FONT_KEY FONT_KEY_GOTHIC_14_BOLD
-	#define LARGE_FONT_KEY FONT_KEY_GOTHIC_18_BOLD
+#define FONT_KEY FONT_KEY_GOTHIC_14_BOLD
+#define LARGE_FONT_KEY FONT_KEY_GOTHIC_18_BOLD
 #endif
 
 #if !PBL_PLATFORM_APLITE
@@ -180,15 +180,15 @@ void achievement_window_push(char *achievement_name, char *achievement_descripti
 	}
 	
 	#if PBL_COLOR
-		random_color = (GColor){ .a = 3, .r = rand() % 4, .g = rand() % 4, .b = rand() % 4 }; // Random color. Cool.
-		while (random_color.r == 0 && random_color.g == 0 && random_color.b == 0) {
-			APP_LOG(APP_LOG_LEVEL_DEBUG, "The random colour generated was black! Oh no!");
-			random_color = (GColor){ .a = 3, .r = rand() % 4, .g = rand() % 4, .b = rand() % 4 }; // To make sure that the background color is not black.
-		}
-		text_color = gcolor_legible_over(random_color);
+	random_color = (GColor){ .a = 3, .r = rand() % 4, .g = rand() % 4, .b = rand() % 4 }; // Random color. Cool.
+	while (random_color.r == 0 && random_color.g == 0 && random_color.b == 0) {
+		APP_LOG(APP_LOG_LEVEL_DEBUG, "The random colour generated was black! Oh no!");
+		random_color = (GColor){ .a = 3, .r = rand() % 4, .g = rand() % 4, .b = rand() % 4 }; // To make sure that the background color is not black.
+	}
+	text_color = gcolor_legible_over(random_color);
 	#else
-		random_color = GColorWhite;
-		text_color = GColorBlack;
+	random_color = GColorWhite;
+	text_color = GColorBlack;
 	#endif
 	
 	s_achievement_window = window_create();
