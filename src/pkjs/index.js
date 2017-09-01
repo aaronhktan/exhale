@@ -127,6 +127,7 @@ Pebble.addEventListener('showConfiguration', function(e) {
 			// Set the achievementsBackup key/value in Clay to show in settings page
 			if (localStorage.getItem('clay-settings') !== null) {
 				var settings = JSON.parse(localStorage.getItem('clay-settings'));
+				settings.achievementsBackup = achievementsString;
 			} else {
 				var settings = {
 					achievementsBackup: achievementsString
