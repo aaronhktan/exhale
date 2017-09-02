@@ -96,17 +96,6 @@
                     "name": "ALARM_SEQUENCE",
                     "targetPlatforms": null,
                     "type": "raw"
-                },
-                {
-                    "file": "data/achievement_sequence.pdc",
-                    "name": "ACHIEVEMENT_SEQUENCE",
-                    "targetPlatforms": [
-                        "basalt",
-                        "chalk",
-                        "diorite",
-                        "emery"
-                    ],
-                    "type": "raw"
                 }
             ]
         },
