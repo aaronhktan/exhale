@@ -5,7 +5,7 @@ module.exports = [
 	},
 	{
 		"type": "text",
-		"defaultValue": "Esto es la página de ajustes para la app Breathe. Estás usando la versión 2.4 de la app.",
+		"defaultValue": "Esto es la página de ajustes para la app Breathe. Estás usando la versión 2.5 de la app.",
 	},
 	{
 		"type": "section",
