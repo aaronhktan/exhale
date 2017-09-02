@@ -1,5 +1,21 @@
 # English
 
+### Version 2.4 (2017-09-01)
+What's new for Pebble Time/Time Steel/Time Round/2:
+- Achievements backup! Lost your old Pebble? Deleted and reinstalled the app? Achievements now are restored automatically.
+- Not sure what happened in the new update? Check these release notes in the settings page by clicking on the version number.
+- A new welcome/onboarding screen for new breathers.
+
+Fixes and Improvements:
+- Decreased minimum breathing rate to 2 times per minute. (Shoutout to sinoth!)
+- Clearer vibration pattern naming.
+- Fixed a crash starting a session after a reminder.
+- Fixed minor memory leak with the achievement window.
+- New version information window now scrolls, so you can see more information.
+- Fixed some disappearing text on Pebble (Steel) models after changing settings.
+
+--
+
 ### Version 2.3 (2017-02-03)
 What's new for Pebble Time/Time Steel/Time Round/2:
 - Settings directly on your watch: Want to change some settings, without pulling out your phone? You can do it now with a long press of the up button! Available settings to change include remembering previous duration, the type of vibration, breathing speed, heart rate variation, text to display, reminder settings, and achievements.
@@ -93,6 +109,23 @@ Download now and enjoy breathing.
 
 # Français
 
+### Version 2.4 (2017-09-01)
+Nouveau pour Pebble Time/Time Steel/Time Round/2:
+- Sauvegardez vos succès! Avez-vous perdu votre Pebble? Supprimé et réinstallé l'app? Vos succès sont maintenant récupérés automatiquement!
+- Voulez-vous savoir ce qu'il y a de nouveau dans ce mise à jour? Lisez les notes de mise à jour en cliquant sur la version dans la page de paramètres.
+- Une nouvelle écran bienvenue pour les nouveaux utilisateurs.
+
+Corrections et Améliorations:
+- Diminué le taux de respiration minimum à 2 respirations par minute.
+- Renommé les types de vibrations.
+- L'app ne plante plus après un rappel!
+- Corrigé une fuite de mémoire avec l'écran de succès.
+- Plus d'infos sur la nouvelle version.
+- Texte ne disparaît plus sur le Pebble (Steel) après avoir changé des paramètres.
+- Corrections orthographiques sur le page de paramètres.
+
+--
+
 ### Version 2.3 (2017-02-03)
 Nouveau pour Pebble Time/Time Steel/Time Round/2:
 - Changez vos paramètres directement sur votre montre! Appuez longuement sur le bouton en haut pour voir toutes les choses que vous pouvez changer.
@@ -175,6 +208,23 @@ Fonctions:
 Téléchargez maintenant et respirez maintenant!
 
 # Español
+
+### Versión 2.4 (2017-09-01)
+Nuevo para Pebble Time/Time Steel/Time Round/2:
+- Copia de seguridad y restauración de logros: ¿Has perdido tu Pebble? ¿O has borrado y reinstalado la app? ¡Tus logros serán restaurados automáticamente!
+- ¿Quieres ver qué hay de nuevo en esta versión? Selecciona la versión en el menú de ajustes para ver las notas de versión.
+- Una pantalla de bienvenida para usuarios nuevos.
+
+Correción de errores y amelioraciones:
+- La tasa más baja de respiraciones ha sido reducida a dos respiraciones por minuto.
+- Los tipos de vibraciones ahora tienen nuevos nombres.
+- La app no se bloqueará después de un recordatorio.
+- La pantalla de logros no causará una pérdida de memoria.
+- Más informaciones en la pantalla de notas de versión.
+- El texto en el menú principal no despararecerá después de haber cambiado unos ajustes en el Pebble (Steel).
+- Correciones ortográficas en la página de ajustes.
+
+--
 
 ### Versión 2.3 (2017-02-03)
 Nuevo para Pebble Time/Time Steel/Time Round/2:
