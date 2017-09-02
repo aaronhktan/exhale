@@ -169,8 +169,10 @@ void achievement_window_push(char *achievement_name, char *achievement_descripti
 	s_achievement_name = achievement_name;
 	s_achievement_description = achievement_description;
 	
+	#if !PBL_PLATFORM_DIORITE
 	// Create sequence from PDC
 	s_command_seq = gdraw_command_sequence_create_with_resource(RESOURCE_ID_ACHIEVEMENT_SEQUENCE);
+	#endif
 	
 	if (s_command_seq) {
 		APP_LOG(APP_LOG_LEVEL_DEBUG, "The command sequence was successfully created.");

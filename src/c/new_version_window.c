@@ -35,7 +35,7 @@ static void background_update_proc(Layer *layer, GContext *ctx) {
 }
 
 static void text_background_update_proc(Layer *layer, GContext *ctx) {
-	graphics_context_set_fill_color(ctx, PBL_IF_COLOR_ELSE(settings_get_backgroundColor(), GColorWhite));
+	graphics_context_set_fill_color(ctx, settings_get_backgroundColor());
 	graphics_fill_rect(ctx, layer_get_bounds(layer), 0, 0);
 }
 
@@ -94,7 +94,7 @@ static void window_load(Window *window) {
 	text_layer_set_background_color(s_label_layer, GColorClear);
 	text_layer_set_text_alignment(s_label_layer, PBL_IF_ROUND_ELSE(GTextAlignmentCenter, GTextAlignmentLeft));
 	text_layer_set_font(s_label_layer, fonts_get_system_font(FONT_KEY_GOTHIC_14));
-	text_layer_set_text_color(s_label_layer, gcolor_legible_over(PBL_IF_COLOR_ELSE(settings_get_backgroundColor(), GColorWhite)));
+	text_layer_set_text_color(s_label_layer, gcolor_legible_over(settings_get_backgroundColor()));
 	
 	scroll_layer_add_child(s_scroll_layer, text_layer_get_layer(s_label_layer));
 	layer_add_child(window_layer, scroll_layer_get_layer(s_scroll_layer));
@@ -108,7 +108,7 @@ static void window_load(Window *window) {
 	layer_add_child(window_layer, s_indicator_down_layer);
 	
 	GColor background_color = settings_get_backgroundColor();
-	GColor foreground_color = gcolor_legible_over(PBL_IF_COLOR_ELSE(settings_get_backgroundColor(), GColorWhite));
+	GColor foreground_color = gcolor_legible_over(settings_get_backgroundColor());
 	
 	const ContentIndicatorConfig up_config = (ContentIndicatorConfig) {
 		.layer = s_indicator_up_layer,

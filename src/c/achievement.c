@@ -178,7 +178,7 @@ void achievement_request_achievements() {
 }
 
 void achievement_send_achievements() {
-	// First, create dictionary with all the settings
+	// First, create dictionary with all the achievements
 
 	// Iterator variable, keeps the state of the creation serialization process:
 	DictionaryIterator *iter;

@@ -35,23 +35,24 @@
         "resources": {
             "media": [
                 {
+                    "file": "images/update.png",
+                    "name": "UPDATE_ICON",
+                    "targetPlatforms": null,
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/icon.png",
+                    "menuIcon": true,
+                    "name": "icon",
+                    "storageFormat": "png",
+                    "targetPlatforms": null,
+                    "type": "bitmap"
+                },
+                {
                     "file": "images/alarm.png",
                     "name": "ALARM_BITMAP",
                     "targetPlatforms": [
                         "aplite"
-                    ],
-                    "type": "bitmap"
-                },
-                {
-                    "file": "images/achievement-complete_large.png",
-                    "memoryFormat": "Smallest",
-                    "name": "ACHIEVEMENT_COMPLETE_BITMAP",
-                    "spaceOptimization": "memory",
-                    "targetPlatforms": [
-                        "basalt",
-                        "chalk",
-                        "diorite",
-                        "emery"
                     ],
                     "type": "bitmap"
                 },
@@ -67,22 +68,21 @@
                     "type": "bitmap"
                 },
                 {
-                    "file": "images/update.png",
-                    "name": "UPDATE_ICON",
-                    "targetPlatforms": null,
-                    "type": "bitmap"
-                },
-                {
-                    "file": "images/icon.png",
-                    "menuIcon": true,
-                    "name": "icon",
-                    "storageFormat": "png",
-                    "targetPlatforms": null,
-                    "type": "bitmap"
-                },
-                {
                     "file": "images/achievement-complete.png",
                     "name": "ACHIEVEMENT_COMPLETE_ICON",
+                    "targetPlatforms": [
+                        "basalt",
+                        "chalk",
+                        "diorite",
+                        "emery"
+                    ],
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/achievement-complete_large.png",
+                    "memoryFormat": "Smallest",
+                    "name": "ACHIEVEMENT_COMPLETE_BITMAP",
+                    "spaceOptimization": "memory",
                     "targetPlatforms": [
                         "basalt",
                         "chalk",
@@ -123,5 +123,5 @@
             "watchface": false
         }
     },
-    "version": "2.4.0"
+    "version": "2.40.0"
 }
