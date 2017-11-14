@@ -45,7 +45,7 @@ static void inbox_received_handler(DictionaryIterator *iter, void *context) {
 }
 
 static void init() {
-	APP_LOG(APP_LOG_LEVEL_INFO, "You are running version 2.5 of the Breathe app.");
+	APP_LOG(APP_LOG_LEVEL_INFO, "You are running version 2.51 of the Breathe app.");
 	// Open AppMessage connection
 	app_message_register_inbox_received(inbox_received_handler);
 	app_message_open(256, 256);
@@ -66,9 +66,9 @@ static void init() {
 		// Pushes the reminder window stack
 		reminder_window_push();
 		// If the user still has reminders enabled, schedule next wakeup
-// 		if (settings_get_reminderHours() != 0) {
-// 			wakeup_schedule_next_wakeup(settings_get_reminderHours(), 0, settings_get_reminderHoursStart());
-// 		}
+		if (settings_get_reminderHours() != 0) {
+			wakeup_schedule_next_wakeup(settings_get_reminderHours(), 0, settings_get_reminderHoursStart());
+		}
 	} else {
 		APP_LOG(APP_LOG_LEVEL_DEBUG, "Heap free is %d.", (int)heap_bytes_free());
 // 				reminder_window_push(); // For testing
