@@ -1,6 +1,6 @@
 # English
 
-### Version 2.4 (2017-09-01)
+### Version 2.5 (2017-09-01)
 What's new for Pebble Time/Time Steel/Time Round/2:
 - Achievements backup! Lost your old Pebble? Deleted and reinstalled the app? Achievements now are restored automatically.
 - Not sure what happened in the new update? Check these release notes in the settings page by clicking on the version number.
@@ -109,7 +109,7 @@ Download now and enjoy breathing.
 
 # Français
 
-### Version 2.4 (2017-09-01)
+### Version 2.5 (2017-09-01)
 Nouveau pour Pebble Time/Time Steel/Time Round/2:
 - Sauvegardez vos succès! Avez-vous perdu votre Pebble? Supprimé et réinstallé l'app? Vos succès sont maintenant récupérés automatiquement!
 - Voulez-vous savoir ce qu'il y a de nouveau dans ce mise à jour? Lisez les notes de mise à jour en cliquant sur la version dans la page de paramètres.
@@ -209,13 +209,13 @@ Téléchargez maintenant et respirez maintenant!
 
 # Español
 
-### Versión 2.4 (2017-09-01)
+### Versión 2.5 (2017-09-01)
 Nuevo para Pebble Time/Time Steel/Time Round/2:
 - Copia de seguridad y restauración de logros: ¿Has perdido tu Pebble? ¿O has borrado y reinstalado la app? ¡Tus logros serán restaurados automáticamente!
 - ¿Quieres ver qué hay de nuevo en esta versión? Selecciona la versión en el menú de ajustes para ver las notas de versión.
 - Una pantalla de bienvenida para usuarios nuevos.
 
-Correción de errores y amelioraciones:
+Correción de errores y mejoras:
 - La tasa más baja de respiraciones ha sido reducida a dos respiraciones por minuto.
 - Los tipos de vibraciones ahora tienen nuevos nombres.
 - La app no se bloqueará después de un recordatorio.
@@ -230,11 +230,11 @@ Correción de errores y amelioraciones:
 Nuevo para Pebble Time/Time Steel/Time Round/2:
 - ¡Ajustes directamente sobre tu reloj! Con una pulsación larga del botón superior se puede ver una lista de todos los ajusted que puedes cambiar.
 
-Correción de errores y amelioraciones:
+Correción de errores y mejoras:
 - Corregido: El texto en la parte inferior del menú principal debería mostrar tu racha actual si has escogido esta opción.
 - Corregido: La página de ajustes mostró opciones que no existen para algunos relojes.
 - Si has elegido de mostrar solamente el saludo o no mostrar nada en la parte superior del menú principal, ahora no hay una ventana que te pide de activar Pebble Health. ¡Muchas gracias, Nick para haberme informado!
-- Tamaño y uso de memoria reducido para todos relojes.
+- Tamaño y uso de memoria reducido para todos los relojes.
 
 --
 
@@ -249,8 +249,8 @@ Nuevo para Pebble Time/Time Steel/Time Round/2:
 
 Desfortunadamente, esas nuevas funciones no están presentes en el Pebble Classic y Pebble Steel, a causa de restriciones de tamaño. :(
 
-Amelioraciones:
-- Eliminación del registro de datos para una animación más optimizado.
+Mejoras:
+- Eliminación del registro de datos para una animación más optimizada.
 
 --
 
