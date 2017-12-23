@@ -140,8 +140,6 @@ static void animation_end_callback(void *data) {
 	s_animating = false;
 	s_main_done = true;
 	
-	snprintf(s_greet_text, sizeof(s_greet_text), "%s", localize_get_greet_text());
-	
 	// If the user breathes during passage from one day to another (i.e. 12AM) then set number of breaths to 0
 	snprintf(s_end_time, sizeof(s_end_time), "%s", data_get_date_today());
 	
@@ -151,19 +149,23 @@ static void animation_end_callback(void *data) {
 		// Add number of minutes breathed
 		s_min_breathed_today += s_min_to_breathe;
 		
+		// Write last duration data for App Glance
+		data_write_last_duration_data(s_min_to_breathe);
+		
 		// Achievements
 		#if !PBL_PLATFORM_APLITE
+		
+		// Add the minutes breathed to the total number of minutes breathed
+		data_set_total_minutes_breathed(data_get_total_minutes_breathed() + s_min_to_breathe);
+		
 		data_calculate_streak_length();
 		// Check whether it's the longest streak and save if it is
 		if (data_get_longest_streak() < data_get_streak_length()) {
 			data_set_longest_streak(data_get_streak_length());
 		}
 	
-		// Add the minutes breathed to the total number of minutes breathed
-		data_set_total_minutes_breathed(data_get_total_minutes_breathed() + s_min_to_breathe);
-	
 		// String to hold the description
-		char * description = "1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ!@";
+		char* description = "1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ!@";
 	
 		// Show achievements for 5, 8, and 10 minutes breathed in this session if achievements are enabled
 		switch (s_min_to_breathe) {
@@ -313,27 +315,36 @@ static void animation_end_callback(void *data) {
 				}
 				break;
 		}
-	
-		achievement_send_achievements();
 		#endif
 		
-	} else if (complete == 1) { // The user interrupted their session, so only add what was breathed before aborting
+	} else if (strcmp(s_start_time, s_end_time) == 0 && complete == 1) { // The user interrupted their session, so only add what was breathed before aborting
 		s_min_breathed_today += floor((time(NULL) - s_start_stamp) / 60);
+		if (floor((time(NULL) - s_start_stamp) / 60) >= 1) {
+			data_write_last_duration_data(floor((time(NULL) - s_start_stamp) / 60));
+		}
+		#if !PBL_PLATFORM_APLITE
+		data_set_total_minutes_breathed(data_get_total_minutes_breathed() + floor((time(NULL) - s_start_stamp) / 60));
+		#endif
 	} else { // Not on the same day, so set number to zero
 		s_min_breathed_today = 0;
 	}
 	
-	// Display minutes breathed today
+	// Display top and bottom text
+	snprintf(s_greet_text, sizeof(s_greet_text), "%s", localize_get_greet_text());
 	snprintf(s_min_today, sizeof(s_min_today), localize_get_min_breathed_today_text(), s_min_breathed_today);
 	
 	// Persist the number of minutes breathed in total today
 	data_write_breathe_persist_data(s_min_breathed_today);
 	data_write_date_persist_data();
 	
-	if (complete != 1) {
-		// Persist the duration of minutes if user didn't interrupt their session
-		data_write_last_duration_data(s_min_to_breathe);
+	// Set offline flag for AppMessage
+	#if !PBL_PLATFORM_APLITE
+	if (connection_service_peek_pebble_app_connection()) {
+		achievement_send_achievements();
+	} else {
+		persist_write_bool(ACHIEVEMENT_OFFLINE_KEY, connection_service_peek_pebble_app_connection());
 	}
+	#endif
 	
 	// Sets different number of digits for one digit or two digits
 	if (s_min_to_breathe == 10) {
@@ -368,7 +379,7 @@ static void main_animation_end(void *data) {
 		.update = radius_expand_update
 	};
 	
-	int complete = (int)data; // Coerce data into int
+	int complete = (int)data; // Cast data into int
 	
 	if (complete == 0) {
 		// Sets duration of animation
@@ -555,7 +566,7 @@ static void main_animation_callback () {
 	if (settings_get_heartRateVariation() && data_get_current_heart_rate() != 0) {
 		int new_duration = settings_get_breathDuration();
 		if (new_duration > s_breath_duration) {
-			APP_LOG(APP_LOG_LEVEL_DEBUG, "Old duration %d, new %d", s_breath_duration, new_duration);
+// 			APP_LOG(APP_LOG_LEVEL_DEBUG, "Old duration %d, new %d", s_breath_duration, new_duration);
 			s_breath_duration = new_duration;
 		}
 	} else {
@@ -872,5 +883,5 @@ void breathe_window_push(int min) {
 	// Show window on the watch, with animated = true
 	window_stack_push(s_main_window, true);
 	
-	APP_LOG(APP_LOG_LEVEL_DEBUG, "Heap free is %d after launching the breathe window.", (int)heap_bytes_free());
+// 	APP_LOG(APP_LOG_LEVEL_DEBUG, "Heap free is %d after launching the breathe window.", (int)heap_bytes_free());
 }

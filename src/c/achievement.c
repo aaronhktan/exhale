@@ -29,7 +29,6 @@ void achievement_init() {
 void achievement_save_achievements() {
 	persist_write_data(ACHIEVEMENT_KEY, &achievements, sizeof(achievements));
 	persist_write_int(ACHIEVEMENT_VERSION_KEY, 1);
-	persist_write_bool(ACHIEVEMENT_OFFLINE_KEY, connection_service_peek_pebble_app_connection());
 }
 
 // Getters and setters for each achievement in the AchievementList Struct

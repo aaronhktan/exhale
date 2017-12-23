@@ -82,14 +82,14 @@ char *data_get_date_today() {
 	struct tm *tick_time = localtime(&temp);
 	static char date_buffer[11];
 	strftime(date_buffer, sizeof(date_buffer), "%F", tick_time);
-	APP_LOG(APP_LOG_LEVEL_DEBUG, "The date today is %s", date_buffer);
+// 	APP_LOG(APP_LOG_LEVEL_DEBUG, "The date today is %s", date_buffer);
 	return date_buffer;
 } 
 
 // Writes the number of minutes breathed today to persistent storage
 void data_write_breathe_persist_data(int min_breathed_today){
 	persist_write_int(MIN_BREATHED_TODAY_KEY, min_breathed_today);
-	APP_LOG(APP_LOG_LEVEL_DEBUG, "The minutes breathed today are: %d", min_breathed_today);
+// 	APP_LOG(APP_LOG_LEVEL_DEBUG, "The minutes breathed today are: %d", min_breathed_today);
 }
 
 // Stores the date associated with the minutes of breathing done
@@ -135,9 +135,9 @@ int data_read_last_duration_data() {
 	int last_duration = 0;
 	if (persist_exists(LAST_DURATION_KEY)) {
 		last_duration = persist_read_int(LAST_DURATION_KEY);
-		APP_LOG(APP_LOG_LEVEL_DEBUG, "The last duration was %d.", last_duration);
+// 		APP_LOG(APP_LOG_LEVEL_DEBUG, "The last duration was %d.", last_duration);
 	} else {
-		APP_LOG(APP_LOG_LEVEL_DEBUG, "User has not breathed before; created data.");
+// 		APP_LOG(APP_LOG_LEVEL_DEBUG, "User has not breathed before; created data.");
 		data_write_last_duration_data(last_duration);
 	}
 	return last_duration;
@@ -178,7 +178,7 @@ int data_get_today_epoch_time() {
 
 // Store today's date as the date for streak calculation as struct tm
 void data_set_streak_date_persist_data() {
-	APP_LOG(APP_LOG_LEVEL_DEBUG, "The set now time is %d.", data_get_today_epoch_time());
+// 	APP_LOG(APP_LOG_LEVEL_DEBUG, "The set now time is %d.", data_get_today_epoch_time());
 	persist_write_int(STREAK_DATE_KEY, data_get_today_epoch_time());
 }
 
@@ -210,7 +210,7 @@ static int data_calculate_time_difference() {
 int data_get_streak_length() {
 	// Get the last date and convert to time_t to use with difftime
 	// By default, last date is today's date with year set to 1900.
-	APP_LOG(APP_LOG_LEVEL_DEBUG, "The last time breathed was %d, and the difftime is %d.", data_get_streak_date_persist_data(), data_calculate_time_difference());
+// 	APP_LOG(APP_LOG_LEVEL_DEBUG, "The last time breathed was %d, and the difftime is %d.", data_get_streak_date_persist_data(), data_calculate_time_difference());
 	
 	if (!persist_exists(STREAK_LENGTH_KEY) || ((data_calculate_time_difference() > SECONDS_PER_DAY) && data_get_streak_date_persist_data() != 631170000)) { 
 		// There is no streak in persist, or the length of time since the last time breathed is more than one day
@@ -227,25 +227,25 @@ static void data_set_streak_length(int value) {
 
 // Returns how long the streak is continued
 void data_calculate_streak_length() {
-	APP_LOG(APP_LOG_LEVEL_DEBUG, "Streak length is being calculated!");
+// 	APP_LOG(APP_LOG_LEVEL_DEBUG, "Streak length is being calculated!");
 	if (data_get_streak_date_persist_data() == 631170000) { // This means that the user has not breathed with the app before (since the timestamp is 1900-01-01)
-		APP_LOG(APP_LOG_LEVEL_DEBUG, "The user has breathed for the first time and the streak is 1 day.");
+// 		APP_LOG(APP_LOG_LEVEL_DEBUG, "The user has breathed for the first time and the streak is 1 day.");
 		data_set_streak_length(1);
 	} else if (data_calculate_time_difference() > SECONDS_PER_DAY) { // difftime returns the difference between the two dates in seconds
 		data_set_streak_length(1);
-		APP_LOG(APP_LOG_LEVEL_DEBUG, "The streak is 1 day because more than 1 has passed.");
+// 		APP_LOG(APP_LOG_LEVEL_DEBUG, "The streak is 1 day because more than 1 has passed.");
 		// This means that it's been more than a day; so streak is one day
 	} else if (data_calculate_time_difference() == 0) {
 		// This means that the user has breathed again on the same day and it's not the first time they've breathed with the app; no change in streak length
 	} else {
-		APP_LOG(APP_LOG_LEVEL_DEBUG, "Streak exists and it's the first time they've breathed today.");
+// 		APP_LOG(APP_LOG_LEVEL_DEBUG, "Streak exists and it's the first time they've breathed today.");
 		data_set_streak_length(data_get_streak_length() + 1);
 		// Streak is whatever the last streak is, plus one
 	}
 	
 	data_set_streak_date_persist_data();
-	APP_LOG(APP_LOG_LEVEL_DEBUG, "The streak is %d.", data_get_streak_length());
-	APP_LOG(APP_LOG_LEVEL_DEBUG, "Finished calculating streak length");
+// 	APP_LOG(APP_LOG_LEVEL_DEBUG, "The streak is %d.", data_get_streak_length());
+// 	APP_LOG(APP_LOG_LEVEL_DEBUG, "Finished calculating streak length");
 }
 
 // Returns a string with correctly formatted streak text

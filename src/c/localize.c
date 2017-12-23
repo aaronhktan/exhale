@@ -312,12 +312,12 @@ char* localize_get_greet_text() {
 char* localize_get_top_text(int random_number) {
 	char*strings[9] = {"TAKE A MOMENT;", "BE STILL;", "CLEAR YOUR MIND;", "EMPTY YOUR THOUGHTS;", "BE CALM;", "THINK NOTHING;", "RELAX;", "CHILL FOR A SEC;", "SPACE OUT;"};
 	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
-		char*french_strings[9] = {"PRENEZ UN MOMENT;", "RÉFLECHISSEZ;", "VIDEZ VOTRE ESPRIT;", "NE PENSEZ À RIEN;", "SOYEZ CALME;", "CONCENTREZ;", "RELAXEZ;", "NE VOUS INQUIETEZ PAS;", "DONNEZ-VOUS DE L'ESPACE;"};
+		char*french_strings[9] = {"PRENEZ UN MOMENT;", "RÉFLECHISSEZ;", "OUVREZ VOTRE ESPRIT;", "NE PENSEZ À RIEN;", "SOYEZ CALME;", "CONCENTREZ;", "RELAXEZ;", "NE VOUS INQUIETEZ PAS;", "DONNEZ-VOUS DE L'ESPACE;"};
 		for (int i = 0; i <= 8; i++) {
 			strings[i] = french_strings[i];
 		}
 	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
-		char*spanish_strings[9] = {"TÓMATE UN TIEMPO;", "NO TE MUEVAS;", "ACLARA TU MENTE;", "NO PIENSA A NADA;", "SÉ CALMO;", "CONCÉNTRATE;", "RELÁJATE;", "NO TE PREOCUPES;", "TOMA UN MOMENTO;"};
+		char*spanish_strings[9] = {"TÓMATE EL TIEMPO;", "NO TE MUEVAS;", "DESPÉJATE;", "NO PIENSA A NADA;", "TRANQUILÍZATE;", "CONCÉNTRATE;", "RELÁJATE;", "NO TE PREOCUPES;", "TOMA UN MOMENTO;"};
 		for (int i = 0; i <= 8; i++) {
 			strings[i] = spanish_strings[i];
 		}
@@ -1239,9 +1239,9 @@ char* localize_get_credits_row_title() {
 
 	char* localize_get_new_version_title() {
 		if (strncmp(localize_get_locale(), "es", 2) == 0) {
-			return "¡Versión 2.51!";
+			return "¡Versión 2.52!";
 		} else {
-			return "Version 2.51!";
+			return "Version 2.52!";
 		}
 	}
 
@@ -1261,7 +1261,7 @@ char* localize_get_credits_row_title() {
 		if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 			return "NOUVEAUTÉS:\n\n• Vos succès sont maintenant copiés sur votre célullaire, et se restaurent automatiquement si vous supprimez puis réinstallez cette app.\n• Le montant minimum de respirations par minute a diminué à 2.\n• Si vous voulez revoir ces notes, sélectionnez la version dans le menu des paramètres sur votre montre.\n• Corrigé plusieurs plantages.\n\nLaissez un \u2764 sur l'App Store si vous aimez cette app!";
 		} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
-			return "NUEVO:\n\n• Ahora se realiza una copia de seguridad de todos tus logros, y estos se restauran automáticamente si eliminas y luego reinstalas esta app.\n• El número mínimo de respiraciones por minuto ha bajado a 2.\n• Si quieres ver de nuevo estas notas, selecciona el número de versión en el menú de ajustes en tu reloj.\n• Varios fallos de programa fueron eliminados.\n\n¡Da un \u2764 en el App Store si te gusta esta app!";
+			return "NUEVO:\n\n• Ahora se realiza una copia de seguridad de todos tus logros, y estos se restauran automáticamente si eliminas y luego reinstalas esta app.\n• El número mínimo de respiraciones por minuto ha bajado a 2.\n• Si quieres ver de nuevo estas notas, selecciona el número de versión en el menú de ajustes en tu reloj.\n• Varios fallos de programa fueron eliminados.\n\n¡Da un \u2764 en el App Store si a tí te gusta esta app!";
 		} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
 			return "NEU:\n\n• Ihre Erfolge werden nun auf dem Handy gespeichert, sodass sie bei einer Neuinstallation erhalten bleiben.\n• Die Anzahl Atemzüge pro Minute kann jetzt minimal 2 sein\n• Die Änderungen können erneut eingesehen werden, wenn Sie die Versionsnummer in den Einstellungen auf der Uhr anwählen\n• Mehrere Crashes und Speicherlecks behoben, darunter einer nach einer Erinnerung\n• Hinterlassen Sie ein \u2764 im App Store, wenn Ihnen diese App gefällt!";
 		} else {
@@ -1273,7 +1273,7 @@ char* localize_get_credits_row_title() {
 		if (strncmp(localize_get_locale(), "fr", 2) == 0) {
 			return "Prenez un moment pour respirer.\n\nRESPIREZ.\nChoississez la durée de votre session de respiration avec les boutons haut et bas. Quand vous êtes prêt à commencer, appuyez le bouton du milieu.\n\nPERSONNALISEZ.\nChangez vos paramètres directement sur votre montre ou sur votre céllulaire! Appuyez longuement sur le bouton haut pour les changer sur votre montre.\n\nACHEVEZ.\nAu fur et à mesure que vous utilisez la app, vous gagnerez des succès! Admirez-les en appuyant longuement sur le bouton bas.";
 		} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
-			return "Tómate un momento a respirar.\n\nRESPIRA.\nEscoge cuántos minutes quieres que dure la sesión con unas pulsaciones de los botónes arriba y abajo. Cuando estés listo a comenzar, presiona el botón central.\n\nPERSONALIZA.\nCambia los ajustes en tu reloj o en tu móvil. ¡Con una pulsación larga del botón arriba se pueden cambiar ajustes en tu reloj!\n\nALCANZA.\n¡Con la respiración regular se puede ganar logros! Se puede verlos con una pulsación larga del botón abajo.";
+			return "Tómate un momento para respirar.\n\nRESPIRA.\nEscoge cuántos minutes quieres que dure la sesión con pulsaciones de los botónes arriba y abajo. Cuando estés listo para comenzar, presiona el botón central.\n\nPERSONALIZA.\nCambia los ajustes en tu reloj o en tu móvil. Con una pulsación larga del botón arriba puedes cambiar ajustes en tu reloj.\n\nALCANZA.\n¡Con la respiración regular ganarás logros! Se puede verlos con una pulsación larga del botón abajo.";
 		} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
 			return "Ein Moment zum Durchatmen.\n\nBREATHE.\nIm Hauptmenü können Sie die Dauer der Atemübung mit dem oberen und dem unteren Knopf. Starten Sie die Übung mit dem mittleren Knopf.\nSie können Einstellungen auf dem Telefon und auf der Uhr vornehmnen. Drücken Sie den oberen Knopf lange, um die Einstellungen auf der Uhr zu öffnen.\n\nERFOLGE.\nWenn Sie Übungen machen, können Sie Erfolge erreichen und Statistiken sehen! Drücken und halten Sie den unteren Knopf um zu sehen, was Sie freigeschaltet haben.";
 		} else {

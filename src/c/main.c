@@ -45,7 +45,7 @@ static void inbox_received_handler(DictionaryIterator *iter, void *context) {
 }
 
 static void init() {
-	APP_LOG(APP_LOG_LEVEL_INFO, "You are running version 2.51 of the Breathe app.");
+	APP_LOG(APP_LOG_LEVEL_INFO, "You are running version 2.52 of the Breathe app.");
 	// Open AppMessage connection
 	app_message_register_inbox_received(inbox_received_handler);
 	app_message_open(256, 256);
@@ -70,7 +70,7 @@ static void init() {
 			wakeup_schedule_next_wakeup(settings_get_reminderHours(), 0, settings_get_reminderHoursStart());
 		}
 	} else {
-		APP_LOG(APP_LOG_LEVEL_DEBUG, "Heap free is %d.", (int)heap_bytes_free());
+// 		APP_LOG(APP_LOG_LEVEL_DEBUG, "Heap free is %d.", (int)heap_bytes_free());
 // 				reminder_window_push(); // For testing
 // 		The app was started by the user; push the standard breathe window
 		if (settings_get_rememberDuration() && data_read_last_duration_data() != 0) { // Set the minutes to breathe to the same as last one, unless the number is zero (meaning they haven't breathed yet)
@@ -83,7 +83,7 @@ static void init() {
 		if (persist_exists(SNOOZE_WAKEUP)) {
 			if (wakeup_query(persist_read_int(SNOOZE_WAKEUP), NULL)) { // Returns true if the wakeup at this ID is still scheduled
 				// Canceled a snooze timer!
-				APP_LOG(APP_LOG_LEVEL_DEBUG, "Cancelling a timer at %d.", (int)persist_read_int(SNOOZE_WAKEUP));
+// 				APP_LOG(APP_LOG_LEVEL_DEBUG, "Cancelling a timer at %d.", (int)persist_read_int(SNOOZE_WAKEUP));
 				wakeup_cancel(persist_read_int(SNOOZE_WAKEUP));
 			}
 		}
@@ -103,7 +103,7 @@ static void init() {
 // 						data_set_streak_date_persist_data();		
 			new_version_window_push(false);
 		} else {
-			APP_LOG(APP_LOG_LEVEL_DEBUG, "The user has already seen the new version page!");
+// 			APP_LOG(APP_LOG_LEVEL_DEBUG, "The user has already seen the new version page!");
 		}
 		#endif
 // 		achievement_menu_window_push(); // For testing
