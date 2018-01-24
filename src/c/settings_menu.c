@@ -41,7 +41,7 @@ static uint16_t menu_get_num_rows_callback(MenuLayer *menu_layer, uint16_t secti
 			return NUM_ABOUT_MENU_ITEMS;
 		default:
 			return 0;
-  }
+	}
 }
 
 static int16_t menu_get_header_height_callback(MenuLayer *menu_layer, uint16_t section_index, void *data) {

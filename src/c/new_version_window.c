@@ -20,7 +20,7 @@ static GBitmap *s_icon_bitmap;
 static bool is_new_user = false;
 
 static void anim_stopped_handler(Animation *animation, bool finished, void *context) {
-  s_appear_anim = NULL;
+	s_appear_anim = NULL;
 	#ifdef PBL_ROUND
 	GSize max_size = text_layer_get_content_size(s_label_layer);
 	text_layer_enable_screen_text_flow_and_paging(s_label_layer, 4);

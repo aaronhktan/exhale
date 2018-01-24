@@ -112,7 +112,7 @@ char* localize_get_well_done_text() {
 
 char* localize_get_inhale_text() {
 	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
-		return "INHALEZ...";
+		return "INSPIREZ...";
 	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
 		return "AHORA INHALA...";
 	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
@@ -124,7 +124,7 @@ char* localize_get_inhale_text() {
 
 char* localize_get_exhale_text() {
 	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
-		return "...ET EXHALEZ.";
+		return "...ET EXPIREZ.";
 	} else if (strncmp(localize_get_locale(), "es", 2) == 0) {
 		return "...Y EXHALA.";
 	} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
@@ -160,7 +160,7 @@ char* localize_get_steps_today_text(int thousands) {
 				return "\u2764 %d.%03d PASOS HOY";
 			} else if (strncmp(localize_get_locale(), "de", 2) == 0) {
 				return "\u2764 %d.%03d HEUTE";
-			} else { // Yes there isn't a heart rate enabled round pebble right now, but who knows?
+			} else { // Yes there isn't a heart rate enabled round pebble right now, but who knows? <-- that comment was made before Pebble went out of business :(
 				#ifdef PBL_ROUND
 					return "\u2764 %d,%03d TODAY";
 				#else
@@ -334,7 +334,7 @@ char* localize_get_top_text(int random_number) {
 char* localize_get_bottom_text(int random_number) {
 	char* strings[4] = {"BREATHE.", "EXHALE.", "CONCENTRATE.", "FOCUS."};
 	if (strncmp(localize_get_locale(), "fr", 2) == 0) {
-		char* french_strings[4] = {"RESPIREZ.", "EXHALEZ.", "RESPIREZ.", "EXHALEZ."};
+		char* french_strings[4] = {"RESPIREZ.", "EXPIREZ.", "RESPIREZ.", "EXPIREZ."};
 		for (int i = 0; i <= 3; i++) {
 			strings[i] = french_strings[i];
 		}	
