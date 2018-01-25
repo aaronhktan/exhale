@@ -206,7 +206,7 @@ static void menu_draw_row_callback(GContext* ctx, const Layer *cell_layer, MenuI
 		case 5: // This is the about section
 			switch (cell_index->row) {
 				case 0: // This is the version number
-					menu_cell_basic_draw(ctx, cell_layer, localize_get_version_row_title(), "v2.52, 2017-12-16", NULL);
+					menu_cell_basic_draw(ctx, cell_layer, localize_get_version_row_title(), "v2.53, 2018-01-24", NULL);
 					break;
 				case 1: // This is the credits
 					menu_cell_basic_draw(ctx, cell_layer, localize_get_credits_row_title(), "cheeseisdisgusting", NULL);
