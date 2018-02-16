@@ -6,24 +6,24 @@
 
 // Struct for each achievement, with completion status and date complete
 typedef struct Achievement {
-	char *date_completed;
-	int complete;
+  char *date_completed;
+  int complete;
 } Achievement;
 
 // Struct for list of the achievements
 typedef struct AchievementList {
-	Achievement one_week_streak;
-	Achievement one_month_streak;
-	Achievement one_year_streak;
-	Achievement five_minutes_day;
-	Achievement ten_minutes_day;
-	Achievement thirty_minutes_day;
-	Achievement one_hour_day;
-	Achievement five_minutes_session;
-	Achievement eight_minutes_session;
-	Achievement ten_minutes_session;
-	Achievement changed_settings;
-	Achievement completionist;
+  Achievement one_week_streak;
+  Achievement one_month_streak;
+  Achievement one_year_streak;
+  Achievement five_minutes_day;
+  Achievement ten_minutes_day;
+  Achievement thirty_minutes_day;
+  Achievement one_hour_day;
+  Achievement five_minutes_session;
+  Achievement eight_minutes_session;
+  Achievement ten_minutes_session;
+  Achievement changed_settings;
+  Achievement completionist;
 } AchievementList;
 
 void achievement_init();

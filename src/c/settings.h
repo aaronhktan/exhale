@@ -1,5 +1,4 @@
 #pragma once
-#include <pebble.h>
 
 #define SETTINGS_KEY 20
 #define SETTINGS_VERSION_KEY 21
@@ -7,21 +6,21 @@
 
 // Define settings struct
 typedef struct ClaySettings {
-	GColor backgroundColor;
-	GColor circleColor;
-	GColor textColor;
-	bool vibrationEnabled;
-	int vibrationType;
-	int displayText;
-	int reminderHours;
-	bool rememberDuration;
-	int reminderHoursStart;
-	int breathsPerMinute;
-	bool heartRateVariation;
-	bool appGlanceEnabled;
-	int appGlanceType;
-	bool achievementsEnabled;
-	int bottomTextType;
+  GColor backgroundColor;
+  GColor circleColor;
+  GColor textColor;
+  bool vibrationEnabled;
+  int vibrationType;
+  int displayText;
+  int reminderHours;
+  bool rememberDuration;
+  int reminderHoursStart;
+  int breathsPerMinute;
+  bool heartRateVariation;
+  bool appGlanceEnabled;
+  int appGlanceType;
+  bool achievementsEnabled;
+  int bottomTextType;
 } ClaySettings;
 
 void settings_init();

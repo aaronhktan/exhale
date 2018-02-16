@@ -1,6 +1,4 @@
 #pragma once
-#include <pebble.h>
-#include "src/c/data.h"
 
 #ifdef PBL_PLATFORM_EMERY
 #define FONT_KEY FONT_KEY_GOTHIC_18_BOLD
