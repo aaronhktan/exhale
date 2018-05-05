@@ -46,7 +46,7 @@ static void inbox_received_handler(DictionaryIterator *iter, void *context) {
 }
 
 static void init() {
-  APP_LOG(APP_LOG_LEVEL_INFO, "You are running version 2.53 of the Breathe app.");
+  APP_LOG(APP_LOG_LEVEL_INFO, "You are running version 2.6 of the Breathe app.");
   // Open AppMessage connection
   app_message_register_inbox_received(inbox_received_handler);
   app_message_open(256, 256);

@@ -5,7 +5,7 @@ module.exports = [
   },
   {
     "type": "text",
-    "defaultValue": "Dies sind die Einstellungen für die Breathe-App. Sie benutzen Version 2.53 von Breathe.",
+    "defaultValue": "Dies sind die Einstellungen für die Breathe-App. Sie benutzen Version 2.6 von Breathe.",
   },
   {
     "type": "section",

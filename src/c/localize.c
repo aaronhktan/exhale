@@ -1241,9 +1241,9 @@ char *localize_get_longest_streak_description(int days) {
 
 char *localize_get_new_version_title() {
   if (strncmp(localize_get_locale(), "es", 2) == 0) {
-    return "¡Versión 2.53!";
+    return "¡Versión 2.6!";
   } else {
-    return "Version 2.53!";
+    return "Version 2.6!";
   }
 }
 
