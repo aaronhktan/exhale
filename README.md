@@ -1,15 +1,15 @@
 # Breathe
 
-![alt tag](https://github.com/cheeseisdisgusting/exhale/blob/master/screenshots/Aplite_Marketing_v8.png)
+![](/screenshots/Aplite_Marketing_v8.png)
 
-![alt tag](https://github.com/cheeseisdisgusting/exhale/blob/master/screenshots/index_blue.png)
-![alt tag](https://github.com/cheeseisdisgusting/exhale/blob/master/screenshots/index_red.png)
-![alt tag](https://github.com/cheeseisdisgusting/exhale/blob/master/screenshots/index_green.png)
-![alt tag](https://github.com/cheeseisdisgusting/exhale/blob/master/screenshots/index_yellow.png)
+![](/screenshots/index_blue.png)
+![](/screenshots/index_red.png)
+![](/screenshots/index_green.png)
+![](/screenshots/index_yellow.png)
 
 
-### Featured on the Pebble App Store from 12 December 2016 to 16 January 2017!
- [![Available on the Pebble App Store](https://github.com/cheeseisdisgusting/exhale/blob/master/screenshots/badge.png)][appstore]
+### Featured on the Pebble App Store from December 2016 to January 2017!
+ [![Available on the Pebble App Store](/screenshots/badge.png)][appstore]
 
 ## Description:
 
@@ -41,9 +41,25 @@
 
 *Pebble Classic/Steel/2, Pebble Time (Steel), Pebble Time Round, Pebble Time 2*
 
-![alt tag](https://github.com/cheeseisdisgusting/exhale/blob/master/screenshots/aplite_final.gif)
-![alt tag](https://github.com/cheeseisdisgusting/exhale/blob/master/screenshots/basalt_final.gif)
-![alt tag](https://github.com/cheeseisdisgusting/exhale/blob/master/screenshots/chalk_final.gif)
-![alt tag](https://github.com/cheeseisdisgusting/exhale/blob/master/screenshots/emery_final.gif)
+![](/screenshots/aplite_final.gif)
+![](/screenshots/basalt_final.gif)
+![](/screenshots/chalk_final.gif)
+![](/screenshots/emery_final.gif)
 
 [appstore]: https://apps.getpebble.com/en_US/application/583dc06f00355abe66000862
+
+## Build and run
+
+### Cloudpebble
+
+You can clone this repository with its URL and import to Cloudpebble. It should be able to build and run when pressing the green play button.
+
+### Command line tools
+
+You'll need to have the Pebble Command Line Tools installed.
+
+After that, from the root of the repository, ```pebble build``` to build the .pbw file.
+
+To install on a watch, enable the Developer connection from the Pebble mobile app, then ```pebble install --phone <IP_ADDRESS>```, where the <IP_ADDRESS> is the one that appears beneath the developer connection section in the ombile app.
+
+To install on the emulator, ```pebble install --emulator <HARDWARE>```, where <HARDWARE> is any one of the codenames used for Pebble hardware, i.e. Aplite, Basalt, Chalk, Diorite, or Emery.
