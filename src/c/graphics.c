@@ -130,7 +130,7 @@ void graphics_draw_inner_text(GContext *ctx, GRect bounds, bool is_animating, in
       case 1 :
       gpath_draw_filled(ctx, s_up_triangle); // Only draw the upper triangle because user cannot set a time lower than 1
       break;
-      case 10 :
+      case MAX_MINUTES :
       gpath_draw_filled(ctx, s_down_triangle); // Only draw the lower triangle because the user cannot set a time higher than 10
       break;
       default:
@@ -142,7 +142,7 @@ void graphics_draw_inner_text(GContext *ctx, GRect bounds, bool is_animating, in
   // Draw text in circle
   graphics_context_set_text_color(ctx, textColor);
   if (!is_animating) {
-    GSize min_to_breathe_bounds = graphics_text_layout_get_content_size("10", fonts_get_system_font(FONT_KEY_LECO_42_NUMBERS), 
+    GSize min_to_breathe_bounds = graphics_text_layout_get_content_size("20", fonts_get_system_font(FONT_KEY_LECO_42_NUMBERS), 
                                                                         GRect(0, 0, bounds.size.w, bounds.size.h), 
                                                                         GTextOverflowModeWordWrap, GTextAlignmentCenter);
     graphics_draw_text(ctx, min_to_breathe_text, fonts_get_system_font(FONT_KEY_LECO_42_NUMBERS), 

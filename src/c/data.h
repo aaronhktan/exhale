@@ -8,6 +8,7 @@
 #define STREAK_LENGTH_KEY 5
 #define TOTAL_MINUTES_BREATHED_KEY 6
 #define LONGEST_STREAK_KEY 7
+#define MAX_MINUTES 29
 
 void data_init();
 

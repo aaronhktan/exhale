@@ -24,6 +24,7 @@
 #define D_END_ANIMATION_DURATION 2000
 #define D_END_ANIMATION_DELAY 2500
 
+
 static Window *s_main_window;
 static Layer *s_circle_layer, *s_inside_text_layer, *s_upper_text_layer, *s_lower_text_layer;
 static AppTimer *s_animation_completed_timer, *animationTimer, *s_hide_lower_text_layer, *s_click_provider_timer, *s_interrupt_timer, *s_update_hr_timer, *s_main_timer;
@@ -350,7 +351,7 @@ static void animation_end_callback(void *data) {
 #endif
   
   // Sets different number of digits for one digit or two digits
-  if (s_min_to_breathe == 10) {
+  if (s_min_to_breathe >= 10) {
     snprintf(s_min_to_breathe_text, 3, "%d", s_min_to_breathe);
   } else {
     snprintf(s_min_to_breathe_text, 2, "%d", s_min_to_breathe);
@@ -694,10 +695,10 @@ static void circle_animation_setup() {
 
 static void up_click_handler(ClickRecognizerRef recognizer, void *context) {
   // Increments number, displays number.
-  if ((!s_animating) && (s_min_to_breathe < 10)) {
+  if ((!s_animating) && (s_min_to_breathe < MAX_MINUTES )) {
     s_min_to_breathe += 1;
     set_min_text(s_min_to_breathe, s_min_text);
-    if (s_min_to_breathe == 10) {
+    if (s_min_to_breathe >= 10) {
       snprintf(s_min_to_breathe_text, 3, "%d", s_min_to_breathe);
     } else {
       snprintf(s_min_to_breathe_text, 2, "%d", s_min_to_breathe);
@@ -711,7 +712,11 @@ static void down_click_handler(ClickRecognizerRef recognizer, void *context) {
   if ((!s_animating) && (s_min_to_breathe > 1)) {
     s_min_to_breathe -= 1;
     set_min_text(s_min_to_breathe, s_min_text);
-    snprintf(s_min_to_breathe_text, 2, "%d", s_min_to_breathe);
+    if (s_min_to_breathe >= 10) {
+      snprintf(s_min_to_breathe_text, 3, "%d", s_min_to_breathe);
+    } else {
+      snprintf(s_min_to_breathe_text, 2, "%d", s_min_to_breathe);
+    }
     layer_mark_dirty(s_inside_text_layer);
   }
 }
